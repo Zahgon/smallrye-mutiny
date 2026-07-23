@@ -1,7 +1,6 @@
 package io.smallrye.mutiny.groups;
 
 import static io.smallrye.mutiny.helpers.ParameterValidation.*;
-import static java.util.Arrays.asList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +8,6 @@ import java.util.List;
 import io.smallrye.common.annotation.CheckReturnValue;
 import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.smallrye.mutiny.operators.uni.builders.UniJoinAll;
-import io.smallrye.mutiny.operators.uni.builders.UniJoinFirst;
 
 /**
  * Join multiple {@link Uni Unis}.
@@ -30,39 +25,15 @@ public class UniJoin {
         // Do nothing
     }
 
-    /**
-     * Join multiple {@link Uni} references and emit a list of values, this is a convenience delegate method for
-     * {@link #all(List)}.
-     * <p>
-     * The list of {@code Unis} must not be {@code null} or contain {@code null} objects.
-     *
-     * @param unis the list of {@link Uni} to join, must not be {@code null}, must not contain any {@code null} reference.
-     * @param <T> the type of the {@link Uni} values
-     * @return the object to configure the failure management strategy
-     */
     @SafeVarargs
     @CheckReturnValue
     public final <T> JoinAllStrategy<T> all(Uni<T>... unis) {
-        return all(asList(nonNull(unis, "unis")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Join multiple {@link Uni} references and emit a list of values.
-     * <p>
-     * The resulting list of values is in order of the list of {@link Uni}.
-     * What happens when any of the {@link Uni} emits a failure rather than a value is specified by a subsequent call
-     * to any of the methods in {@link JoinAllStrategy}.
-     * <p>
-     * The list of {@code Unis} must not be {@code null} or contain {@code null} objects.
-     *
-     * @param unis the list of {@link Uni} to join, must not be {@code null}, must not contain any {@code null} reference
-     * @param <T> the type of the {@link Uni} values
-     * @return the object to configure the failure management strategy
-     */
     @CheckReturnValue
     public final <T> JoinAllStrategy<T> all(List<Uni<T>> unis) {
-        doesNotContainNull(unis, "unis");
-        return new JoinAllStrategy<>(unis);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -99,89 +70,38 @@ public class UniJoin {
     public static class JoinAllStrategy<T> implements JoinAllStrategyTerminal<T> {
 
         private final List<Uni<T>> unis;
+
         private int concurrency = -1;
 
         private JoinAllStrategy(List<Uni<T>> unis) {
             this.unis = unis;
         }
 
-        /**
-         * Limit the number of concurrent upstream subscriptions.
-         * <p>
-         * When not specified all upstream {@link Uni} are being subscribed when the joining {@link Uni} is subscribed.
-         * <p>
-         * Setting a limit is useful when you have a large number of {@link Uni} to join and their simultaneous
-         * subscriptions might overwhelm resources (e.g., database connections, etc).
-         *
-         * @param limit the concurrency limit, must be strictly positive
-         * @return an object to conclude the join strategy
-         */
         @CheckReturnValue
         public JoinAllStrategyTerminal<T> usingConcurrencyOf(int limit) {
-            this.concurrency = ParameterValidation.positive(limit, "limit");
-            return this;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @CheckReturnValue
         public Uni<List<T>> andCollectFailures() {
-            if (unis.isEmpty()) {
-                return Uni.createFrom().item(List.of());
-            } else {
-                return Infrastructure.onUniCreation(new UniJoinAll<>(unis, UniJoinAll.Mode.COLLECT_FAILURES, concurrency));
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @CheckReturnValue
         public Uni<List<T>> andFailFast() {
-            if (unis.isEmpty()) {
-                return Uni.createFrom().item(List.of());
-            } else {
-                return Infrastructure.onUniCreation(new UniJoinAll<>(unis, UniJoinAll.Mode.FAIL_FAST, concurrency));
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
-    /**
-     * Join multiple {@link Uni} and emit the result from the first one to emit a signal, or the first one with a value.
-     * This is a convenience delegate method for {@link #first(List)}.
-     * <p>
-     * The list of {@code Unis} must not be {@code null}, empty, or contain {@code null} objects.
-     *
-     * @param unis the list of {@link Uni} to join, must not be {@code null}, empty and must not contain any
-     *        {@code null} reference
-     * @param <T> the type of the {@link Uni} values
-     * @return the object to configure the failure management strategy
-     */
     @SafeVarargs
     @CheckReturnValue
     public final <T> JoinFirstStrategy<T> first(Uni<T>... unis) {
-        return first(asList(nonNull(unis, "unis")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Join multiple {@link Uni} and emit the result from the first one to emit a signal, or the first one with a value.
-     * <p>
-     * What happens when any of the {@link Uni} emits a failure rather than a value is specified by a subsequent call
-     * to any of the methods in {@link JoinFirstStrategy}.
-     * <p>
-     * The list of {@code Unis} must not be {@code null}, empty, or contain {@code null} objects.
-     *
-     * @param unis the list of {@link Uni} to join, must not be {@code null}, empty, must not contain any
-     *        {@code null} reference
-     * @param <T> the type of the {@link Uni} values
-     * @return the object to configure the failure management strategy
-     */
     @CheckReturnValue
     public final <T> JoinFirstStrategy<T> first(List<Uni<T>> unis) {
-        doesNotContainNull(unis, "unis");
-        isNotEmpty(unis, "unis");
-        return new JoinFirstStrategy<>(unis);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -211,57 +131,32 @@ public class UniJoin {
     public static class JoinFirstStrategy<T> implements JoinFirstStrategyTerminal<T> {
 
         private final List<Uni<T>> unis;
+
         private int concurrency = -1;
 
         private JoinFirstStrategy(List<Uni<T>> unis) {
             this.unis = unis;
         }
 
-        /**
-         * Limit the number of concurrent upstream subscriptions.
-         * <p>
-         * When not specified all upstream {@link Uni} are being subscribed when the joining {@link Uni} is subscribed.
-         * <p>
-         * Setting a limit is useful when you have a large number of {@link Uni} to join and their simultaneous
-         * subscriptions might overwhelm resources (e.g., database connections, etc).
-         *
-         * @param limit the concurrency limit, must be strictly positive
-         * @return an object to conclude the join strategy
-         */
         @CheckReturnValue
         public JoinFirstStrategyTerminal<T> usingConcurrencyOf(int limit) {
-            this.concurrency = ParameterValidation.positive(limit, "limit");
-            return this;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
-        /**
-         * Forward the value or failure from the first {@link Uni} to terminate.
-         *
-         * @return a new {@link Uni}
-         */
         @CheckReturnValue
         public Uni<T> toTerminate() {
-            return Infrastructure.onUniCreation(new UniJoinFirst<>(unis, UniJoinFirst.Mode.FIRST_TO_EMIT, concurrency));
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @CheckReturnValue
         public Uni<T> withItem() {
-            return Infrastructure.onUniCreation(new UniJoinFirst<>(unis, UniJoinFirst.Mode.FIRST_WITH_ITEM, concurrency));
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
-    /**
-     * Provide a builder to assemble the {@link Uni} references to join.
-     *
-     * @param <T> the type of the {@link Uni} values
-     * @return a new builder
-     */
     @CheckReturnValue
     public <T> Builder<T> builder() {
-        return new Builder<>();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -273,36 +168,19 @@ public class UniJoin {
 
         private final List<Uni<T>> unis = new ArrayList<>();
 
-        /**
-         * Add a {@link Uni}.
-         *
-         * @param uni a {@link Uni}
-         * @return this builder instance
-         */
         @CheckReturnValue
         public Builder<T> add(Uni<T> uni) {
-            unis.add(uni);
-            return this;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
-        /**
-         * Join all {@link Uni} references.
-         *
-         * @return the object to configure the failure management strategy
-         */
         @CheckReturnValue
         public JoinAllStrategy<T> joinAll() {
-            return UniJoin.this.all(unis);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
-        /**
-         * Join on one among the {@link Uni} references.
-         *
-         * @return the object to configure the failure management strategy
-         */
         @CheckReturnValue
         public JoinFirstStrategy<T> joinFirst() {
-            return UniJoin.this.first(unis);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

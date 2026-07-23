@@ -15,6 +15,6 @@ public class ToCompletableFuture<T> implements Function<Uni<T>, CompletableFutur
 
     @Override
     public CompletableFuture<T> apply(Uni<T> uni) {
-        return uni.subscribeAsCompletionStage();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

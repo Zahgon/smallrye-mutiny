@@ -12,7 +12,6 @@ public abstract class UniOperator<I, O> extends AbstractUni<O> {
     }
 
     public Uni<? extends I> upstream() {
-        return upstream;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

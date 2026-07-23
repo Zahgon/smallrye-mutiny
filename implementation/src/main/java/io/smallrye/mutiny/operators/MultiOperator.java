@@ -12,7 +12,6 @@ public abstract class MultiOperator<I, O> extends AbstractMulti<O> {
     }
 
     public Multi<I> upstream() {
-        return upstream;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

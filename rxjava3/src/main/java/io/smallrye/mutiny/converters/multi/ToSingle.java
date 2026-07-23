@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 
 import io.reactivex.rxjava3.core.Single;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.converters.uni.UniRx3Converters;
 
 public class ToSingle<T> implements Function<Multi<T>, Single<Optional<T>>> {
+
     @SuppressWarnings("rawtypes")
     public static final ToSingle INSTANCE = new ToSingle();
 
@@ -17,12 +17,11 @@ public class ToSingle<T> implements Function<Multi<T>, Single<Optional<T>>> {
     }
 
     public <R> ToSingleFailOnNull<R> onEmptyThrow(Supplier<? extends Throwable> supplier) {
-        return new ToSingleFailOnNull<>(supplier);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Single<Optional<T>> apply(Multi<T> multi) {
-        return multi.collect().first().convert().with(UniRx3Converters.toSingle());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

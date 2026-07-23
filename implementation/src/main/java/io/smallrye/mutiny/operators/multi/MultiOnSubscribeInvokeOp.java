@@ -1,13 +1,9 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.Subscriptions.CANCELLED;
-
-import java.util.Objects;
 import java.util.concurrent.Flow.Subscription;
 import java.util.function.Consumer;
 
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
 /**
@@ -22,17 +18,14 @@ public final class MultiOnSubscribeInvokeOp<T> extends AbstractMultiOperator<T, 
 
     private final Consumer<? super Subscription> onSubscribe;
 
-    public MultiOnSubscribeInvokeOp(Multi<? extends T> upstream,
-            Consumer<? super Subscription> onSubscribe) {
+    public MultiOnSubscribeInvokeOp(Multi<? extends T> upstream, Consumer<? super Subscription> onSubscribe) {
         super(upstream);
         this.onSubscribe = onSubscribe;
     }
 
     @Override
     public void subscribe(MultiSubscriber<? super T> actual) {
-        OnSubscribeSubscriber subscriber = new OnSubscribeSubscriber(
-                Objects.requireNonNull(actual, "Subscriber must not be `null`"));
-        upstream.subscribe().withSubscriber(subscriber);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private final class OnSubscribeSubscriber extends MultiOperatorProcessor<T, T> {
@@ -43,20 +36,7 @@ public final class MultiOnSubscribeInvokeOp<T> extends AbstractMultiOperator<T, 
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (compareAndSetUpstreamSubscription(null, s)) {
-                try {
-                    onSubscribe.accept(s);
-                } catch (Throwable e) {
-                    Subscriptions.fail(downstream, e);
-                    getAndSetUpstreamSubscription(CANCELLED).cancel();
-                    return;
-                }
-                downstream.onSubscribe(this);
-            } else {
-                s.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
-
     }
-
 }

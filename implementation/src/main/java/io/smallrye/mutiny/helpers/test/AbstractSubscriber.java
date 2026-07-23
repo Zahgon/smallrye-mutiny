@@ -40,47 +40,31 @@ public class AbstractSubscriber<T> implements Subscriber<T>, Subscription {
 
     @Override
     public void onSubscribe(Subscription s) {
-        if (upstream.compareAndSet(null, s)) {
-            if (upfrontRequest > 0) {
-                s.request(upfrontRequest);
-            }
-        } else {
-            throw new IllegalStateException("We already have a subscription");
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onNext(T t) {
-
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onError(Throwable t) {
-
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onComplete() {
-
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void request(long n) {
-        Subscription subscription = upstream.get();
-        if (subscription != null) {
-            subscription.request(n);
-        } else {
-            throw new IllegalStateException("No subscription");
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        Subscription subscription = upstream.get();
-        if (subscription != null) {
-            subscription.cancel();
-        } else {
-            throw new IllegalStateException("No subscription");
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

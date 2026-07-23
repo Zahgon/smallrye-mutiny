@@ -9,7 +9,6 @@ import java.util.function.Function;
 
 import io.smallrye.common.annotation.CheckReturnValue;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.converters.uni.BuiltinConverters;
 
 public class UniConvert<T> {
 
@@ -19,32 +18,22 @@ public class UniConvert<T> {
         this.upstream = nonNull(upstream, "upstream");
     }
 
-    /**
-     * Transforms this {@link Uni} into a type using the provided converter.
-     *
-     * @param converter the converter function
-     * @return an instance of R
-     * @param <R> the result type
-     * @throws RuntimeException if the conversion fails.
-     */
     public <R> R with(Function<Uni<T>, R> converter) {
-        // No interception for converters
-        return nonNull(converter, "converter").apply(upstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @CheckReturnValue
     public CompletionStage<T> toCompletionStage() {
-        return with(BuiltinConverters.toCompletionStage());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @CheckReturnValue
     public CompletableFuture<T> toCompletableFuture() {
-        return with(BuiltinConverters.toCompletableFuture());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @CheckReturnValue
     public Flow.Publisher<T> toPublisher() {
-        return with(BuiltinConverters.toPublisher());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

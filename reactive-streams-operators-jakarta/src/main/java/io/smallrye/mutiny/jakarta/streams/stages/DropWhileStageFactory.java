@@ -9,7 +9,6 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.jakarta.streams.Engine;
 import io.smallrye.mutiny.jakarta.streams.operators.ProcessingStage;
 import io.smallrye.mutiny.jakarta.streams.operators.ProcessingStageFactory;
-import io.smallrye.mutiny.jakarta.streams.utils.Casts;
 
 /**
  * Implementation of the {@link Stage.DropWhile} stage.
@@ -20,11 +19,11 @@ public class DropWhileStageFactory implements ProcessingStageFactory<Stage.DropW
 
     @Override
     public <I, O> ProcessingStage<I, O> create(Engine engine, Stage.DropWhile stage) {
-        Predicate<I> predicate = Casts.cast(stage.getPredicate());
-        return Casts.cast(new TakeWhile<>(predicate));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static class TakeWhile<I> implements ProcessingStage<I, I> {
+
         private final Predicate<I> predicate;
 
         TakeWhile(Predicate<I> predicate) {
@@ -33,7 +32,7 @@ public class DropWhileStageFactory implements ProcessingStageFactory<Stage.DropW
 
         @Override
         public Multi<I> apply(Multi<I> source) {
-            return source.skip().first(predicate);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

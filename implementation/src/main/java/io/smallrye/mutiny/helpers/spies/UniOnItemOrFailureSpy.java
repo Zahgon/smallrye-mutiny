@@ -6,6 +6,7 @@ import io.smallrye.mutiny.subscription.UniSubscriber;
 public class UniOnItemOrFailureSpy<T> extends UniSpyBase<T> {
 
     private volatile T lastItem;
+
     private volatile Throwable lastFailure;
 
     UniOnItemOrFailureSpy(Uni<T> upstream) {
@@ -13,42 +14,29 @@ public class UniOnItemOrFailureSpy<T> extends UniSpyBase<T> {
     }
 
     public boolean hasFailed() {
-        return lastFailure != null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public T lastItem() {
-        return lastItem;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void reset() {
-        super.reset();
-        lastItem = null;
-        lastFailure = null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public Throwable lastFailure() {
-        return lastFailure;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(UniSubscriber<? super T> downstream) {
-        upstream()
-                .onItemOrFailure().invoke((item, failure) -> {
-                    synchronized (UniOnItemOrFailureSpy.this) {
-                        lastItem = item;
-                        lastFailure = failure;
-                    }
-                    incrementInvocationCount();
-                })
-                .subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "UniOnItemOrFailureSpy{" +
-                "lastItem=" + lastItem +
-                ", lastFailure=" + lastFailure +
-                "} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

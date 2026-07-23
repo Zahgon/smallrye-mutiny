@@ -1,7 +1,6 @@
 package io.smallrye.mutiny.groups;
 
 import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-import static io.smallrye.mutiny.helpers.ParameterValidation.validate;
 
 import java.time.Duration;
 
@@ -16,15 +15,8 @@ public class UniIfNoItem<T> {
         this.upstream = nonNull(upstream, "upstream");
     }
 
-    /**
-     * Configures the timeout duration.
-     *
-     * @param timeout the timeout, must not be {@code null}, must be strictly positive.
-     * @return a new {@link UniOnTimeout}
-     */
     @CheckReturnValue
     public UniOnTimeout<T> after(Duration timeout) {
-        return new UniOnTimeout<>(upstream, validate(timeout, "timeout"), null);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

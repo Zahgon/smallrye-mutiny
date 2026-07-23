@@ -11,13 +11,11 @@ public class UniOnCancellationSpy<T> extends UniSpyBase<T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> downstream) {
-        upstream()
-                .onCancellation().invoke(this::incrementInvocationCount)
-                .subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "UniOnCancellationSpy{} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -10,6 +10,7 @@ abstract class FlatMapManager<T> {
     private int[] free = FREE_EMPTY;
 
     private long producerIndex;
+
     private long consumerIndex;
 
     private final AtomicInteger size = new AtomicInteger();
@@ -27,79 +28,23 @@ abstract class FlatMapManager<T> {
     abstract void setIndex(T entry, int index);
 
     final void unsubscribe() {
-        unsubscribe(false);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     final void unsubscribe(boolean fromOnError) {
-        T[] a;
-        T[] t = terminated();
-        synchronized (this) {
-            a = inners.get();
-            if (a == t) {
-                return;
-            }
-            size.lazySet(0);
-            free = null;
-            inners.set(t);
-        }
-        for (T e : a) {
-            if (e != null) {
-                unsubscribeEntry(e, fromOnError);
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     final T[] get() {
-        return inners.get();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     final boolean add(T entry) {
-        T[] a = inners.get();
-        if (a == terminated()) {
-            return false;
-        }
-        synchronized (this) {
-            a = inners.get();
-            if (a == terminated()) {
-                return false;
-            }
-
-            int idx = pollFree();
-            if (idx < 0) {
-                int n = a.length;
-                T[] b = n != 0 ? newArray(n << 1) : newArray(4);
-                System.arraycopy(a, 0, b, 0, n);
-
-                inners.set(b);
-                a = b;
-
-                int m = b.length;
-                int[] u = new int[m];
-                for (int i = n + 1; i < m; i++) {
-                    u[i] = i;
-                }
-                free = u;
-                consumerIndex = n + 1L;
-                producerIndex = m;
-
-                idx = n;
-            }
-            setIndex(entry, idx);
-            a[idx] = entry;
-            size.incrementAndGet();
-        }
-        return true;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     final void remove(int index) {
-        synchronized (this) {
-            T[] a = inners.get();
-            if (a != terminated()) {
-                a[index] = null;
-                offerFree(index);
-                size.decrementAndGet();
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private int pollFree() {
@@ -124,6 +69,6 @@ abstract class FlatMapManager<T> {
     }
 
     final boolean isEmpty() {
-        return size.get() == 0;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

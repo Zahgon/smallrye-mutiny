@@ -1,7 +1,5 @@
 package io.smallrye.mutiny.converters.uni;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
 import java.util.concurrent.Flow;
 import java.util.function.Function;
 
@@ -15,7 +13,6 @@ import io.smallrye.mutiny.Uni;
 // must not happen. In (3), the emission could happen.
 // 4. If the uni item is `null` the stream is completed. If the uni item is not `null`, the stream contains
 // the item and the end of stream signal. In the case of error, the stream propagates the error.
-
 public class ToPublisher<T> implements Function<Uni<T>, Flow.Publisher<T>> {
 
     public static final ToPublisher INSTANCE = new ToPublisher();
@@ -26,8 +23,6 @@ public class ToPublisher<T> implements Function<Uni<T>, Flow.Publisher<T>> {
 
     @Override
     public Flow.Publisher<T> apply(Uni<T> uni) {
-        //return new UniPublisher<>(nonNull(uni, "uni"));
-        return new UniToMultiPublisher<>(nonNull(uni, "uni"));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

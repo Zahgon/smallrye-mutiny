@@ -6,6 +6,7 @@ import io.smallrye.mutiny.subscription.UniSubscription;
  * A onSubscribe signal.
  */
 public final class OnSubscribeUniSignal implements UniSignal {
+
     private final UniSubscription subscription;
 
     public OnSubscribeUniSignal(UniSubscription subscription) {
@@ -14,13 +15,11 @@ public final class OnSubscribeUniSignal implements UniSignal {
 
     @Override
     public UniSubscription value() {
-        return subscription;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "OnSubscribeSignal{" +
-                "subscription=" + subscription +
-                '}';
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

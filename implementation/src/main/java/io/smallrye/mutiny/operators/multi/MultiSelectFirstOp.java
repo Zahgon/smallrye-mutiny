@@ -1,12 +1,9 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.Subscriptions.CANCELLED;
-
 import java.util.concurrent.Flow.Subscription;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
 /**
@@ -28,13 +25,13 @@ public final class MultiSelectFirstOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        ParameterValidation.nonNullNpe(downstream, "subscriber");
-        upstream.subscribe(new MultiSelectFirstProcessor<>(downstream, numberOfItems));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class MultiSelectFirstProcessor<T> extends MultiOperatorProcessor<T, T> {
 
         private final long numberOfItems;
+
         private long remaining;
 
         MultiSelectFirstProcessor(MultiSubscriber<? super T> downstream, long numberOfItems) {
@@ -45,53 +42,17 @@ public final class MultiSelectFirstOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (compareAndSetUpstreamSubscription(null, s)) {
-                if (numberOfItems == 0) {
-                    getAndSetUpstreamSubscription(CANCELLED).cancel();
-                    Subscriptions.complete(downstream);
-                } else {
-                    downstream.onSubscribe(this);
-                }
-            } else {
-                s.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T t) {
-            if (getUpstreamSubscription() == Subscriptions.CANCELLED) {
-                return;
-            }
-
-            MultiSubscriber<? super T> actual = downstream;
-
-            long r = remaining;
-
-            if (r == 0) {
-                getAndSetUpstreamSubscription(CANCELLED).cancel();
-                actual.onCompletion();
-                return;
-            }
-
-            remaining = --r;
-            downstream.onItem(t);
-            if (r == 0L) {
-                getAndSetUpstreamSubscription(CANCELLED).cancel();
-                actual.onCompletion();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long n) {
-            Subscription upstream = getUpstreamSubscription();
-            if (upstream != CANCELLED) {
-                if (n >= numberOfItems) {
-                    upstream.request(Long.MAX_VALUE);
-                } else {
-                    upstream.request(n);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

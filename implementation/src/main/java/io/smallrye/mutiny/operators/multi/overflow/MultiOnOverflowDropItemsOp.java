@@ -9,7 +9,6 @@ import java.util.function.Function;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.operators.multi.AbstractMultiOperator;
 import io.smallrye.mutiny.operators.multi.MultiOperatorProcessor;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
@@ -17,6 +16,7 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
 public class MultiOnOverflowDropItemsOp<T> extends AbstractMultiOperator<T, T> {
 
     private final Consumer<T> dropConsumer;
+
     private final Function<T, Uni<?>> dropUniMapper;
 
     public MultiOnOverflowDropItemsOp(Multi<? extends T> upstream, Consumer<T> dropConsumer,
@@ -36,7 +36,7 @@ public class MultiOnOverflowDropItemsOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new MultiOnOverflowDropItemsProcessor(downstream));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     class MultiOnOverflowDropItemsProcessor extends MultiOperatorProcessor<T, T> {
@@ -49,31 +49,12 @@ public class MultiOnOverflowDropItemsOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Flow.Subscription subscription) {
-            if (compareAndSetUpstreamSubscription(null, subscription)) {
-                downstream.onSubscribe(this);
-                getUpstreamSubscription().request(Long.MAX_VALUE);
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T item) {
-            if (isDone()) {
-                return;
-            }
-            long req = requested.get();
-            if (req != 0L) {
-                downstream.onItem(item);
-                Subscriptions.subtract(requested, 1);
-            } else {
-                // no request, dropping.
-                if (dropConsumer != null) {
-                    notifyOnOverflowInvoke(item);
-                } else if (dropUniMapper != null) {
-                    notifyOnOverflowCall(item);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void notifyOnOverflowInvoke(T item) {
@@ -87,12 +68,9 @@ public class MultiOnOverflowDropItemsOp<T> extends AbstractMultiOperator<T, T> {
         private void notifyOnOverflowCall(T item) {
             try {
                 Uni<?> uni = nonNull(dropUniMapper.apply(item), "uni");
-                uni.subscribe().with(
-                        context(),
-                        ignored -> {
-                            // Just drop and ignore
-                        },
-                        super::onFailure);
+                uni.subscribe().with(context(), ignored -> {
+                    // Just drop and ignore
+                }, super::onFailure);
             } catch (Throwable failure) {
                 super.onFailure(failure);
             }
@@ -100,12 +78,7 @@ public class MultiOnOverflowDropItemsOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void request(long n) {
-            if (n > 0) {
-                Subscriptions.add(requested, n);
-            } else {
-                cancel();
-                downstream.onFailure(Subscriptions.getInvalidRequestException());
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

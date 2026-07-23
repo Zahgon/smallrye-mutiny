@@ -7,11 +7,7 @@ public interface MutinyInterceptor {
      */
     int DEFAULT_ORDINAL = 100;
 
-    /**
-     * @return the interceptor ordinal. The ordinal is used to sort the interceptor. Lower value are executed first.
-     *         Default is 100.
-     */
     default int ordinal() {
-        return DEFAULT_ORDINAL;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

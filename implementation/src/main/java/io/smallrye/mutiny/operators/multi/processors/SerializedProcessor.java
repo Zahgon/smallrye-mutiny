@@ -13,15 +13,16 @@ import java.util.concurrent.Flow.Subscription;
  * @param <O> the type of item propagated to the downstream
  */
 public class SerializedProcessor<I, O> implements Processor<I, O> {
+
     /**
      * The actual subscriber to serialize Subscriber calls to.
-     **/
+     */
     private final Processor<I, O> actual;
 
     /**
      * Indicates an emission is going on.
      * Access by be guarded by the monitor lock.
-     **/
+     */
     boolean emitting;
 
     /**
@@ -31,7 +32,7 @@ public class SerializedProcessor<I, O> implements Processor<I, O> {
 
     /**
      * Indicates a terminal event has been received and all further events will be dropped.
-     **/
+     */
     volatile boolean done;
 
     /**
@@ -45,35 +46,12 @@ public class SerializedProcessor<I, O> implements Processor<I, O> {
 
     @Override
     public void subscribe(Subscriber<? super O> downstream) {
-        actual.subscribe(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onSubscribe(Subscription s) {
-        boolean cancel;
-        if (!done) {
-            synchronized (this) {
-                if (done) {
-                    cancel = true;
-                } else {
-                    if (emitting) {
-                        List<Object> q = getOrCreateQueue();
-                        q.add(new SubscriptionEvent(s));
-                        return;
-                    }
-                    emitting = true;
-                    cancel = false;
-                }
-            }
-        } else {
-            cancel = true;
-        }
-        if (cancel) {
-            s.cancel();
-        } else {
-            actual.onSubscribe(s);
-            emitLoop();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private List<Object> getOrCreateQueue() {
@@ -87,113 +65,26 @@ public class SerializedProcessor<I, O> implements Processor<I, O> {
 
     @Override
     public void onNext(I item) {
-        if (done) {
-            return;
-        }
-        synchronized (this) {
-            if (done) {
-                return;
-            }
-            if (emitting) {
-                List<Object> q = getOrCreateQueue();
-                q.add(new ItemEvent<>(item));
-                return;
-            }
-            emitting = true;
-        }
-        actual.onNext(item);
-        emitLoop();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onError(Throwable t) {
-        if (done) {
-            return;
-        }
-        synchronized (this) {
-            if (done) {
-                return;
-            } else {
-                done = true;
-                if (emitting) {
-                    List<Object> q = getOrCreateQueue();
-                    q.add(0, new FailureEvent(t));
-                    return;
-                }
-                emitting = true;
-            }
-        }
-        actual.onError(t);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onComplete() {
-        if (done) {
-            return;
-        }
-        synchronized (this) {
-            if (done) {
-                return;
-            }
-            done = true;
-            if (emitting) {
-                List<Object> q = getOrCreateQueue();
-                q.add(new CompletionEvent());
-                return;
-            }
-            emitting = true;
-        }
-        actual.onComplete();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Loops until all notifications in the queue has been processed.
-     */
     void emitLoop() {
-        for (;;) {
-            List<Object> q;
-            synchronized (this) {
-                q = queue;
-                if (q == null) {
-                    emitting = false;
-                    return;
-                }
-                queue = null;
-            }
-
-            dispatch(q, actual);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Dispatches the events contained in the queue to the given subscriber.
-     *
-     * @param queue the queue of event
-     * @param subscriber the subscriber to emit the events to
-     */
     @SuppressWarnings("unchecked")
     public void dispatch(List<Object> queue, Subscriber<I> subscriber) {
-        for (Object event : queue) {
-            if (event != null) {
-                if (event instanceof SerializedProcessor.SubscriptionEvent) {
-                    subscriber.onSubscribe(((SubscriptionEvent) event).subscription);
-                }
-
-                if (event instanceof SerializedProcessor.FailureEvent) {
-                    subscriber.onError(((FailureEvent) event).failure);
-                    return;
-                }
-
-                if (event instanceof SerializedProcessor.CompletionEvent) {
-                    subscriber.onComplete();
-                    return;
-                }
-
-                if (event instanceof SerializedProcessor.ItemEvent) {
-                    subscriber.onNext(((ItemEvent<I>) event).item);
-                }
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private record SubscriptionEvent(Subscription subscription) {
@@ -206,6 +97,7 @@ public class SerializedProcessor<I, O> implements Processor<I, O> {
     }
 
     private static class CompletionEvent {
+
         private CompletionEvent() {
             // do nothing.
         }

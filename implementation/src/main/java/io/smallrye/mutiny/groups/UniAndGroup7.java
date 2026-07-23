@@ -1,51 +1,34 @@
 package io.smallrye.mutiny.groups;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
 import io.smallrye.common.annotation.CheckReturnValue;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.tuples.*;
 
 public class UniAndGroup7<T1, T2, T3, T4, T5, T6, T7> extends UniAndGroupIterable<T1> {
 
-    public UniAndGroup7(Uni<? extends T1> source, Uni<? extends T2> o1, Uni<? extends T3> o2,
-            Uni<? extends T4> o3, Uni<? extends T5> o4, Uni<? extends T6> o5,
-            Uni<? extends T7> o6) {
+    public UniAndGroup7(Uni<? extends T1> source, Uni<? extends T2> o1, Uni<? extends T3> o2, Uni<? extends T4> o3,
+            Uni<? extends T5> o4, Uni<? extends T6> o5, Uni<? extends T7> o6) {
         super(source, Arrays.asList(o1, o2, o3, o4, o5, o6));
     }
 
     @Override
     @CheckReturnValue
     public UniAndGroup7<T1, T2, T3, T4, T5, T6, T7> collectFailures() {
-        super.collectFailures();
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @CheckReturnValue
     public Uni<Tuple7<T1, T2, T3, T4, T5, T6, T7>> asTuple() {
-        return combine(Tuple7::of);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Limit the number of concurrent upstream subscriptions.
-     * <p>
-     * When not specified all upstream {@link Uni} are being subscribed when the combining {@link Uni} is subscribed.
-     * <p>
-     * Setting a limit is useful when you have a large number of {@link Uni} to combine and their simultaneous
-     * subscriptions might overwhelm resources (e.g., database connections, etc).
-     *
-     * @param level the concurrency level, must be strictly positive
-     * @return an object to configure the combination logic
-     */
     @CheckReturnValue
     public UniAndGroup7<T1, T2, T3, T4, T5, T6, T7> usingConcurrencyOf(int level) {
-        super.usingConcurrencyOf(level);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -59,9 +42,7 @@ public class UniAndGroup7<T1, T2, T3, T4, T5, T6, T7> extends UniAndGroupIterabl
 
     @CheckReturnValue
     public <O> Uni<O> with(Functions.Function7<T1, T2, T3, T4, T5, T6, T7, O> combinator) {
-        Functions.Function7<T1, T2, T3, T4, T5, T6, T7, O> actual = Infrastructure
-                .decorate(nonNull(combinator, "combinator"));
-        return combine(actual);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings("unchecked")
@@ -75,7 +56,6 @@ public class UniAndGroup7<T1, T2, T3, T4, T5, T6, T7> extends UniAndGroupIterabl
             T5 item5 = (T5) list.get(4);
             T6 item6 = (T6) list.get(5);
             T7 item7 = (T7) list.get(6);
-
             return combinator.apply(item1, item2, item3, item4, item5, item6, item7);
         };
         return super.with(function);
@@ -83,9 +63,7 @@ public class UniAndGroup7<T1, T2, T3, T4, T5, T6, T7> extends UniAndGroupIterabl
 
     @CheckReturnValue
     public <O> Uni<O> withUni(Functions.Function7<T1, T2, T3, T4, T5, T6, T7, Uni<O>> combinator) {
-        Functions.Function7<T1, T2, T3, T4, T5, T6, T7, Uni<O>> actual = Infrastructure
-                .decorate(nonNull(combinator, "combinator"));
-        return combineUni(actual);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings("unchecked")
@@ -99,7 +77,6 @@ public class UniAndGroup7<T1, T2, T3, T4, T5, T6, T7> extends UniAndGroupIterabl
             T5 item5 = (T5) list.get(4);
             T6 item6 = (T6) list.get(5);
             T7 item7 = (T7) list.get(6);
-
             return combinator.apply(item1, item2, item3, item4, item5, item6, item7);
         };
         return super.with(function).flatMap(Function.identity());

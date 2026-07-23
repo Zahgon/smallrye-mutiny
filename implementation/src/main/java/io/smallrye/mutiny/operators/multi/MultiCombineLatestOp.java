@@ -1,12 +1,7 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.Subscriptions.CANCELLED;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.Flow.Publisher;
 import java.util.concurrent.Flow.Subscription;
@@ -17,7 +12,6 @@ import java.util.function.Function;
 
 import io.smallrye.mutiny.Context;
 import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.helpers.queues.Queues;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.operators.MultiOperator;
@@ -40,9 +34,7 @@ public class MultiCombineLatestOp<I, O> extends MultiOperator<I, O> {
 
     private final boolean delayErrors;
 
-    public MultiCombineLatestOp(
-            Iterable<? extends Publisher<? extends I>> upstreams,
-            Function<List<?>, ? extends O> combinator,
+    public MultiCombineLatestOp(Iterable<? extends Publisher<? extends I>> upstreams, Function<List<?>, ? extends O> combinator,
             int bufferSize, boolean delayErrors) {
         super(null);
         this.upstreams = ParameterValidation.doesNotContainNull(upstreams, "upstreams");
@@ -53,60 +45,47 @@ public class MultiCombineLatestOp<I, O> extends MultiOperator<I, O> {
 
     @Override
     public void subscribe(MultiSubscriber<? super O> downstream) {
-        Objects.requireNonNull(downstream, "The subscriber must not be `null`");
-        List<Publisher<? extends I>> publishers = new ArrayList<>();
-        this.upstreams.forEach(publishers::add);
-
-        if (publishers.isEmpty()) {
-            Subscriptions.complete(downstream);
-            return;
-        }
-
-        if (publishers.size() == 1) {
-            publishers.get(0).subscribe(
-                    Infrastructure.onMultiSubscription(publishers.get(0),
-                            new MultiMapOp.MapProcessor<>(downstream,
-                                    x -> combinator.apply(Collections.singletonList(x)))));
-            return;
-        }
-
-        CombineLatestCoordinator<I, O> coordinator = new CombineLatestCoordinator<>(downstream, combinator,
-                publishers.size(),
-                bufferSize, delayErrors);
-        downstream.onSubscribe(coordinator);
-        coordinator.subscribe(publishers);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static final class CombineLatestCoordinator<I, O> implements Subscription {
 
         private final MultiSubscriber<? super O> downstream;
+
         private final Function<List<?>, ? extends O> combinator;
+
         private final List<CombineLatestInnerSubscriber<I>> subscribers = new ArrayList<>();
+
         private final Queue<Object> queue;
+
         private final Object[] latest;
+
         private final boolean delayErrors;
 
         private int nonEmptySources;
+
         private int completedSources;
+
         private volatile boolean cancelled;
+
         private volatile boolean done;
+
         private final AtomicLong requested = new AtomicLong();
+
         private final AtomicReference<Throwable> failure = new AtomicReference<>();
+
         private final AtomicInteger wip = new AtomicInteger();
 
-        CombineLatestCoordinator(MultiSubscriber<? super O> downstream,
-                Function<List<?>, ? extends O> combinator, int size,
+        CombineLatestCoordinator(MultiSubscriber<? super O> downstream, Function<List<?>, ? extends O> combinator, int size,
                 int bufferSize, boolean delayErrors) {
             this.downstream = downstream;
             this.combinator = combinator;
-
             Context context;
             if (downstream instanceof ContextSupport) {
                 context = ((ContextSupport) downstream).context();
             } else {
                 context = Context.empty();
             }
-
             for (int i = 0; i < size; i++) {
                 subscribers.add(new CombineLatestInnerSubscriber<>(context, this, i, bufferSize));
             }
@@ -117,21 +96,12 @@ public class MultiCombineLatestOp<I, O> extends MultiOperator<I, O> {
 
         @Override
         public void request(long n) {
-            if (n > 0) {
-                Subscriptions.add(requested, n);
-                drain();
-            } else {
-                cancelAll();
-                failure.set(Subscriptions.getInvalidRequestException());
-                done = true;
-                drain();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            cancelled = true;
-            cancelAll();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void subscribe(List<Publisher<? extends I>> sources) {
@@ -146,186 +116,49 @@ public class MultiCombineLatestOp<I, O> extends MultiOperator<I, O> {
         }
 
         void innerValue(int index, I value) {
-            boolean replenishInsteadOfDrain;
-            synchronized (this) {
-                Object[] os = latest;
-
-                int localNonEmptySources = nonEmptySources;
-
-                if (os[index] == null) {
-                    localNonEmptySources++;
-                    nonEmptySources = localNonEmptySources;
-                }
-                os[index] = value;
-                if (os.length == localNonEmptySources) {
-                    queue.offer(subscribers.get(index));
-                    queue.offer(os.clone());
-                    replenishInsteadOfDrain = false;
-                } else {
-                    replenishInsteadOfDrain = true;
-                }
-            }
-
-            if (replenishInsteadOfDrain) {
-                subscribers.get(index).requestOneItem();
-            } else {
-                drain();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void innerComplete(int index) {
-            synchronized (this) {
-                Object[] os = latest;
-
-                if (os[index] != null) {
-                    int localCompletedSources = completedSources + 1;
-
-                    if (localCompletedSources == os.length) {
-                        done = true;
-                    } else {
-                        completedSources = localCompletedSources;
-                        return;
-                    }
-                } else {
-                    done = true;
-                }
-            }
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void innerError(int index, Throwable e) {
-            if (Subscriptions.addFailure(failure, e)) {
-                if (!delayErrors) {
-                    cancelAll();
-                    done = true;
-                    drain();
-                } else {
-                    innerComplete(index);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @SuppressWarnings("unchecked")
         void drainAsync() {
-            final Queue<Object> q = queue;
-
-            int missed = 1;
-
-            for (;;) {
-                long req = requested.get();
-                long emitter = 0L;
-                while (emitter != req) {
-                    boolean d = done;
-                    Object v = q.poll();
-                    boolean empty = v == null;
-                    if (isEmptyOrDone(d, empty)) {
-                        return;
-                    }
-                    if (empty) {
-                        break;
-                    }
-
-                    I[] va;
-                    do {
-                        // There is a possible race-condition due to double stacking in the queue
-                        va = (I[]) q.poll();
-                    } while (va == null);
-
-                    O resultOfCombination;
-                    try {
-                        resultOfCombination = combinator.apply(Arrays.asList(va));
-                        if (resultOfCombination == null) {
-                            throw new NullPointerException("The combinator returned `null`");
-                        }
-                    } catch (Throwable ex) {
-                        cancelAll();
-                        Subscriptions.addFailure(failure, ex);
-                        Subscriptions.terminateAndPropagate(failure, downstream);
-                        return;
-                    }
-                    downstream.onItem(resultOfCombination);
-
-                    ((CombineLatestInnerSubscriber<I>) v).requestOneItem();
-
-                    emitter++;
-                }
-
-                if (emitter == req) {
-                    if (isEmptyOrDone(done, q.isEmpty())) {
-                        return;
-                    }
-                }
-
-                if (emitter != 0L && req != Long.MAX_VALUE) {
-                    requested.addAndGet(-emitter);
-                }
-
-                missed = wip.addAndGet(-missed);
-                if (missed == 0) {
-                    break;
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void drain() {
-            if (wip.getAndIncrement() != 0) {
-                return;
-            }
-
-            drainAsync();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         boolean isEmptyOrDone(boolean d, boolean empty) {
-            if (cancelled) {
-                cancelAll();
-                queue.clear();
-                return true;
-            }
-
-            if (d) {
-                if (delayErrors) {
-                    if (empty) {
-                        cancelAll();
-                        Throwable prev = Subscriptions.terminate(failure);
-                        if (prev != null && prev != Subscriptions.TERMINATED) {
-                            downstream.onFailure(prev);
-                        } else {
-                            downstream.onCompletion();
-                        }
-                        return true;
-                    }
-                } else {
-                    Throwable prev = Subscriptions.terminate(failure);
-                    if (prev != null && prev != Subscriptions.TERMINATED) {
-                        cancelAll();
-                        queue.clear();
-                        downstream.onFailure(prev);
-                        return true;
-                    } else if (empty) {
-                        cancelAll();
-                        downstream.onCompletion();
-                        return true;
-                    }
-                }
-            }
-            return false;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void cancelAll() {
-            for (CombineLatestInnerSubscriber<I> inner : subscribers) {
-                inner.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
     private static final class CombineLatestInnerSubscriber<T> implements MultiSubscriber<T>, ContextSupport {
 
         private final AtomicReference<Subscription> upstream = new AtomicReference<>();
+
         private final Context context;
+
         private final CombineLatestCoordinator<T, ?> parent;
+
         private final int index;
+
         private final int prefetch;
+
         private final int limit;
+
         int produced;
 
         CombineLatestInnerSubscriber(Context context, CombineLatestCoordinator<T, ?> parent, int index, int prefetch) {
@@ -338,46 +171,35 @@ public class MultiCombineLatestOp<I, O> extends MultiOperator<I, O> {
 
         @Override
         public void onSubscribe(Subscription s) {
-            if (upstream.compareAndSet(null, s)) {
-                s.request(prefetch);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T t) {
-            parent.innerValue(index, t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable t) {
-            parent.innerError(index, t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            parent.innerComplete(index);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public void cancel() {
-            Subscription current = upstream.getAndSet(CANCELLED);
-            if (current != CANCELLED && current != null) {
-                current.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void requestOneItem() {
-            int p = produced + 1;
-            if (p == limit) {
-                produced = 0;
-                upstream.get().request(p);
-            } else {
-                produced = p;
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public Context context() {
-            return this.context;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

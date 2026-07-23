@@ -11,7 +11,6 @@ import java.util.function.Function;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.operators.multi.AbstractMultiOperator;
 import io.smallrye.mutiny.operators.multi.MultiOperatorProcessor;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
@@ -19,6 +18,7 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
 public class MultiOnOverflowKeepLastOp<T> extends AbstractMultiOperator<T, T> {
 
     private final Consumer<T> dropConsumer;
+
     private final Function<T, Uni<?>> dropUniMapper;
 
     public MultiOnOverflowKeepLastOp(Multi<? extends T> upstream, Consumer<T> dropConsumer, Function<T, Uni<?>> dropUniMapper) {
@@ -29,16 +29,19 @@ public class MultiOnOverflowKeepLastOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new MultiOnOverflowLatestProcessor(downstream));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     class MultiOnOverflowLatestProcessor extends MultiOperatorProcessor<T, T> {
 
         private final AtomicInteger wip = new AtomicInteger();
+
         private Throwable failure;
+
         private final AtomicLong requested = new AtomicLong();
 
         private volatile boolean done;
+
         private volatile boolean cancelled;
 
         private final AtomicReference<T> last = new AtomicReference<>();
@@ -49,103 +52,36 @@ public class MultiOnOverflowKeepLastOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Flow.Subscription subscription) {
-            if (compareAndSetUpstreamSubscription(null, subscription)) {
-                downstream.onSubscribe(this);
-                subscription.request(Long.MAX_VALUE);
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T t) {
-            T previous = last.getAndSet(t);
-            if (previous != null) {
-                if (dropConsumer != null) {
-                    notifyOnOverflowInvoke(previous);
-                } else if (dropUniMapper != null) {
-                    notifyOnOverflowCall(previous);
-                }
-            }
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable f) {
-            failure = f;
-            done = true;
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            done = true;
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long n) {
-            if (n > 0) {
-                Subscriptions.add(requested, n);
-                drain();
-            } else {
-                cancel();
-                downstream.onFailure(Subscriptions.getInvalidRequestException());
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (!cancelled) {
-                cancelled = true;
-                super.cancel();
-                if (wip.getAndIncrement() == 0) {
-                    last.lazySet(null);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void drain() {
-            if (wip.getAndIncrement() != 0) {
-                return;
-            }
-
-            int missed = 1;
-            final AtomicLong req = requested;
-            for (;;) {
-                long emitted = 0L;
-
-                while (emitted != req.get()) {
-                    boolean isDone = done;
-                    T v = last.getAndSet(null);
-                    boolean isEmpty = v == null;
-
-                    if (checkTerminated(isDone, isEmpty)) {
-                        return;
-                    }
-
-                    if (isEmpty) {
-                        break;
-                    }
-
-                    downstream.onItem(v);
-
-                    emitted++;
-                }
-
-                if (emitted == req.get() && checkTerminated(done, last.get() == null)) {
-                    return;
-                }
-
-                if (emitted != 0L) {
-                    Subscriptions.subtract(req, emitted);
-                }
-
-                missed = wip.addAndGet(-missed);
-                if (missed == 0) {
-                    break;
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void notifyOnOverflowInvoke(T possiblyDropped) {
@@ -160,34 +96,16 @@ public class MultiOnOverflowKeepLastOp<T> extends AbstractMultiOperator<T, T> {
             // Some exceptions may be dropped in cascade
             try {
                 Uni<?> uni = nonNull(dropUniMapper.apply(possiblyDropped), "uni");
-                uni.subscribe().with(
-                        context(),
-                        ignored -> {
-                            // Nothing to do
-                        }, super::onFailure);
+                uni.subscribe().with(context(), ignored -> {
+                    // Nothing to do
+                }, super::onFailure);
             } catch (Throwable failure) {
                 super.onFailure(failure);
             }
         }
 
         boolean checkTerminated(boolean wasDone, boolean wasEmpty) {
-            if (cancelled) {
-                last.lazySet(null);
-                return true;
-            }
-
-            if (wasDone) {
-                if (failure != null) {
-                    last.lazySet(null);
-                    super.onFailure(failure);
-                    return true;
-                } else if (wasEmpty) {
-                    super.onCompletion();
-                    return true;
-                }
-            }
-
-            return false;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

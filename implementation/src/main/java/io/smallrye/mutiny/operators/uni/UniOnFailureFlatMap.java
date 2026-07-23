@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 
 import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.operators.UniOperator;
 import io.smallrye.mutiny.subscription.UniSubscriber;
@@ -17,12 +16,12 @@ import io.smallrye.mutiny.subscription.UniSubscription;
 public class UniOnFailureFlatMap<I, E> extends UniOperator<I, I> {
 
     private final Function<E, Uni<? extends I>> mapper;
+
     private final Predicate<? super Throwable> predicate;
+
     private final Class<E> typeOfFailure;
 
-    public UniOnFailureFlatMap(Uni<I> upstream,
-            Predicate<? super Throwable> predicate,
-            Function<E, Uni<? extends I>> mapper,
+    public UniOnFailureFlatMap(Uni<I> upstream, Predicate<? super Throwable> predicate, Function<E, Uni<? extends I>> mapper,
             Class<E> typeOfFailure) {
         super(nonNull(upstream, "upstream"));
         this.mapper = nonNull(mapper, "mapper");
@@ -31,7 +30,7 @@ public class UniOnFailureFlatMap<I, E> extends UniOperator<I, I> {
     }
 
     public void subscribe(UniSubscriber<? super I> subscriber) {
-        AbstractUni.subscribe(upstream(), new UniOnFailureFlatMapProcessor(subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class UniOnFailureFlatMapProcessor extends UniOperatorProcessor<I, I> {
@@ -44,38 +43,17 @@ public class UniOnFailureFlatMap<I, E> extends UniOperator<I, I> {
 
         @Override
         public void onSubscribe(UniSubscription subscription) {
-            if (getCurrentUpstreamSubscription() == null) {
-                super.onSubscribe(subscription);
-            } else if (innerSubscription == null) {
-                if (isCancelled()) {
-                    subscription.cancel();
-                    return;
-                }
-                this.innerSubscription = subscription;
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            if (isCancelled()) {
-                Infrastructure.handleDroppedException(failure);
-                return;
-            }
-            if (innerSubscription == null) {
-                dispatch(failure);
-            } else {
-                downstream.onFailure(failure);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (innerSubscription != null) {
-                innerSubscription.cancel();
-            }
-            super.cancel();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void dispatch(Throwable failure) {

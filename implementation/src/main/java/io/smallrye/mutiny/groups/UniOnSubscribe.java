@@ -8,9 +8,6 @@ import java.util.function.Supplier;
 
 import io.smallrye.common.annotation.CheckReturnValue;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.smallrye.mutiny.operators.uni.UniOnSubscribeCall;
-import io.smallrye.mutiny.operators.uni.UniOnSubscribeInvoke;
 import io.smallrye.mutiny.subscription.UniSubscription;
 
 /**
@@ -39,71 +36,23 @@ public class UniOnSubscribe<T> {
         this.upstream = nonNull(upstream, "upstream");
     }
 
-    /**
-     * Produces a new {@link Uni} invoking the given callback when the {@code subscription} is received.
-     * <p>
-     * The callback in invoked before passing a subscription event downstream.
-     * If the callback throws an exception, the downstream receives a subscription and the failure immediately.
-     *
-     * @param callback the callback, must not be {@code null}.
-     * @return the new {@link Uni}
-     */
     @CheckReturnValue
     public Uni<T> invoke(Consumer<? super UniSubscription> callback) {
-        Consumer<? super UniSubscription> actual = Infrastructure.decorate(nonNull(callback, "callback"));
-        return Infrastructure.onUniCreation(
-                new UniOnSubscribeInvoke<>(upstream, actual));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a new {@link Uni} invoking the given callback when the {@code subscription} is received.
-     * <p>
-     * The callback in invoked before passing a subscription event downstream.
-     * If the callback throws an exception, the downstream receives a subscription and the failure immediately.
-     *
-     * @param callback the callback, must not be {@code null}.
-     * @return the new {@link Uni}
-     */
     @CheckReturnValue
     public Uni<T> invoke(Runnable callback) {
-        Runnable actual = nonNull(callback, "callback");
-        // Decoration happens in `invoke`
-        return invoke(ignored -> actual.run());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a new {@link Uni} invoking the given @{code action} when the {@code subscription} event is received.
-     * <p>
-     * Unlike {@link #invoke(Consumer)}, the passed function returns a {@link Uni}. When the produced {@code Uni} sends
-     * the subscription, the function is called. The subscription event is passed downstream only when the {@link Uni}
-     * completes. If the produced {@code Uni} fails or if the function throws an exception, the failure is propagated
-     * downstream.
-     *
-     * @param action the callback, must not be {@code null}
-     * @return the new {@link Uni}
-     */
     @CheckReturnValue
     public Uni<T> call(Function<? super UniSubscription, Uni<?>> action) {
-        Function<? super UniSubscription, Uni<?>> actual = Infrastructure.decorate(nonNull(action, "action"));
-        return Infrastructure.onUniCreation(
-                new UniOnSubscribeCall<>(upstream, actual));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a new {@link Uni} invoking the given @{code action} when the {@code subscription} event is received.
-     * <p>
-     * Unlike {@link #invoke(Consumer)}, the passed function returns a {@link Uni}. When the produced {@code Uni} sends
-     * the subscription, the function is called. The subscription event is passed downstream only when the {@link Uni}
-     * completes. If the produced {@code Uni} fails or if the function throws an exception, the failure is propagated
-     * downstream.
-     *
-     * @param action the callback, must not be {@code null}
-     * @return the new {@link Uni}
-     */
     @CheckReturnValue
     public Uni<T> call(Supplier<Uni<?>> action) {
-        Supplier<Uni<?>> actual = Infrastructure.decorate(nonNull(action, "action"));
-        return call(ignored -> actual.get());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

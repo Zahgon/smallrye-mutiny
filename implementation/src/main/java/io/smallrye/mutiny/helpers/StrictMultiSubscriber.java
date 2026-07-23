@@ -1,6 +1,5 @@
 package io.smallrye.mutiny.helpers;
 
-import java.util.Objects;
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,8 +23,7 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
  *
  * @param <T> the type of item
  */
-public class StrictMultiSubscriber<T>
-        implements MultiSubscriber<T>, Subscription, ContextSupport {
+public class StrictMultiSubscriber<T> implements MultiSubscriber<T>, Subscription, ContextSupport {
 
     private final AtomicInteger wip = new AtomicInteger();
 
@@ -51,57 +49,36 @@ public class StrictMultiSubscriber<T>
 
     @Override
     public void request(long n) {
-        if (n <= 0) {
-            cancel();
-            onError(new IllegalArgumentException("Reactive Streams Rule 3.9 violated: request must be positive, but was " + n));
-        } else {
-            Subscriptions.requestIfNotNullOrAccumulate(upstream, requested, n);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        if (!done) {
-            Subscriptions.cancel(upstream);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onSubscribe(Subscription s) {
-        if (once.compareAndSet(false, true)) {
-            downstream.onSubscribe(this);
-            Subscriptions.setIfEmptyAndRequest(this.upstream, requested, s);
-        } else {
-            s.cancel();
-            cancel();
-            onError(new IllegalStateException("Reactive Streams Rule 2.12 violated: onSubscribe must be called at most once"));
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onItem(T t) {
-        Objects.requireNonNull(t);
-        HalfSerializer.onNext(downstream, t, wip, failure);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onFailure(Throwable t) {
-        done = true;
-        HalfSerializer.onError(downstream, t, wip, failure);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onCompletion() {
-        done = true;
-        HalfSerializer.onComplete(downstream, wip, failure);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Context context() {
-        if (downstream instanceof ContextSupport) {
-            return ((ContextSupport) downstream).context();
-        } else {
-            return Context.empty();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

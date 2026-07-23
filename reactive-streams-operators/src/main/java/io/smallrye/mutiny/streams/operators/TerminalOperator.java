@@ -14,6 +14,6 @@ public class TerminalOperator<T extends Stage> extends Operator<T> {
     }
 
     public <I, O> TerminalStage<I, O> create(Engine engine, T stage) {
-        return factory.create(engine, stage);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

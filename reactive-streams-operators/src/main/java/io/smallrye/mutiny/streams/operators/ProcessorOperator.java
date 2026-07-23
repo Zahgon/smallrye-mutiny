@@ -14,6 +14,6 @@ public class ProcessorOperator<T extends Stage> extends Operator<T> {
     }
 
     public <I, O> ProcessingStage<I, O> create(Engine engine, T stage) {
-        return factory.create(engine, stage);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

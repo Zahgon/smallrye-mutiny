@@ -39,32 +39,19 @@ public interface DemandPacer {
             }
         }
 
-        /**
-         * Get the demand.
-         *
-         * @return the demand
-         */
         @Override
         public long demand() {
-            return demand;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
-        /**
-         * Get the delay
-         *
-         * @return the delay
-         */
         @Override
         public Duration delay() {
-            return delay;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public String toString() {
-            return "Request{" +
-                    "demand=" + demand +
-                    ", delay=" + delay +
-                    '}';
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 

@@ -1,6 +1,5 @@
 package io.smallrye.mutiny.tuples;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,14 +21,9 @@ public interface Tuple extends Iterable<Object> {
      */
     List<Object> asList();
 
-    /**
-     * Gets an immutable {@link Iterator} traversing the content of this {@link Tuple}.
-     *
-     * @return the iterator
-     */
     @Override
     default Iterator<Object> iterator() {
-        return Collections.unmodifiableList(asList()).iterator();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**

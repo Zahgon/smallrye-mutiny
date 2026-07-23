@@ -9,8 +9,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.smallrye.mutiny.Context;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.helpers.Subscriptions;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.subscription.ContextSupport;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 import io.smallrye.mutiny.subscription.SerializedSubscriber;
@@ -32,10 +30,7 @@ public final class MultiSkipUntilOtherOp<T, U> extends AbstractMultiOperator<T, 
 
     @Override
     public void subscribe(MultiSubscriber<? super T> actual) {
-        SkipUntilMainProcessor<T> main = new SkipUntilMainProcessor<>(actual);
-        OtherStreamTracker<U> otherSubscriber = new OtherStreamTracker<>(main);
-        other.subscribe(Infrastructure.onMultiSubscription(other, otherSubscriber));
-        upstream.subscribe(Infrastructure.onMultiSubscription(upstream, main));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings("SubscriberImplementation")
@@ -49,35 +44,34 @@ public final class MultiSkipUntilOtherOp<T, U> extends AbstractMultiOperator<T, 
 
         @Override
         public void onSubscribe(Subscription s) {
-            main.setOtherSubscription(s);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(U t) {
-            main.open();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable t) {
-            if (!main.isOpened()) {
-                main.onFailure(t);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            main.open();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public Context context() {
-            return main.context();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
     static final class SkipUntilMainProcessor<T> extends MultiOperatorProcessor<T, T> {
 
         private final AtomicReference<Subscription> other = new AtomicReference<>();
+
         private final AtomicBoolean gate = new AtomicBoolean(false);
 
         SkipUntilMainProcessor(Subscriber<? super T> downstream) {
@@ -85,48 +79,35 @@ public final class MultiSkipUntilOtherOp<T, U> extends AbstractMultiOperator<T, 
         }
 
         void open() {
-            if (gate.compareAndSet(false, true)) {
-                Subscriptions.cancel(other);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         boolean isOpened() {
-            return gate.get();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void setOtherSubscription(Subscription s) {
-            if (other.compareAndSet(null, s)) {
-                s.request(1);
-            } else {
-                s.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            super.cancel();
-            Subscriptions.cancel(other);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T t) {
-            if (gate.get()) {
-                downstream.onItem(t);
-            } else {
-                request(1);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable t) {
-            Subscriptions.cancel(other);
-            super.onFailure(t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            Subscriptions.cancel(other);
-            super.onCompletion();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

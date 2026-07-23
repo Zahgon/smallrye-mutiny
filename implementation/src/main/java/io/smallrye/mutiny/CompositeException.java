@@ -1,7 +1,5 @@
 package io.smallrye.mutiny;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.smallrye.mutiny.groups.UniAndGroup;
@@ -59,26 +57,10 @@ public class CompositeException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        String messageFromSuper = super.getMessage();
-        StringBuilder message;
-        if (messageFromSuper != null) {
-            message = new StringBuilder(messageFromSuper);
-        } else {
-            message = new StringBuilder();
-        }
-        message.append("\n\t[Exception 0] ").append(getCause());
-        Throwable[] suppressed = getSuppressed();
-        for (int i = 0; i < suppressed.length; i++) {
-            Throwable cause = suppressed[i];
-            message.append("\n\t[Exception ").append(i + 1).append("] ").append(cause);
-        }
-        return message.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public List<Throwable> getCauses() {
-        List<Throwable> causes = new ArrayList<>();
-        causes.add(getCause());
-        causes.addAll(Arrays.asList(getSuppressed()));
-        return causes;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -12,13 +12,14 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
  * @param <T> the type of item.
  */
 public class MultiConnectAfter<T> extends MultiOperator<T, T> {
+
     private final int numberOfSubscribers;
+
     private final AtomicInteger count = new AtomicInteger();
+
     private final ConnectableMultiConnection connection;
 
-    public MultiConnectAfter(ConnectableMulti<T> upstream,
-            int numberOfSubscribers,
-            ConnectableMultiConnection connection) {
+    public MultiConnectAfter(ConnectableMulti<T> upstream, int numberOfSubscribers, ConnectableMultiConnection connection) {
         super(upstream);
         this.numberOfSubscribers = numberOfSubscribers;
         this.connection = connection;
@@ -26,13 +27,6 @@ public class MultiConnectAfter<T> extends MultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        if (downstream == null) {
-            throw new NullPointerException("The subscriber must not be `null`");
-        }
-        // TODO Wondering if we can just delay the subscription and not call connect.
-        upstream().subscribe().withSubscriber(downstream);
-        if (count.incrementAndGet() == numberOfSubscribers) {
-            ((ConnectableMulti) upstream()).connect(connection);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -26,11 +26,7 @@ public class MultiSelectLastOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        if (numberOfItems == 0) {
-            upstream.subscribe(new TakeSelectLastZeroProcessor<>(subscriber));
-        } else {
-            upstream.subscribe(new MultiSelectLastProcessor<>(subscriber, numberOfItems));
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class TakeSelectLastZeroProcessor<T> extends MultiOperatorProcessor<T, T> {
@@ -41,28 +37,25 @@ public class MultiSelectLastOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Flow.Subscription subscription) {
-            if (compareAndSetUpstreamSubscription(null, subscription)) {
-                // Propagate subscription to downstream.
-                downstream.onSubscribe(this);
-                // Dropping all values.
-                subscription.request(Long.MAX_VALUE);
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T t) {
-            // Do nothing, we are dropping all the values.
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
     static final class MultiSelectLastProcessor<T> extends MultiOperatorProcessor<T, T> {
 
         private final int numberOfItems;
+
         private final ArrayDeque<T> queue;
+
         private final AtomicLong requested = new AtomicLong();
+
         private final AtomicInteger wip = new AtomicInteger();
+
         volatile boolean upstreamCompleted;
 
         MultiSelectLastProcessor(MultiSubscriber<? super T> downstream, int numberOfItems) {
@@ -73,38 +66,22 @@ public class MultiSelectLastOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void request(long n) {
-            if (n <= 0) {
-                onFailure(Subscriptions.getInvalidRequestException());
-                return;
-            }
-            Subscriptions.add(requested, n);
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onSubscribe(Flow.Subscription subscription) {
-            if (compareAndSetUpstreamSubscription(null, subscription)) {
-                // Propagate subscription to downstream.
-                downstream.onSubscribe(this);
-                subscription.request(Long.MAX_VALUE);
-
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T t) {
-            if (queue.size() == numberOfItems) {
-                queue.poll();
-            }
-            queue.offer(t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            upstreamCompleted = true;
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void drain() {
@@ -116,7 +93,6 @@ public class MultiSelectLastOp<T> extends AbstractMultiOperator<T, T> {
                     }
                     if (upstreamCompleted) {
                         long count = 0L;
-
                         while (count != req) {
                             if (getUpstreamSubscription() == Subscriptions.CANCELLED) {
                                 return;
@@ -127,11 +103,9 @@ public class MultiSelectLastOp<T> extends AbstractMultiOperator<T, T> {
                                 downstream.onCompletion();
                                 return;
                             }
-
                             downstream.onItem(item);
                             count++;
                         }
-
                         if (count != 0L && req != Long.MAX_VALUE) {
                             req = requested.addAndGet(-count);
                         }
@@ -139,6 +113,5 @@ public class MultiSelectLastOp<T> extends AbstractMultiOperator<T, T> {
                 } while (wip.decrementAndGet() != 0);
             }
         }
-
     }
 }

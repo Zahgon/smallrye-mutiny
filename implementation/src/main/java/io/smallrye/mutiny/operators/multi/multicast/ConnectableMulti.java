@@ -1,12 +1,9 @@
-
 package io.smallrye.mutiny.operators.multi.multicast;
 
 import java.time.Duration;
 import java.util.concurrent.Flow;
 
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.operators.AbstractMulti;
 
 /**
@@ -33,44 +30,15 @@ public abstract class ConnectableMulti<T> extends AbstractMulti<T> {
      */
     protected abstract void connect(ConnectableMultiConnection connection);
 
-    /**
-     * Returns a {@code Multi} that stays connected to this {@code ConnectableMulti} as long as there
-     * is at least one active subscription.
-     *
-     * @return a {@link Multi}
-     */
     public Multi<T> referenceCount() {
-        return Infrastructure.onMultiCreation(new MultiReferenceCount<>(this));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Connects to the upstream {@code ConnectableMulti} if the number of subscribers reaches the specified amount and
-     * disconnect after the specified duration after all subscribers have unsubscribed (cancelled their subscriptions).
-     *
-     * @param count the number of subscribers that trigger the emissions
-     * @param duration the duration, can be {@code null}, if set must be positive
-     * @return the new Multi instance
-     */
     public Multi<T> referenceCount(int count, Duration duration) {
-        if (duration != null) {
-            ParameterValidation.validate(duration, "duration");
-        }
-        ParameterValidation.positive(count, "count");
-        return Infrastructure.onMultiCreation(new MultiReferenceCount<>(this, count, duration));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Returns a {@link Multi} that connect to the upstream as soon as the {@code numberOfSubscribers} subscribers
-     * subscribe.
-     * The connection stays opens even if the subscribers cancelled the subscription.
-     * Other subscribers can subscribe, it would not re-subscribe to the upstream.
-     *
-     * @param numberOfSubscribers the number of subscribe to reach before subscribing to upstream.
-     * @return the multi
-     */
     public Multi<T> connectAfter(int numberOfSubscribers) {
-        ParameterValidation.positive(numberOfSubscribers, "numberOfSubscribers");
-        return Infrastructure.onMultiCreation(new MultiConnectAfter<>(this, numberOfSubscribers, null));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

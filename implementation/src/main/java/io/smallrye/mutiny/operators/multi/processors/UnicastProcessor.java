@@ -1,6 +1,5 @@
 package io.smallrye.mutiny.operators.multi.processors;
 
-import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.Flow;
 import java.util.concurrent.Flow.Processor;
@@ -10,11 +9,7 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.Consumer;
 
 import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.helpers.Subscriptions;
-import io.smallrye.mutiny.helpers.queues.Queues;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.operators.AbstractMulti;
-import io.smallrye.mutiny.subscription.BackPressureFailure;
 import io.smallrye.mutiny.subscription.BackPressureStrategy;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
@@ -34,41 +29,32 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
 public class UnicastProcessor<T> extends AbstractMulti<T> implements Processor<T, T>, Flow.Subscription {
 
     private final Runnable onTermination;
+
     private final Queue<T> queue;
 
     private volatile boolean done = false;
+
     private volatile Throwable failure = null;
+
     private volatile boolean cancelled = false;
 
     private volatile Flow.Subscriber<? super T> downstream = null;
+
     private static final AtomicReferenceFieldUpdater<UnicastProcessor, Flow.Subscriber> DOWNSTREAM_UPDATER = AtomicReferenceFieldUpdater
             .newUpdater(UnicastProcessor.class, Flow.Subscriber.class, "downstream");
 
     private final AtomicInteger wip = new AtomicInteger();
+
     private final AtomicLong requested = new AtomicLong();
 
     private volatile boolean hasUpstream;
 
-    /**
-     * Creates a new {@link UnicastProcessor} using a new unbounded queue.
-     *
-     * @param <I> the type of item
-     * @return the unicast processor
-     */
     public static <I> UnicastProcessor<I> create() {
-        return new UnicastProcessor<>(Queues.<I> unbounded(Infrastructure.getBufferSizeS()).get(), null);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Creates a new {@link UnicastProcessor} using the given queue.
-     *
-     * @param queue the queue, must not be {@code null}
-     * @param onTermination the termination callback, can be {@code null}
-     * @param <I> the type of item
-     * @return the unicast processor
-     */
     public static <I> UnicastProcessor<I> create(Queue<I> queue, Runnable onTermination) {
-        return new UnicastProcessor<>(queue, onTermination);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private UnicastProcessor(Queue<T> queue, Runnable onTermination) {
@@ -83,55 +69,13 @@ public class UnicastProcessor<T> extends AbstractMulti<T> implements Processor<T
     }
 
     void drainWithDownstream(Flow.Subscriber<? super T> actual) {
-        int missed = 1;
-
-        final Queue<T> q = queue;
-
-        for (;;) {
-
-            long r = requested.get();
-            long e = 0L;
-
-            while (r != e) {
-
-                T t = q.poll();
-                boolean empty = t == null;
-
-                if (isCancelledOrDone(done, empty)) {
-                    return;
-                }
-
-                if (empty) {
-                    break;
-                }
-
-                actual.onNext(t);
-
-                e++;
-            }
-
-            if (r == e) {
-                if (isCancelledOrDone(done, q.isEmpty())) {
-                    return;
-                }
-            }
-
-            if (e != 0 && r != Long.MAX_VALUE) {
-                requested.addAndGet(-e);
-            }
-
-            missed = wip.addAndGet(-missed);
-            if (missed == 0) {
-                break;
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void drain() {
         if (wip.getAndIncrement() != 0) {
             return;
         }
-
         int missed = 1;
         for (;;) {
             Flow.Subscriber<? super T> actual = downstream;
@@ -166,43 +110,17 @@ public class UnicastProcessor<T> extends AbstractMulti<T> implements Processor<T
 
     @Override
     public void onSubscribe(Flow.Subscription upstream) {
-        if (hasUpstream) {
-            upstream.cancel();
-            return;
-        }
-        if (isDoneOrCancelled()) {
-            upstream.cancel();
-        } else {
-            hasUpstream = true;
-            // Request max, it's the queue that buffer the items.
-            upstream.request(Long.MAX_VALUE);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        ParameterValidation.nonNull(downstream, "downstream");
-        if (DOWNSTREAM_UPDATER.compareAndSet(this, null, downstream)) {
-            downstream.onSubscribe(this);
-            if (!cancelled) {
-                drain();
-            }
-        } else {
-            Subscriptions.fail(downstream, new IllegalStateException("Already subscribed"));
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public synchronized void onNext(T t) {
-        if (isDoneOrCancelled()) {
-            return;
-        }
-        if (!queue.offer(t)) {
-            Throwable overflow = new BackPressureFailure("the queue is full");
-            onError(overflow);
-            return;
-        }
-        drain();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private boolean isDoneOrCancelled() {
@@ -211,64 +129,29 @@ public class UnicastProcessor<T> extends AbstractMulti<T> implements Processor<T
 
     @Override
     public void onError(Throwable failure) {
-        Objects.requireNonNull(failure);
-        if (isDoneOrCancelled()) {
-            return;
-        }
-
-        onTerminate();
-        this.failure = failure;
-        this.done = true;
-
-        drain();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onComplete() {
-        if (isDoneOrCancelled()) {
-            return;
-        }
-        onTerminate();
-        this.done = true;
-        drain();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void request(long n) {
-        if (n <= 0) {
-            cancelled = true;
-            downstream.onError(Subscriptions.getInvalidRequestException());
-        } else {
-            Subscriptions.add(requested, n);
-            drain();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        if (cancelled) {
-            return;
-        }
-        this.cancelled = true;
-        if (DOWNSTREAM_UPDATER.getAndSet(this, null) != null) {
-            onTerminate();
-            if (wip.getAndIncrement() == 0) {
-                queue.clear();
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Checks whether there is a subscriber listening for the emitted events.
-     * Mostly for testing purpose.
-     *
-     * @return {@code true} if there is a subscriber, {@code false} otherwise
-     */
     public boolean hasSubscriber() {
-        return downstream != null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public SerializedProcessor<T, T> serialized() {
-        return new SerializedProcessor<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

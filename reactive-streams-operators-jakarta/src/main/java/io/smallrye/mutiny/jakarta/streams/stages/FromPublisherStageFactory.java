@@ -1,15 +1,10 @@
 package io.smallrye.mutiny.jakarta.streams.stages;
 
-import java.util.Objects;
-
 import org.eclipse.microprofile.reactive.streams.operators.spi.Stage;
-import org.reactivestreams.Publisher;
 
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.jakarta.streams.Engine;
 import io.smallrye.mutiny.jakarta.streams.operators.PublisherStage;
 import io.smallrye.mutiny.jakarta.streams.operators.PublisherStageFactory;
-import mutiny.zero.flow.adapters.AdaptersToFlow;
 
 /**
  * Implementation of the {@link Stage.PublisherStage} stage.
@@ -21,7 +16,6 @@ public class FromPublisherStageFactory implements PublisherStageFactory<Stage.Pu
     @SuppressWarnings("unchecked")
     @Override
     public <O> PublisherStage<O> create(Engine engine, Stage.PublisherStage stage) {
-        Publisher<O> publisher = (Publisher<O>) Objects.requireNonNull(Objects.requireNonNull(stage.getRsPublisher()));
-        return () -> Multi.createFrom().publisher(AdaptersToFlow.publisher(publisher));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.function.Function;
 
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.helpers.ParameterValidation;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
 /**
@@ -24,60 +23,38 @@ public final class MultiDistinctByKeyOp<T, K> extends AbstractMultiOperator<T, T
 
     @Override
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        upstream.subscribe(
-                new DistinctByKeyProcessor<>(ParameterValidation.nonNullNpe(subscriber, "subscriber"), keyExtractor));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class DistinctByKeyProcessor<T, K> extends MultiOperatorProcessor<T, T> {
 
         private final Collection<K> foundKeys = new HashSet<>();
+
         private final Function<T, K> keyExtractor;
 
-        DistinctByKeyProcessor(MultiSubscriber<? super T> downstream,
-                Function<T, K> keyExtractor) {
+        DistinctByKeyProcessor(MultiSubscriber<? super T> downstream, Function<T, K> keyExtractor) {
             super(downstream);
             this.keyExtractor = keyExtractor;
         }
 
         @Override
         public void onItem(T t) {
-            if (isDone()) {
-                return;
-            }
-
-            boolean added;
-            try {
-                added = foundKeys.add(keyExtractor.apply(t));
-            } catch (Throwable e) {
-                // catch exception thrown by the equals / comparator
-                failAndCancel(e);
-                return;
-            }
-
-            if (added) {
-                downstream.onItem(t);
-            } else {
-                request(1);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable t) {
-            super.onFailure(t);
-            foundKeys.clear();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            super.onCompletion();
-            foundKeys.clear();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            super.cancel();
-            foundKeys.clear();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

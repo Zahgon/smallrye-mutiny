@@ -3,7 +3,6 @@ package io.smallrye.mutiny.helpers.spies;
 import java.util.concurrent.atomic.AtomicLong;
 
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
 public class MultiOnRequestSpy<T> extends MultiSpyBase<T> {
@@ -11,7 +10,7 @@ public class MultiOnRequestSpy<T> extends MultiSpyBase<T> {
     private final AtomicLong requestedCount = new AtomicLong();
 
     public long requestedCount() {
-        return requestedCount.get();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public MultiOnRequestSpy(Multi<? extends T> upstream) {
@@ -20,22 +19,16 @@ public class MultiOnRequestSpy<T> extends MultiSpyBase<T> {
 
     @Override
     public void reset() {
-        super.reset();
-        requestedCount.set(0);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.onRequest().invoke(count -> {
-            incrementInvocationCount();
-            Subscriptions.add(requestedCount, count);
-        }).subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "MultiOnRequestSpy{" +
-                "requestedCount=" + requestedCount +
-                "} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

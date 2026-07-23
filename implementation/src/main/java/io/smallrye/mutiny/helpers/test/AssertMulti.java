@@ -1,7 +1,6 @@
 package io.smallrye.mutiny.helpers.test;
 
 import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-import static io.smallrye.mutiny.helpers.ParameterValidation.positive;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -47,9 +46,13 @@ import io.smallrye.mutiny.Multi;
 public final class AssertMulti<T> {
 
     private final Multi<T> multi;
+
     private final Context context;
+
     private final List<Step<T>> steps = new ArrayList<>();
+
     private boolean frozen = false;
+
     private long initialRequest = Long.MAX_VALUE;
 
     private AssertMulti(Multi<T> multi, Context context) {
@@ -57,257 +60,87 @@ public final class AssertMulti<T> {
         this.context = nonNull(context, "context");
     }
 
-    /**
-     * Create a new {@link AssertMulti} for the given {@link Multi}.
-     *
-     * @param multi the Multi to verify, must not be {@code null}
-     * @param <T> the item type
-     * @return a new AssertMulti
-     */
     public static <T> AssertMulti<T> create(Multi<T> multi) {
-        return new AssertMulti<>(multi, Context.empty());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Create a new {@link AssertMulti} for the given {@link Multi} with a subscription {@link Context}.
-     *
-     * @param multi the Multi to verify, must not be {@code null}
-     * @param context the context, must not be {@code null}
-     * @param <T> the item type
-     * @return a new AssertMulti
-     */
     public static <T> AssertMulti<T> create(Multi<T> multi, Context context) {
-        return new AssertMulti<>(multi, context);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // ---- Configuration ----
-
-    /**
-     * Set the initial number of items to request from upstream on subscription.
-     * <p>
-     * Defaults to {@code Long.MAX_VALUE} (unbounded).
-     * Set to {@code 0} to disable initial demand and control backpressure explicitly with {@link #thenRequest(long)}.
-     *
-     * @param n the initial request count, must be {@code >= 0}
-     * @return this AssertMulti
-     */
     public AssertMulti<T> withInitialRequest(long n) {
-        if (n < 0) {
-            throw new IllegalArgumentException("initialRequest must be >= 0, was " + n);
-        }
-        this.initialRequest = n;
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // ---- Item expectations ----
-
-    /**
-     * Expect the next item to be equal to {@code expected}.
-     *
-     * @param expected the expected item
-     * @return this AssertMulti
-     */
     public AssertMulti<T> expectNext(T expected) {
-        return addStep(new Step.ExpectNext<>(List.of(expected)));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Expect the next items to be equal to {@code expected} in order.
-     *
-     * @param expected the expected items
-     * @return this AssertMulti
-     */
     @SafeVarargs
     public final AssertMulti<T> expectNext(T... expected) {
-        return addStep(new Step.ExpectNext<>(List.of(expected)));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Expect the next item to match the given predicate.
-     *
-     * @param predicate the predicate to test, must not be {@code null}
-     * @param description a description for error messages
-     * @return this AssertMulti
-     */
     public AssertMulti<T> expectNextMatches(Predicate<? super T> predicate, String description) {
-        nonNull(predicate, "predicate");
-        nonNull(description, "description");
-        return addStep(new Step.ExpectNextMatches<>(predicate, description));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Expect that the next {@code count} items are received (values are not checked).
-     *
-     * @param count the number of items to expect, must be positive
-     * @return this AssertMulti
-     */
     public AssertMulti<T> expectNextCount(int count) {
-        positive(count, "count");
-        return addStep(new Step.ExpectNextCount<>(count));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // ---- Consumer-based inspection ----
-
-    /**
-     * Consume and inspect the next item.
-     * The consumer should throw an {@link AssertionError} if the item is not acceptable.
-     *
-     * @param consumer the consumer, must not be {@code null}
-     * @return this AssertMulti
-     */
     public AssertMulti<T> consumeNext(Consumer<? super T> consumer) {
-        nonNull(consumer, "consumer");
-        return addStep(new Step.ConsumeNext<>(consumer));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Consume and inspect the next {@code count} items as a list.
-     * The consumer should throw an {@link AssertionError} if the items are not acceptable.
-     *
-     * @param count the number of items to collect, must be positive
-     * @param consumer the consumer, must not be {@code null}
-     * @return this AssertMulti
-     */
     public AssertMulti<T> consumeNextItems(int count, Consumer<? super List<T>> consumer) {
-        positive(count, "count");
-        nonNull(consumer, "consumer");
-        return addStep(new Step.ConsumeNextItems<>(count, consumer));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // ---- Demand control ----
-
-    /**
-     * Request {@code n} items from upstream.
-     * Use with {@link #withInitialRequest(long) withInitialRequest(0)} for explicit backpressure testing.
-     *
-     * @param n the number of items to request, must be positive
-     * @return this AssertMulti
-     */
     public AssertMulti<T> thenRequest(long n) {
-        positive(n, "n");
-        return addStep(new Step.ThenRequest<>(n));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // ---- Terminal expectations ----
-
-    /**
-     * Expect the stream to complete.
-     *
-     * @return this AssertMulti
-     */
     public AssertMulti<T> expectComplete() {
-        return addStep(new Step.ExpectComplete<>());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Expect the stream to fail with any failure.
-     *
-     * @return this AssertMulti
-     */
     public AssertMulti<T> expectFailure() {
-        return addStep(new Step.ExpectFailure<>(null));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Expect the stream to fail with a specific failure type.
-     *
-     * @param type the expected failure type
-     * @return this AssertMulti
-     */
     public AssertMulti<T> expectFailure(Class<? extends Throwable> type) {
-        nonNull(type, "type");
-        return addStep(new Step.ExpectFailure<>(t -> {
-            if (!type.isInstance(t)) {
-                throw new AssertionError(
-                        "Expected failure of type " + type.getName() + " but got " + t.getClass().getName(), t);
-            }
-        }));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Expect the stream to fail with a specific failure type and message substring.
-     *
-     * @param type the expected failure type
-     * @param messageSubstring a substring expected in the failure message
-     * @return this AssertMulti
-     */
     public AssertMulti<T> expectFailure(Class<? extends Throwable> type, String messageSubstring) {
-        nonNull(type, "type");
-        nonNull(messageSubstring, "messageSubstring");
-        return addStep(new Step.ExpectFailure<>(t -> {
-            if (!type.isInstance(t)) {
-                throw new AssertionError(
-                        "Expected failure of type " + type.getName() + " but got " + t.getClass().getName(), t);
-            }
-            if (t.getMessage() == null || !t.getMessage().contains(messageSubstring)) {
-                throw new AssertionError(
-                        "Expected failure message to contain '" + messageSubstring + "' but was '" + t.getMessage()
-                                + "'",
-                        t);
-            }
-        }));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Expect the stream to fail and validate the failure with a consumer.
-     *
-     * @param validator the failure validator, must not be {@code null}
-     * @return this AssertMulti
-     */
     public AssertMulti<T> expectFailure(Consumer<Throwable> validator) {
-        nonNull(validator, "validator");
-        return addStep(new Step.ExpectFailure<>(validator));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // ---- Cancellation ----
-
-    /**
-     * Cancel the subscription at this point in the step sequence.
-     *
-     * @return this AssertMulti
-     */
     public AssertMulti<T> thenCancel() {
-        return addStep(new Step.ThenCancel<>());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // ---- Execution ----
-
-    /**
-     * Subscribe to the Multi and execute all steps with the default timeout.
-     *
-     * @throws AssertionError if any step fails
-     */
     public void verify() {
-        verify(AssertSubscriber.DEFAULT_TIMEOUT);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Subscribe to the Multi and execute all steps with the given timeout per step.
-     *
-     * @param timeout the maximum wait time per step, must not be {@code null}
-     * @throws AssertionError if any step fails
-     */
     public void verify(Duration timeout) {
-        nonNull(timeout, "timeout");
-        freeze();
-        validate();
-
-        AssertSubscriber<T> subscriber = AssertSubscriber.create(context, initialRequest);
-        multi.subscribe().withSubscriber(subscriber);
-
-        int itemIndex = 0;
-        for (int i = 0; i < steps.size(); i++) {
-            Step<T> step = steps.get(i);
-            try {
-                itemIndex = executeStep(step, subscriber, timeout, itemIndex);
-            } catch (AssertionError e) {
-                throw new AssertionError("Step " + i + " [" + step.description() + "] failed: " + e.getMessage(), e);
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // ---- Internals ----
-
     private AssertMulti<T> addStep(Step<T> step) {
         if (frozen) {
             throw new IllegalStateException("Cannot add steps after verify() has been called");
@@ -352,8 +185,7 @@ public final class AssertMulti<T> {
             subscriber.awaitAtLeastItems(targetCount, timeout);
             T actual = subscriber.getItems().get(itemIndex);
             if (!expectNextMatches.predicate().test(actual)) {
-                throw new AssertionError(
-                        "received item <" + actual + "> did not match predicate");
+                throw new AssertionError("received item <" + actual + "> did not match predicate");
             }
             return targetCount;
         } else if (step instanceof Step.ExpectNextCount<T> expectNextCount) {
@@ -397,72 +229,79 @@ public final class AssertMulti<T> {
     }
 
     // ---- Step types ----
-
     sealed interface Step<T> {
 
         String description();
 
         record ExpectNext<T>(List<T> expected) implements Step<T> {
+
             @Override
             public String description() {
-                return "expectNext: " + expected;
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
 
-        record ExpectNextMatches<T>(Predicate<? super T> predicate,
-                String predicateDescription) implements Step<T> {
+        record ExpectNextMatches<T>(Predicate<? super T> predicate, String predicateDescription) implements Step<T> {
+
             @Override
             public String description() {
-                return "expectNextMatches: " + predicateDescription;
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
 
         record ExpectNextCount<T>(int count) implements Step<T> {
+
             @Override
             public String description() {
-                return "expectNextCount: " + count;
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
 
         record ConsumeNext<T>(Consumer<? super T> consumer) implements Step<T> {
+
             @Override
             public String description() {
-                return "consumeNext";
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
 
         record ConsumeNextItems<T>(int count, Consumer<? super List<T>> consumer) implements Step<T> {
+
             @Override
             public String description() {
-                return "consumeNextItems: " + count;
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
 
         record ThenRequest<T>(long n) implements Step<T> {
+
             @Override
             public String description() {
-                return "thenRequest: " + n;
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
 
         record ThenCancel<T>() implements Step<T> {
+
             @Override
             public String description() {
-                return "thenCancel";
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
 
         record ExpectComplete<T>() implements Step<T> {
+
             @Override
             public String description() {
-                return "expectComplete";
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
 
         record ExpectFailure<T>(Consumer<Throwable> validator) implements Step<T> {
+
             @Override
             public String description() {
-                return "expectFailure";
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
     }

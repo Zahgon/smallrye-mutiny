@@ -1,6 +1,5 @@
 package io.smallrye.mutiny.unchecked;
 
-import java.util.Objects;
 import java.util.function.BiConsumer;
 
 /**
@@ -15,16 +14,8 @@ import java.util.function.BiConsumer;
 @FunctionalInterface
 public interface UncheckedBiConsumer<T, U> {
 
-    /**
-     * Creates a {@link UncheckedBiConsumer} from an existing {@link BiConsumer}
-     *
-     * @param consumer the consumer
-     * @param <T> the type of the first argument to the operation
-     * @param <U> the type of the second argument to the operation
-     * @return the created {@link UncheckedBiConsumer}
-     */
     static <T, U> UncheckedBiConsumer<T, U> from(BiConsumer<T, U> consumer) {
-        return consumer::accept;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -36,40 +27,11 @@ public interface UncheckedBiConsumer<T, U> {
      */
     void accept(T t, U u) throws Exception;
 
-    /**
-     * Returns a composed {@code UncheckedBiConsumer} that performs, in sequence, this
-     * operation followed by the {@code after} operation. If performing either
-     * operation throws an exception, it is relayed to the caller of the
-     * composed operation. If performing this operation throws an exception,
-     * the {@code after} operation will not be performed.
-     *
-     * @param after the operation to perform after this operation
-     * @return a composed {@code UncheckedBiConsumer} that performs in sequence this
-     *         operation followed by the {@code after} operation
-     * @throws NullPointerException if {@code after} is null
-     */
     default UncheckedBiConsumer<T, U> andThen(UncheckedBiConsumer<? super T, ? super U> after) {
-        Objects.requireNonNull(after);
-
-        return (l, r) -> {
-            accept(l, r);
-            after.accept(l, r);
-        };
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * @return the {@link BiConsumer} associated with this {@code UncheckedBiConsumer}. If the operation throws an
-     *         exception, the exception is rethrown, wrapped in a {@link RuntimeException} if needed.
-     */
     default BiConsumer<T, U> toBiConsumer() {
-        return (x, y) -> {
-            try {
-                accept(x, y);
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        };
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -22,13 +22,13 @@ public final class MultiSkipFirstUntilOp<T> extends AbstractMultiOperator<T, T> 
 
     @Override
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        ParameterValidation.nonNullNpe(subscriber, "subscriber");
-        upstream.subscribe(new MultiSkipFirstUntilProcessor<>(subscriber, predicate));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class MultiSkipFirstUntilProcessor<T> extends MultiOperatorProcessor<T, T> {
 
         private final Predicate<? super T> predicate;
+
         private boolean gateOpen = false;
 
         MultiSkipFirstUntilProcessor(MultiSubscriber<? super T> downstream, Predicate<? super T> predicate) {
@@ -38,31 +38,7 @@ public final class MultiSkipFirstUntilOp<T> extends AbstractMultiOperator<T, T> 
 
         @Override
         public void onItem(T t) {
-            if (isDone()) {
-                return;
-            }
-
-            if (gateOpen) {
-                downstream.onItem(t);
-                return;
-            }
-
-            boolean toBeSkipped;
-            try {
-                toBeSkipped = predicate.test(t);
-            } catch (Throwable e) {
-                failAndCancel(e);
-                return;
-            }
-
-            if (!toBeSkipped) {
-                gateOpen = true;
-                downstream.onItem(t);
-                return;
-            }
-
-            request(1);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

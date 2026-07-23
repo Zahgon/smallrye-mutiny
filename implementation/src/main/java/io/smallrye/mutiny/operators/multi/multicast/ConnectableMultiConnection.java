@@ -13,11 +13,15 @@ public class ConnectableMultiConnection implements Runnable, Consumer<Cancellabl
     };
 
     private final MultiReferenceCount<?> parent;
+
     private final MultiSubscriber<?> subscriber;
+
     private final AtomicReference<Cancellable> onCancellation = new AtomicReference<>();
 
     private Cancellable timer;
+
     private long subscriberCount;
+
     private boolean connected;
 
     ConnectableMultiConnection(MultiReferenceCount<?> parent, MultiSubscriber<?> subscriber) {
@@ -27,82 +31,47 @@ public class ConnectableMultiConnection implements Runnable, Consumer<Cancellabl
 
     @Override
     public void run() {
-        parent.timeout(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void accept(Cancellable action) {
-        for (;;) {
-            Cancellable current = onCancellation.get();
-            if (current == CANCELLED) {
-                if (action != null) {
-                    action.cancel();
-                }
-            }
-            if (onCancellation.compareAndSet(current, action)) {
-                break;
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public synchronized boolean shouldConnectAfterIncrement(int toBeReached) {
-        subscriberCount = subscriberCount + 1;
-        if (!connected && subscriberCount == toBeReached) {
-            connected = true;
-            return true;
-        } else {
-            return false;
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public long getSubscriberCount() {
-        return subscriberCount;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public boolean isConnected() {
-        return connected;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public void cancelTimerIf0() {
-        boolean cancel;
-        synchronized (this) {
-            cancel = subscriberCount == 0L && timer != null;
-        }
-        if (cancel) {
-            timer.cancel();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public void cancel() {
-        Cancellable current = onCancellation.getAndSet(CANCELLED);
-        if (current != null && current != CANCELLED) {
-            current.cancel();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     synchronized boolean decrementAndReached0() {
-        if (subscriberCount == 1) {
-            subscriberCount = 0;
-            return true;
-        } else {
-            subscriberCount--;
-            return false;
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     synchronized long decrement() {
-        subscriberCount = subscriberCount - 1;
-        return subscriberCount;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     synchronized void setTimer(Cancellable cancellable) {
-        if (timer != null && timer != CANCELLED) {
-            timer.cancel();
-        }
-        this.timer = cancellable;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public MultiSubscriber<?> getSubscriber() {
-        return subscriber;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

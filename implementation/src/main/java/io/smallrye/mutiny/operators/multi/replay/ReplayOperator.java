@@ -20,7 +20,9 @@ public class ReplayOperator<T> extends AbstractMulti<T> {
     private final AppendOnlyReplayList replayList;
 
     private final AtomicBoolean upstreamSubscriptionRequested = new AtomicBoolean();
+
     private volatile Subscription upstreamSubscription = null;
+
     protected final CopyOnWriteArrayList<ReplaySubscription> subscriptions = new CopyOnWriteArrayList<>();
 
     public ReplayOperator(Multi<T> upstream, long numberOfItemsToReplay) {
@@ -35,45 +37,34 @@ public class ReplayOperator<T> extends AbstractMulti<T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        if (upstreamSubscriptionRequested.compareAndSet(false, true)) {
-            upstream.subscribe(new UpstreamSubscriber(subscriber));
-        }
-        ReplaySubscription replaySubscription = new ReplaySubscription(subscriber);
-        subscriptions.add(replaySubscription);
-        subscriber.onSubscribe(replaySubscription);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     protected class ReplaySubscription implements Subscription {
 
         private final MultiSubscriber<? super T> downstream;
+
         private final AtomicLong demand = new AtomicLong();
+
         private volatile boolean done = false;
+
         private final AppendOnlyReplayList.Cursor cursor;
 
         private ReplaySubscription(MultiSubscriber<? super T> downstream) {
             this.downstream = downstream;
             this.cursor = replayList.newCursor();
-            this.cursor.hasNext(); // Try to catch the replay stream at subscription time if ready
+            // Try to catch the replay stream at subscription time if ready
+            this.cursor.hasNext();
         }
 
         @Override
         public void request(long n) {
-            if (done) {
-                return;
-            }
-            if (n <= 0) {
-                cancel();
-                downstream.onFailure(Subscriptions.getInvalidRequestException());
-                return;
-            }
-            Subscriptions.add(demand, n);
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            done = true;
-            subscriptions.remove(this);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private final AtomicInteger wip = new AtomicInteger();
@@ -109,7 +100,8 @@ public class ReplayOperator<T> extends AbstractMulti<T> {
                         return;
                     }
                     T item = (T) cursor.read();
-                    assert item != null; // Invariant enforced by AppendOnlyReplayList
+                    // Invariant enforced by AppendOnlyReplayList
+                    assert item != null;
                     downstream.onItem(item);
                     emitted++;
                 }
@@ -144,37 +136,27 @@ public class ReplayOperator<T> extends AbstractMulti<T> {
 
         @Override
         public void onItem(T item) {
-            replayList.push(item);
-            triggerDrainLoops();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            replayList.pushFailure(failure);
-            markAsDone();
-            triggerDrainLoops();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            replayList.pushCompletion();
-            markAsDone();
-            triggerDrainLoops();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onSubscribe(Subscription subscription) {
-            upstreamSubscription = subscription;
-            upstreamSubscription.request(Long.MAX_VALUE);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public Context context() {
-            if (initialSubscriber instanceof ContextSupport) {
-                return ((ContextSupport) initialSubscriber).context();
-            } else {
-                return Context.empty();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void triggerDrainLoops() {

@@ -18,7 +18,9 @@ public class AverageOperator<T extends Number> implements Function<Multi<T>, Mul
     private final AtomicReference<State> state = new AtomicReference<>();
 
     private static class State {
+
         double sum = 0.0d;
+
         long count = 0L;
 
         State(double sum, long count) {
@@ -29,16 +31,6 @@ public class AverageOperator<T extends Number> implements Function<Multi<T>, Mul
 
     @Override
     public Multi<Double> apply(Multi<T> multi) {
-        return multi
-                .onItem().transform(x -> {
-                    State newState = this.state.updateAndGet(s -> {
-                        if (s == null) {
-                            return new State(x.doubleValue(), 1L);
-                        }
-                        return new State(x.doubleValue() + s.sum, s.count + 1L);
-                    });
-                    return newState.sum / (double) newState.count;
-                })
-                .onCompletion().ifEmpty().continueWith(0.0d);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

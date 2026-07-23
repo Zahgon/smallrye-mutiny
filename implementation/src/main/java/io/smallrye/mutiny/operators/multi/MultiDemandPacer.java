@@ -14,6 +14,7 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
 public class MultiDemandPacer<T> extends AbstractMultiOperator<T, T> {
 
     private final ScheduledExecutorService executor;
+
     private final DemandPacer pacer;
 
     public MultiDemandPacer(Multi<? extends T> upstream, ScheduledExecutorService executor, DemandPacer pacer) {
@@ -24,16 +25,19 @@ public class MultiDemandPacer<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        upstream.subscribe(new MultiSubscriptionPacerProcessor<>(subscriber, executor, pacer));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static class MultiSubscriptionPacerProcessor<T> extends MultiOperatorProcessor<T, T> {
 
         private final ScheduledExecutorService executor;
+
         private final DemandPacer pacer;
 
         private final AtomicLong itemsCounter = new AtomicLong();
+
         private ScheduledFuture<?> scheduledFuture;
+
         private DemandPacer.Request currentRequest;
 
         MultiSubscriptionPacerProcessor(MultiSubscriber<? super T> downstream, ScheduledExecutorService executor,
@@ -75,64 +79,32 @@ public class MultiDemandPacer<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Subscription subscription) {
-            if (compareAndSetUpstreamSubscription(null, subscription)) {
-                downstream.onSubscribe(this);
-                try {
-                    currentRequest = pacer.initial();
-                } catch (Throwable failure) {
-                    cancel();
-                    downstream.onFailure(failure);
-                    return;
-                }
-                if (currentRequest == null) {
-                    cancel();
-                    downstream.onFailure(new NullPointerException("The pacer provided a null initial request"));
-                } else {
-                    demandAndSchedule(executor);
-                }
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T item) {
-            if (upstream == Subscriptions.CANCELLED) {
-                return;
-            }
-            itemsCounter.incrementAndGet();
-            downstream.onItem(item);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            if (upstream == Subscriptions.CANCELLED) {
-                return;
-            }
-            cancel();
-            downstream.onFailure(failure);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            if (upstream == Subscriptions.CANCELLED) {
-                return;
-            }
-            cancel();
-            downstream.onCompletion();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (scheduledFuture != null) {
-                scheduledFuture.cancel(false);
-            }
-            super.cancel();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long numberOfItems) {
-            // Ignore on purpose
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

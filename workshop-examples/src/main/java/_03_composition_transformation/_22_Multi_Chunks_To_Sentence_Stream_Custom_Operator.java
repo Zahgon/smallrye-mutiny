@@ -2,8 +2,6 @@
 //DEPS io.smallrye.reactive:mutiny:3.3.0
 package _03_composition_transformation;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -16,25 +14,7 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
 public class _22_Multi_Chunks_To_Sentence_Stream_Custom_Operator {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println("⚡️ Chunks of text to sentence stream (with a custom operator)");
-
-        List<String> chunks = List.of(
-                "Hel",
-                "lo ",
-                "world\n",
-                "Foo",
-                " B",
-                "ar ",
-                "Baz\n");
-
-        Multi.createFrom().iterable(chunks)
-                .plug(TokenToSentence::new)
-                .onItem().transformToUniAndConcatenate(line -> sendText(line))
-                .subscribe().with(
-                        line -> System.out.println(">>> " + line),
-                        Throwable::printStackTrace,
-                        pool::shutdownNow);
-
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static class TokenToSentence extends AbstractMultiOperator<String, String> {
@@ -45,7 +25,7 @@ public class _22_Multi_Chunks_To_Sentence_Stream_Custom_Operator {
 
         @Override
         public void subscribe(MultiSubscriber<? super String> downstream) {
-            upstream.subscribe().withSubscriber(new TokenToSentenceProcessor(downstream));
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         static private class TokenToSentenceProcessor extends MultiOperatorProcessor<String, String> {
@@ -58,14 +38,7 @@ public class _22_Multi_Chunks_To_Sentence_Stream_Custom_Operator {
 
             @Override
             public void onItem(String chunk) {
-                builder.append(chunk);
-                String current = builder.toString();
-                if (current.endsWith("\n")) {
-                    builder.setLength(0);
-                    super.onItem(current.substring(0, current.length() - 1));
-                } else {
-                    upstream.request(1L);
-                }
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
     }
@@ -73,8 +46,6 @@ public class _22_Multi_Chunks_To_Sentence_Stream_Custom_Operator {
     static final ScheduledExecutorService pool = Executors.newSingleThreadScheduledExecutor();
 
     static Uni<String> sendText(String text) {
-        return Uni.createFrom().item(text)
-                .onItem().delayIt().onExecutor(pool).by(Duration.ofMillis(300))
-                .onItem().invoke(txt -> System.out.println("[sendText] " + txt));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -23,9 +23,6 @@ public interface UniSubscription extends Subscription, Cancellable {
 
     @Override
     default void request(long n) {
-        if (n < 1) {
-            throw new IllegalArgumentException("Invalid request");
-        }
-        // Ignored, on Uni the request happens at subscription time.
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

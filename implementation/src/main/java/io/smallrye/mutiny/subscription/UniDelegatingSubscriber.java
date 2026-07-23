@@ -14,22 +14,22 @@ public class UniDelegatingSubscriber<I, O> implements UniSubscriber<I> {
 
     @Override
     public Context context() {
-        return delegate.context();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onSubscribe(UniSubscription subscription) {
-        delegate.onSubscribe(subscription);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void onItem(I item) {
-        delegate.onItem((O) item);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onFailure(Throwable failure) {
-        delegate.onFailure(failure);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

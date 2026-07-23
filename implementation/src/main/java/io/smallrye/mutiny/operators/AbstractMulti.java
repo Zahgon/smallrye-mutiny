@@ -1,8 +1,5 @@
 package io.smallrye.mutiny.operators;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
-import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Flow;
 import java.util.function.BiFunction;
@@ -30,190 +27,166 @@ import io.smallrye.mutiny.groups.MultiOverflow;
 import io.smallrye.mutiny.groups.MultiSelect;
 import io.smallrye.mutiny.groups.MultiSkip;
 import io.smallrye.mutiny.groups.MultiSubscribe;
-import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.smallrye.mutiny.operators.multi.MultiCacheOp;
-import io.smallrye.mutiny.operators.multi.MultiDemandCapping;
-import io.smallrye.mutiny.operators.multi.MultiEmitOnOp;
-import io.smallrye.mutiny.operators.multi.MultiLogger;
-import io.smallrye.mutiny.operators.multi.MultiSubscribeOnOp;
-import io.smallrye.mutiny.operators.multi.MultiWithContext;
-import io.smallrye.mutiny.operators.multi.processors.BroadcastProcessor;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
-import io.smallrye.mutiny.subscription.MultiSubscriberAdapter;
 
 public abstract class AbstractMulti<T> implements Multi<T> {
 
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        this.subscribe(Infrastructure.onMultiSubscription(this, subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
-        // NOTE The Reactive Streams TCK mandates throwing an NPE.
-        Objects.requireNonNull(subscriber, "Subscriber is `null`");
-        MultiSubscriber<? super T> actual;
-        if (subscriber instanceof MultiSubscriber) {
-            actual = (MultiSubscriber<? super T>) subscriber;
-        } else {
-            actual = new MultiSubscriberAdapter<>(subscriber);
-        }
-        this.subscribe(actual);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOnItem<T> onItem() {
-        return new MultiOnItem<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiSubscribe<T> subscribe() {
-        return new MultiSubscribe<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Uni<T> toUni() {
-        return Uni.createFrom().publisher(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOnFailure<T> onFailure() {
-        return new MultiOnFailure<>(this, null);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOnFailure<T> onFailure(Predicate<? super Throwable> predicate) {
-        return new MultiOnFailure<>(this, predicate);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOnFailure<T> onFailure(Class<? extends Throwable> typeOfFailure) {
-        return new MultiOnFailure<>(this, typeOfFailure::isInstance);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiIfNoItem<T> ifNoItem() {
-        return new MultiIfNoItem<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Multi<T> cache() {
-        return Infrastructure.onMultiCreation(new MultiCacheOp<>(this));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Multi<T> emitOn(Executor executor) {
-        return emitOn(executor, Infrastructure.getBufferSizeS());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Multi<T> emitOn(Executor executor, int bufferSize) {
-        return Infrastructure.onMultiCreation(
-                new MultiEmitOnOp<>(
-                        this,
-                        nonNull(executor, "executor"),
-                        ParameterValidation.positive(bufferSize, "bufferSize")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Multi<T> runSubscriptionOn(Executor executor) {
-        return Infrastructure.onMultiCreation(new MultiSubscribeOnOp<>(this, executor));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOnCompletion<T> onCompletion() {
-        return new MultiOnCompletion<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiSelect<T> select() {
-        return new MultiSelect<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiSkip<T> skip() {
-        return new MultiSkip<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOverflow<T> onOverflow() {
-        return new MultiOverflow<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOnSubscribe<T> onSubscription() {
-        return new MultiOnSubscribe<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiBroadcast<T> broadcast() {
-        return new MultiBroadcast<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiConvert<T> convert() {
-        return new MultiConvert<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOnTerminate<T> onTermination() {
-        return new MultiOnTerminate<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOnCancel<T> onCancellation() {
-        return new MultiOnCancel<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiOnRequest<T> onRequest() {
-        return new MultiOnRequest<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiCollect<T> collect() {
-        return new MultiCollect<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiGroup<T> group() {
-        return new MultiGroup<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public Multi<T> toHotStream() {
-        BroadcastProcessor<T> processor = BroadcastProcessor.create();
-        this.subscribe(processor);
-        return processor;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Multi<T> log(String identifier) {
-        return Infrastructure.onMultiCreation(new MultiLogger<>(this, identifier));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Multi<T> log() {
-        return log("Multi." + this.getClass().getSimpleName());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public <R> Multi<R> withContext(BiFunction<Multi<T>, Context, Multi<R>> builder) {
-        return Infrastructure.onMultiCreation(new MultiWithContext<>(this, nonNull(builder, "builder")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiDemandPacing<T> paceDemand() {
-        return new MultiDemandPacing<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public MultiDemandPausing<T> pauseDemand() {
-        return new MultiDemandPausing<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Multi<T> capDemandsUsing(LongFunction<Long> function) {
-        return Infrastructure.onMultiCreation(new MultiDemandCapping<>(this, nonNull(function, "function")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

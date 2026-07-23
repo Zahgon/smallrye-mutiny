@@ -21,22 +21,6 @@ public class MaxOperator<T extends Comparable<T>> implements Function<Multi<T>, 
 
     @Override
     public Multi<T> apply(Multi<T> multi) {
-        return multi
-                .onItem().transformToMultiAndConcatenate(item -> {
-                    if (max.compareAndSet(null, item)) {
-                        return Multi.createFrom().item(item);
-                    }
-
-                    if (item == max.updateAndGet(t -> {
-                        if (t.compareTo(item) < 0) {
-                            return item;
-                        }
-                        return t;
-                    })) {
-                        return Multi.createFrom().item(item);
-                    }
-
-                    return Multi.createFrom().empty();
-                }).skip().repetitions();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

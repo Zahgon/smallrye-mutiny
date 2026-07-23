@@ -16,12 +16,15 @@ import io.smallrye.mutiny.subscription.UniSubscription;
 public class UniJoinAll<T> extends AbstractUni<List<T>> {
 
     public enum Mode {
+
         COLLECT_FAILURES,
         FAIL_FAST
     }
 
     private final List<Uni<T>> unis;
+
     private final Mode mode;
+
     private final int concurrency;
 
     public UniJoinAll(List<Uni<T>> unis, Mode mode, int concurrency) {
@@ -32,9 +35,7 @@ public class UniJoinAll<T> extends AbstractUni<List<T>> {
 
     @Override
     public void subscribe(UniSubscriber<? super List<T>> subscriber) {
-        UniJoinAllSubscription joinAllSubscription = new UniJoinAllSubscription(subscriber);
-        subscriber.onSubscribe(joinAllSubscription);
-        joinAllSubscription.triggerSubscriptions();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class UniJoinAllSubscription implements UniSubscription {
@@ -42,10 +43,13 @@ public class UniJoinAll<T> extends AbstractUni<List<T>> {
         private final UniSubscriber<? super List<T>> subscriber;
 
         private final AtomicReferenceArray<UniSubscription> subscriptions = new AtomicReferenceArray<>(unis.size());
+
         private final AtomicBoolean cancelled = new AtomicBoolean();
 
         private final AtomicReferenceArray<T> items = new AtomicReferenceArray<>(unis.size());
+
         private final List<Throwable> failures = Collections.synchronizedList(new ArrayList<>());
+
         private final AtomicInteger completionSignalsCount = new AtomicInteger();
 
         private AtomicInteger nextSubscriptionIndex;
@@ -55,34 +59,21 @@ public class UniJoinAll<T> extends AbstractUni<List<T>> {
         }
 
         public void triggerSubscriptions() {
-            int limit;
-            if (concurrency != -1) {
-                limit = Math.min(concurrency, unis.size());
-                nextSubscriptionIndex = new AtomicInteger(concurrency - 1);
-            } else {
-                limit = unis.size();
-            }
-            for (int index = 0; index < limit; index++) {
-                if (!trySubscribe(index, unis.get(index))) {
-                    break;
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private boolean trySubscribe(int index, Uni<? extends T> uni) {
             boolean proceed = !this.cancelled.get();
             if (proceed) {
-                uni.onSubscription()
-                        .invoke(subscription -> this.onSubscribe(index, subscription))
-                        .subscribe().with(subscriber.context(), item -> this.onItem(index, item), this::onFailure);
+                uni.onSubscription().invoke(subscription -> this.onSubscribe(index, subscription)).subscribe()
+                        .with(subscriber.context(), item -> this.onItem(index, item), this::onFailure);
             }
             return proceed;
         }
 
         @Override
         public void cancel() {
-            cancelled.set(true);
-            cancelSubscriptions();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void cancelSubscriptions() {

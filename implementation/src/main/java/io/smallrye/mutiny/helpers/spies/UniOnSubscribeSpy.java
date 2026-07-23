@@ -9,7 +9,7 @@ public class UniOnSubscribeSpy<T> extends UniSpyBase<T> {
     private volatile UniSubscription lastSubscription;
 
     public UniSubscription lastSubscription() {
-        return lastSubscription;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     UniOnSubscribeSpy(Uni<T> upstream) {
@@ -18,24 +18,16 @@ public class UniOnSubscribeSpy<T> extends UniSpyBase<T> {
 
     @Override
     public void reset() {
-        super.reset();
-        lastSubscription = null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(UniSubscriber<? super T> downstream) {
-        upstream()
-                .onSubscription().invoke(uniSubscription -> {
-                    incrementInvocationCount();
-                    lastSubscription = uniSubscription;
-                })
-                .subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "UniOnSubscribeSpy{" +
-                "lastSubscription=" + lastSubscription +
-                "} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -14,6 +14,6 @@ public class PublisherOperator<T extends Stage> extends Operator<T> {
     }
 
     public PublisherStage create(Engine engine, T stage) {
-        return factory.create(engine, stage);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -24,7 +24,9 @@ import io.smallrye.mutiny.subscription.UniSubscription;
 public class DefaultUniEmitter<T> implements UniEmitter<T>, UniSubscription {
 
     private final UniSubscriber<T> downstream;
+
     private final AtomicBoolean disposed = new AtomicBoolean();
+
     private final AtomicReference<Runnable> onTermination = new AtomicReference<>();
 
     DefaultUniEmitter(UniSubscriber<T> subscriber) {
@@ -33,10 +35,7 @@ public class DefaultUniEmitter<T> implements UniEmitter<T>, UniSubscription {
 
     @Override
     public void complete(T item) {
-        if (disposed.compareAndSet(false, true)) {
-            downstream.onItem(item);
-            terminate();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void terminate() {
@@ -48,41 +47,25 @@ public class DefaultUniEmitter<T> implements UniEmitter<T>, UniSubscription {
 
     @Override
     public void fail(Throwable failure) {
-        nonNull(failure, "failure");
-        if (disposed.compareAndSet(false, true)) {
-            downstream.onFailure(failure);
-            terminate();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniEmitter<T> onTermination(Runnable onTermination) {
-        Runnable actual = nonNull(onTermination, "onTermination");
-        if (!disposed.get()) {
-            this.onTermination.set(actual);
-            // Re-check if the termination didn't happen in the meantime
-            if (disposed.get()) {
-                terminate();
-            }
-        } else {
-            onTermination.run();
-        }
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        if (disposed.compareAndSet(false, true)) {
-            terminate();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public boolean isTerminated() {
-        return disposed.get();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Context context() {
-        return downstream.context();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

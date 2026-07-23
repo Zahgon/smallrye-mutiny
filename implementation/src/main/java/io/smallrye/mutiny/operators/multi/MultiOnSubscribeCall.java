@@ -3,7 +3,6 @@ package io.smallrye.mutiny.operators.multi;
 import static io.smallrye.mutiny.helpers.Subscriptions.CANCELLED;
 import static io.smallrye.mutiny.helpers.Subscriptions.empty;
 
-import java.util.Objects;
 import java.util.concurrent.Flow;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
@@ -25,25 +24,24 @@ public final class MultiOnSubscribeCall<T> extends AbstractMultiOperator<T, T> {
 
     private final Function<? super Flow.Subscription, Uni<?>> onSubscribe;
 
-    public MultiOnSubscribeCall(Multi<? extends T> upstream,
-            Function<? super Flow.Subscription, Uni<?>> onSubscribe) {
+    public MultiOnSubscribeCall(Multi<? extends T> upstream, Function<? super Flow.Subscription, Uni<?>> onSubscribe) {
         super(upstream);
         this.onSubscribe = onSubscribe;
     }
 
     @Override
     public void subscribe(MultiSubscriber<? super T> actual) {
-        if (actual == null) {
-            throw new NullPointerException("Subscriber must not be `null`");
-        }
-        upstream.subscribe().withSubscriber(new OnSubscribeSubscriber(actual));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private final class OnSubscribeSubscriber extends MultiOperatorProcessor<T, T> {
 
         private final ReentrantLock lock = new ReentrantLock();
+
         private Throwable failure;
+
         private boolean terminatedEarly;
+
         private boolean uniHasTerminated;
 
         OnSubscribeSubscriber(MultiSubscriber<? super T> downstream) {
@@ -52,20 +50,7 @@ public final class MultiOnSubscribeCall<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Flow.Subscription s) {
-            if (compareAndSetUpstreamSubscription(null, s)) {
-                try {
-                    Uni<?> uni = Objects.requireNonNull(onSubscribe.apply(s), "The produced Uni must not be `null`");
-                    uni.subscribe().with(
-                            context(),
-                            ignored -> uniCompleted(),
-                            err -> uniFailed(err));
-                } catch (Throwable e) {
-                    Subscriptions.fail(downstream, e);
-                    getAndSetUpstreamSubscription(CANCELLED).cancel();
-                }
-            } else {
-                s.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         /*
@@ -87,30 +72,14 @@ public final class MultiOnSubscribeCall<T> extends AbstractMultiOperator<T, T> {
          * Most notably, we need to make sure that we don't dispatch signals (e.g., onFailure())
          * while we hold a lock.
          */
-
         @Override
         public void onFailure(Throwable throwable) {
-            lock.lock();
-            if (!uniHasTerminated) {
-                terminatedEarly = true;
-                this.failure = throwable;
-                lock.unlock();
-            } else {
-                lock.unlock();
-                super.onFailure(throwable);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            lock.lock();
-            if (!uniHasTerminated) {
-                terminatedEarly = true;
-                lock.unlock();
-            } else {
-                lock.unlock();
-                super.onCompletion();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void uniFailed(Throwable failure) {
@@ -146,5 +115,4 @@ public final class MultiOnSubscribeCall<T> extends AbstractMultiOperator<T, T> {
             }
         }
     }
-
 }

@@ -1,6 +1,5 @@
 package io.smallrye.mutiny.jakarta.streams.stages;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -19,19 +18,14 @@ public class FindFirstStageFactory implements TerminalStageFactory<Stage.FindFir
 
     private static final TerminalStage<?, Optional<?>> INSTANCE = source -> {
         CompletableFuture<Optional<?>> future = new CompletableFuture<>();
-        source
-                .collect().first()
-                .subscribe().with(
-                        item -> future.complete(Optional.ofNullable(item)),
-                        future::completeExceptionally);
+        source.collect().first().subscribe().with(item -> future.complete(Optional.ofNullable(item)),
+                future::completeExceptionally);
         return future;
     };
 
     @SuppressWarnings("unchecked")
     @Override
     public <I, O> TerminalStage<I, O> create(Engine engine, Stage.FindFirst stage) {
-        Objects.requireNonNull(stage); // Not really useful here as it conveys no parameters, so just here for symmetry
-        return (TerminalStage<I, O>) INSTANCE;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

@@ -4,10 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-import io.smallrye.mutiny.helpers.Subscriptions;
-import io.smallrye.mutiny.helpers.queues.Queues;
 import io.smallrye.mutiny.operators.AbstractMulti;
-import io.smallrye.mutiny.subscription.BackPressureFailure;
 import io.smallrye.mutiny.subscription.BackPressureStrategy;
 import io.smallrye.mutiny.subscription.MultiEmitter;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
@@ -15,8 +12,11 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
 public final class EmitterBasedMulti<T> extends AbstractMulti<T> {
 
     public static final int HINT = 16;
+
     private final Consumer<MultiEmitter<? super T>> consumer;
+
     private final BackPressureStrategy backpressure;
+
     private final int overflowBufferSize;
 
     public EmitterBasedMulti(Consumer<MultiEmitter<? super T>> consumer, BackPressureStrategy backpressure) {
@@ -32,42 +32,7 @@ public final class EmitterBasedMulti<T> extends AbstractMulti<T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        BaseMultiEmitter<T> emitter;
-
-        switch (backpressure) {
-            case DROP:
-                emitter = new DropItemOnOverflowMultiEmitter<>(downstream);
-                break;
-
-            case ERROR:
-                emitter = new ErrorOnOverflowMultiEmitter<>(downstream);
-                break;
-
-            case IGNORE:
-                emitter = new IgnoreBackPressureMultiEmitter<>(downstream);
-                break;
-
-            case LATEST:
-                emitter = new DropLatestOnOverflowMultiEmitter<>(downstream);
-                break;
-
-            default:
-                if (overflowBufferSize == -1) {
-                    emitter = new BufferItemMultiEmitter<>(downstream, Queues.<T> unbounded(HINT).get(), overflowBufferSize);
-                } else {
-                    emitter = new BufferItemMultiEmitter<>(downstream, Queues.createMpscArrayQueue(overflowBufferSize),
-                            overflowBufferSize);
-                }
-                break;
-
-        }
-
-        downstream.onSubscribe(emitter);
-        try {
-            consumer.accept(emitter.serialize());
-        } catch (Throwable ex) {
-            emitter.fail(ex);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class IgnoreBackPressureMultiEmitter<T> extends BaseMultiEmitter<T> {
@@ -78,16 +43,8 @@ public final class EmitterBasedMulti<T> extends AbstractMulti<T> {
 
         @Override
         public MultiEmitter<T> emit(T item) {
-            downstream.onItem(item);
-
-            for (;;) {
-                long r = requested.get();
-                if (r == 0L || requested.compareAndSet(r, r - 1)) {
-                    return this;
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
-
     }
 
     abstract static class NoOverflowBaseMultiEmitter<T> extends BaseMultiEmitter<T> {
@@ -98,13 +55,7 @@ public final class EmitterBasedMulti<T> extends AbstractMulti<T> {
 
         @Override
         public final MultiEmitter<T> emit(T t) {
-            if (requested.get() != 0) {
-                downstream.onItem(t);
-                Subscriptions.produced(requested, 1);
-            } else {
-                onOverflow();
-            }
-            return this;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         abstract void onOverflow();
@@ -118,9 +69,8 @@ public final class EmitterBasedMulti<T> extends AbstractMulti<T> {
 
         @Override
         void onOverflow() {
-            // nothing to do, we drop the item.
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
-
     }
 
     static final class ErrorOnOverflowMultiEmitter<T> extends NoOverflowBaseMultiEmitter<T> {
@@ -131,16 +81,18 @@ public final class EmitterBasedMulti<T> extends AbstractMulti<T> {
 
         @Override
         void onOverflow() {
-            fail(new BackPressureFailure("Could not emit value due to lack of requests"));
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
-
     }
 
     static final class DropLatestOnOverflowMultiEmitter<T> extends BaseMultiEmitter<T> {
 
         private final AtomicReference<T> queue = new AtomicReference<>();
+
         private Throwable failure;
+
         private volatile boolean done;
+
         private final AtomicInteger wip = new AtomicInteger();
 
         DropLatestOnOverflowMultiEmitter(MultiSubscriber<? super T> downstream) {
@@ -149,107 +101,31 @@ public final class EmitterBasedMulti<T> extends AbstractMulti<T> {
 
         @Override
         public MultiEmitter<T> emit(T t) {
-            queue.set(t);
-            drain();
-            return this;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void failed(Throwable e) {
-            failure = e;
-            done = true;
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void completion() {
-            done = true;
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         void onRequested() {
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         void onUnsubscribed() {
-            if (wip.getAndIncrement() == 0) {
-                queue.lazySet(null);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void drain() {
-            if (wip.getAndIncrement() != 0) {
-                return;
-            }
-
-            int missed = 1;
-            final AtomicReference<T> q = queue;
-
-            do {
-                long r = requested.get();
-                long e = 0L;
-
-                while (e != r) {
-                    if (isCancelled()) {
-                        q.lazySet(null);
-                        return;
-                    }
-
-                    boolean d = done;
-
-                    T o = q.getAndSet(null);
-
-                    boolean empty = o == null;
-
-                    if (d && empty) {
-                        Throwable ex = failure;
-                        if (ex != null) {
-                            super.failed(ex);
-                        } else {
-                            super.completion();
-                        }
-                        return;
-                    }
-
-                    if (empty) {
-                        break;
-                    }
-
-                    downstream.onItem(o);
-
-                    e++;
-                }
-
-                if (e == r) {
-                    if (isCancelled()) {
-                        q.lazySet(null);
-                        return;
-                    }
-
-                    boolean d = done;
-
-                    boolean empty = q.get() == null;
-
-                    if (d && empty) {
-                        Throwable ex = failure;
-                        if (ex != null) {
-                            super.failed(ex);
-                        } else {
-                            super.completion();
-                        }
-                        return;
-                    }
-                }
-
-                if (e != 0) {
-                    Subscriptions.produced(requested, e);
-                }
-
-                missed = wip.addAndGet(-missed);
-            } while (missed != 0);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

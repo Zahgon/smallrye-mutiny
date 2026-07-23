@@ -3,18 +3,18 @@ package io.smallrye.mutiny.helpers.spies;
 import java.util.function.Predicate;
 
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.groups.MultiOnFailure;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
 public class MultiOnFailureSpy<T> extends MultiSpyBase<T> {
 
     private Predicate<? super Throwable> predicate;
+
     private Class<? extends Throwable> typeOfFailure;
 
     private volatile Throwable lastFailure;
 
     public Throwable lastFailure() {
-        return lastFailure;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     MultiOnFailureSpy(Multi<? extends T> upstream) {
@@ -33,30 +33,16 @@ public class MultiOnFailureSpy<T> extends MultiSpyBase<T> {
 
     @Override
     public void reset() {
-        super.reset();
-        lastFailure = null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(MultiSubscriber<? super T> dowstream) {
-        MultiOnFailure<? extends T> group;
-        if (predicate != null) {
-            group = upstream.onFailure(predicate);
-        } else if (typeOfFailure != null) {
-            group = upstream.onFailure(typeOfFailure);
-        } else {
-            group = upstream.onFailure();
-        }
-        group.invoke(failure -> {
-            incrementInvocationCount();
-            lastFailure = failure;
-        }).subscribe().withSubscriber(dowstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "MultiOnFailureSpy{" +
-                "lastFailure=" + lastFailure +
-                "} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

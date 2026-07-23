@@ -1,7 +1,5 @@
 package io.smallrye.mutiny.groups;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -9,16 +7,15 @@ import java.util.stream.StreamSupport;
 
 import io.smallrye.common.annotation.CheckReturnValue;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.smallrye.mutiny.operators.uni.UniAndCombination;
 
 public class UniAndGroupIterable<T1> {
 
     private final Uni<? extends T1> source;
+
     private final List<? extends Uni<?>> unis;
 
     private boolean collectFailures;
+
     private int concurrency = -1;
 
     public UniAndGroupIterable(Iterable<? extends Uni<?>> iterable) {
@@ -44,25 +41,12 @@ public class UniAndGroupIterable<T1> {
 
     @CheckReturnValue
     public UniAndGroupIterable<T1> collectFailures() {
-        collectFailures = true;
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Limit the number of concurrent upstream subscriptions.
-     * <p>
-     * When not specified all upstream {@link Uni} are being subscribed when the combining {@link Uni} is subscribed.
-     * <p>
-     * Setting a limit is useful when you have a large number of {@link Uni} to combine and their simultaneous
-     * subscriptions might overwhelm resources (e.g., database connections, etc).
-     *
-     * @param level the concurrency level, must be strictly positive
-     * @return an object to configure the combination logic
-     */
     @CheckReturnValue
     public UniAndGroupIterable<T1> usingConcurrencyOf(int level) {
-        this.concurrency = ParameterValidation.positive(level, "level");
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -80,36 +64,14 @@ public class UniAndGroupIterable<T1> {
         return with(function);
     }
 
-    /**
-     * Combine the items emitted by the {@link Uni unis}, and emit the result when all {@link Uni unis} have
-     * successfully completed. In case of failure, the failure is propagated.
-     *
-     * @param function the combination function
-     * @param <O> the combination value type
-     * @return the new {@link Uni}
-     */
     @CheckReturnValue
     public <O> Uni<O> with(Function<List<?>, O> function) {
-        Function<List<?>, O> actual = Infrastructure.decorate(nonNull(function, "function"));
-        return Infrastructure
-                .onUniCreation(new UniAndCombination<>(source, unis, actual, collectFailures, concurrency));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Combine the items emitted by the {@link Uni unis} to a new Uni, and emit the result when all
-     * {@link Uni unis} (including the one returned from {@code function} have successfully completed.
-     * In case of failure, the failure is propagated.
-     *
-     * @param function the combination function
-     * @param <O> the combination value type
-     * @return the new {@link Uni}
-     */
     @CheckReturnValue
     public <O> Uni<O> withUni(Function<List<?>, Uni<O>> function) {
-        Function<List<?>, Uni<O>> actual = Infrastructure.decorate(nonNull(function, "function"));
-        return Infrastructure
-                .onUniCreation(new UniAndCombination<>(source, unis, actual, collectFailures, concurrency))
-                .flatMap(Function.identity());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -133,57 +95,20 @@ public class UniAndGroupIterable<T1> {
         return with(superType, function);
     }
 
-    /**
-     * Combine the items emitted by the {@link Uni unis}, and emit the result when all {@link Uni unis} have
-     * successfully completed. In case of failure, the failure is propagated.
-     * <p>
-     * This method is a convenience wrapper for {@link #with(Function)} but with the assumption that all items
-     * have {@code I} as a super type, which saves you a cast in the combination function.
-     * If the cast fails then the returned {@link Uni} fails with a {@link ClassCastException}.
-     *
-     * @param superType the super type of all items
-     * @param function the combination function
-     * @param <O> the combination value type
-     * @param <I> the super type of all items
-     * @return the new {@link Uni}
-     */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @CheckReturnValue
     public <O, I> Uni<O> with(Class<I> superType, Function<List<I>, O> function) {
-        return with((Function) function);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Combine the items emitted by the {@link Uni unis}, and emit the result when all {@link Uni unis} have
-     * successfully completed. In case of failure, the failure is propagated.
-     * <p>
-     * This method is a convenience wrapper for {@link #withUni(Function)} but with the assumption that
-     * all items have {@code I} as a super type, which saves you a cast in the combination function.
-     * If the cast fails then the returned {@link Uni} fails with a {@link ClassCastException}.
-     *
-     * @param superType the super type of all items
-     * @param function the combination function
-     * @param <O> the combination value type
-     * @param <I> the super type of all items
-     * @return the new {@link Uni}
-     */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @CheckReturnValue
     public <O, I> Uni<O> withUni(Class<I> superType, Function<List<I>, Uni<O>> function) {
-        return withUni((Function) function);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Discards the items emitted by the combined {@link Uni unis}, and just emits {@code null} when all the
-     * {@link Uni unis} have successfully completed. In case of failure, the failure is propagated.
-     *
-     * @return the {@code Uni Uni<Void>} emitting {@code null} when all the {@link Uni unis} have completed, or propagating
-     *         the failure.
-     */
     @CheckReturnValue
     public Uni<Void> discardItems() {
-        return Infrastructure
-                .onUniCreation(new UniAndCombination<>(source, unis, x -> null, collectFailures, concurrency));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

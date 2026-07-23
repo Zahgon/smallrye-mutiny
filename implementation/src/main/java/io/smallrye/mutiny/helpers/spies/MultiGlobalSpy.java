@@ -6,11 +6,17 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
 public class MultiGlobalSpy<T> extends MultiSpyBase<T> {
 
     private final MultiOnCancellationSpy<T> onCancellationSpy;
+
     private final MultiOnCompletionSpy<T> onCompletionSpy;
+
     private final MultiOnFailureSpy<T> onFailureSpy;
+
     private final MultiOnItemSpy<T> onItemSpy;
+
     private final MultiOnRequestSpy<T> onRequestSpy;
+
     private final MultiOnSubscribeSpy<T> onSubscribeSpy;
+
     private final MultiOnTerminationSpy<T> onTerminationSpy;
 
     MultiGlobalSpy(Multi<T> upstream) {
@@ -25,71 +31,55 @@ public class MultiGlobalSpy<T> extends MultiSpyBase<T> {
     }
 
     public MultiOnCancellationSpy<T> onCancellationSpy() {
-        return onCancellationSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public MultiOnCompletionSpy<T> onCompletionSpy() {
-        return onCompletionSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public MultiOnFailureSpy<T> onFailureSpy() {
-        return onFailureSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public MultiOnItemSpy<T> onItemSpy() {
-        return onItemSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public MultiOnRequestSpy<T> onRequestSpy() {
-        return onRequestSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public MultiOnSubscribeSpy<T> onSubscribeSpy() {
-        return onSubscribeSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public MultiOnTerminationSpy<T> onTerminationSpy() {
-        return onTerminationSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        onTerminationSpy.subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public long invocationCount() {
-        return onCancellationSpy.invocationCount() + onCompletionSpy.invocationCount() + onFailureSpy.invocationCount()
-                + onItemSpy.invocationCount() + onRequestSpy.invocationCount() + onSubscribeSpy.invocationCount()
-                + onTerminationSpy.invocationCount();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public boolean invoked() {
-        return invocationCount() > 0;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void reset() {
-        onCancellationSpy.reset();
-        onCompletionSpy.reset();
-        onFailureSpy.reset();
-        onItemSpy.reset();
-        onRequestSpy.reset();
-        onSubscribeSpy.reset();
-        onTerminationSpy.reset();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "MultiGlobalSpy{" +
-                "onCancellationSpy=" + onCancellationSpy +
-                ", onCompletionSpy=" + onCompletionSpy +
-                ", onFailureSpy=" + onFailureSpy +
-                ", onItemSpy=" + onItemSpy +
-                ", onRequestSpy=" + onRequestSpy +
-                ", onSubscribeSpy=" + onSubscribeSpy +
-                ", onTerminationSpy=" + onTerminationSpy +
-                "} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

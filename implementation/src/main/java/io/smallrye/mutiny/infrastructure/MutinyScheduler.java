@@ -20,17 +20,18 @@ public class MutinyScheduler extends ScheduledThreadPoolExecutor {
 
     @Override
     protected <V> RunnableScheduledFuture<V> decorateTask(Runnable runnable, RunnableScheduledFuture<V> task) {
-        return new DecoratedRunnableTask<>(task, executor);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     protected <V> RunnableScheduledFuture<V> decorateTask(Callable<V> callable, RunnableScheduledFuture<V> task) {
-        return new DecoratedRunnableTask<>(task, executor);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static class DecoratedRunnableTask<V> implements RunnableScheduledFuture<V> {
 
         private final Executor executor;
+
         private final RunnableScheduledFuture<V> origin;
 
         public DecoratedRunnableTask(RunnableScheduledFuture<V> origin, Executor executor) {
@@ -40,48 +41,47 @@ public class MutinyScheduler extends ScheduledThreadPoolExecutor {
 
         @Override
         public boolean isPeriodic() {
-            return origin.isPeriodic();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public long getDelay(TimeUnit unit) {
-            return origin.getDelay(unit);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public int compareTo(Delayed o) {
-            return origin.compareTo(o);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void run() {
-            executor.execute(origin);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public boolean cancel(boolean mayInterruptIfRunning) {
-            return origin.cancel(mayInterruptIfRunning);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public boolean isCancelled() {
-            return origin.isCancelled();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public boolean isDone() {
-            return origin.isDone();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public V get() throws ExecutionException, InterruptedException {
-            return origin.get();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-            return origin.get(timeout, unit);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

@@ -1,12 +1,10 @@
 package io.smallrye.mutiny.helpers.test;
 
 import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-import static io.smallrye.mutiny.helpers.test.AssertSubscriber.DEFAULT_TIMEOUT;
 import static io.smallrye.mutiny.helpers.test.AssertionHelper.*;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -22,23 +20,33 @@ import io.smallrye.mutiny.subscription.UniSubscription;
  * @param <T> the type of the items
  */
 public class UniAssertSubscriber<T> implements UniSubscriber<T> {
+
     private volatile boolean cancelImmediatelyOnSubscription;
+
     private final Context context;
 
     // Writable from the subscribers
     private final CompletableFuture<T> completion = new CompletableFuture<>();
+
     private final CompletableFuture<UniSubscription> subscribed = new CompletableFuture<>();
 
     // Readable from the assertions
     private final CompletableFuture<T> hasCompleted;
+
     private final CompletableFuture<UniSubscription> hasSubscription;
 
     private volatile UniSubscription subscription;
+
     private volatile T item;
+
     private volatile Throwable failure;
+
     private volatile boolean hasCompletedSuccessfully;
+
     private volatile String onResultThreadName;
+
     private volatile String onErrorThreadName;
+
     private volatile String onSubscribeThreadName;
 
     private final List<UniSignal> signals = new ArrayList<>(4);
@@ -66,7 +74,6 @@ public class UniAssertSubscriber<T> implements UniSubscriber<T> {
             this.subscription = s;
             return s;
         }).toCompletableFuture();
-
         this.cancelImmediatelyOnSubscription = cancelled;
     }
 
@@ -84,195 +91,64 @@ public class UniAssertSubscriber<T> implements UniSubscriber<T> {
         this(false);
     }
 
-    /**
-     * Create a new {@link UniAssertSubscriber} with no upfront cancellation and an empty {@link Context}.
-     *
-     * @param <T> the type of the item
-     * @return a new subscriber
-     */
     public static <T> UniAssertSubscriber<T> create() {
-        return new UniAssertSubscriber<>();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Create a new {@link UniAssertSubscriber} with no upfront cancellation and a {@link Context}.
-     *
-     * @param <T> the type of the item
-     * @param context the context, cannot be {@code null}
-     * @return a new subscriber
-     */
     public static <T> UniAssertSubscriber<T> create(Context context) {
-        return new UniAssertSubscriber<>(context, false);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Context context() {
-        return this.context;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public synchronized void onSubscribe(UniSubscription subscription) {
-        signals.add(new OnSubscribeUniSignal(subscription));
-        subscribed.complete(subscription);
-        if (this.cancelImmediatelyOnSubscription) {
-            subscription.cancel();
-            completion.cancel(false);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public synchronized void onItem(T item) {
-        signals.add(new OnItemUniSignal<>(item));
-        this.completion.complete(item);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public synchronized void onFailure(Throwable failure) {
-        signals.add(new OnFailureUniSignal(failure));
-        this.completion.completeExceptionally(failure);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Awaits for an item event.
-     * It waits at most {@link AssertSubscriber#DEFAULT_TIMEOUT}.
-     * <p>
-     * If the timeout expired, or if a failure event is received instead of the expected completion, the check fails.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> awaitItem() {
-        return awaitItem(DEFAULT_TIMEOUT);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Awaits for a item event at most {@code duration}.
-     * <p>
-     * If the timeout expired, or if a failure event is received instead of the expected completion, the check fails.
-     *
-     * @param duration the duration, must not be {@code null}
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> awaitItem(Duration duration) {
-        try {
-            awaitEvent(hasCompleted, duration);
-        } catch (TimeoutException e) {
-            throw new AssertionError(
-                    "No item (or failure) event received in the last " + duration.toMillis() + " ms");
-        }
-
-        if (failure == null) {
-            return this;
-        } else {
-            throw new AssertionError("Expected an item event but got a failure: " + failure);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Awaits for a failure event.
-     * It waits at most {@link AssertSubscriber#DEFAULT_TIMEOUT}.
-     * <p>
-     * If the timeout expired, or if an item event is received instead of the expected failure, the check fails.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> awaitFailure() {
-        return awaitFailure(t -> {
-        });
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Awaits for a failure event and validate it.
-     * It waits at most {@link AssertSubscriber#DEFAULT_TIMEOUT}.
-     * <p>
-     * If the timeout expired, or if an item event is received instead of the expected failure, the check fails.
-     * The received failure is validated using the {@code assertion} consumer. The code of the consumer is expected to
-     * throw an {@link AssertionError} to indicate that the failure didn't pass the validation. The consumer is not
-     * called if no failures are received.
-     *
-     * @param assertion a check validating the received failure (if any). Must not be {@code null}
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> awaitFailure(Consumer<Throwable> assertion) {
-        return awaitFailure(assertion, DEFAULT_TIMEOUT);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Awaits for a failure event.
-     * It waits at most {@code duration}.
-     * <p>
-     * If the timeout expired, or if an item event is received instead of the expected failure, the check fails.
-     *
-     * @param duration the max duration to wait, must not be {@code null}
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> awaitFailure(Duration duration) {
-        return awaitFailure(t -> {
-        }, duration);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Awaits for a failure event and validate it.
-     * It waits at most {@code duration}.
-     * <p>
-     * If the timeout expired, or if an item event is received instead of the expected failure, the check fails.
-     * The received failure is validated using the {@code assertion} consumer. The code of the consumer is expected to
-     * throw an {@link AssertionError} to indicate that the failure didn't pass the validation. The consumer is not
-     * called if no failures are received.
-     *
-     * @param assertion a check validating the received failure (if any). Must not be {@code null}
-     * @param duration the max duration to wait, must not be {@code null}
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> awaitFailure(Consumer<Throwable> assertion, Duration duration) {
-        try {
-            awaitEvent(hasCompleted, duration);
-        } catch (TimeoutException e) {
-            throw new AssertionError(
-                    "No item (or failure) event received in the last " + duration.toMillis() + " ms");
-        }
-
-        if (failure == null) {
-            throw new AssertionError("Expected a failure event but got an item event: " + item);
-        }
-
-        try {
-            assertion.accept(failure);
-            return this;
-        } catch (AssertionError e) {
-            throw new AssertionError("Received a failure event, but that failure did not pass the validation: " + e, e);
-        }
-
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Awaits for a subscription event (the subscriber receives a {@link UniSubscription} from the upstream.
-     * It waits at most {@link AssertSubscriber#DEFAULT_TIMEOUT}.
-     * <p>
-     * If the timeout expired, the check fails.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> awaitSubscription() {
-        return awaitSubscription(DEFAULT_TIMEOUT);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Awaits for a subscription event (the subscriber receives a {@link UniSubscription} from the upstream.
-     * It waits at most {@code duration}.
-     * <p>
-     * If the timeout expired, the check fails.
-     *
-     * @param duration the UniAssertSubscriber, must not be {@code null}
-     * @return this {@link AssertSubscriber}
-     */
     public UniAssertSubscriber<T> awaitSubscription(Duration duration) {
-        try {
-            awaitEvent(hasSubscription, duration);
-        } catch (TimeoutException e) {
-            throw new AssertionError(
-                    "Expecting a subscription event in the last " + duration.toMillis() + " ms, but did not get it");
-        }
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void awaitEvent(CompletableFuture<?> future, Duration duration) throws TimeoutException {
@@ -289,252 +165,83 @@ public class UniAssertSubscriber<T> implements UniSubscriber<T> {
         }
     }
 
-    /**
-     * Assert that the {@link io.smallrye.mutiny.Uni} has completed.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public synchronized UniAssertSubscriber<T> assertCompleted() {
-        shouldHaveCompleted(hasCompletedSuccessfully, failure, null);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the {@link io.smallrye.mutiny.Uni} has failed.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public synchronized UniAssertSubscriber<T> assertFailed() {
-        shouldHaveFailed(hasCompletedSuccessfully, failure, null, null);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the {@link io.smallrye.mutiny.Uni} item, if any.
-     *
-     * @return the item or {@code null}
-     */
     public synchronized T getItem() {
-        return item;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the {@link io.smallrye.mutiny.Uni} failure, if any.
-     *
-     * @return the failure or {@code null}
-     */
     public synchronized Throwable getFailure() {
-        if (failure instanceof CancellationException) {
-            return null;
-        }
-        return failure;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the {@link io.smallrye.mutiny.Uni} has received an item.
-     *
-     * @param expected the expected item
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> assertItem(T expected) {
-        shouldHaveCompleted(hasCompletedSuccessfully, failure, null);
-        shouldHaveReceived(getItem(), expected);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the received item matches the given predicate.
-     * The assertion first checks that the {@link io.smallrye.mutiny.Uni} has completed successfully.
-     *
-     * @param predicate the predicate to test the item against, must not be {@code null}
-     * @param description a description of what the predicate checks, used in error messages
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> assertItem(Predicate<? super T> predicate, String description) {
-        shouldHaveCompleted(hasCompletedSuccessfully, failure, null);
-        shouldMatchPredicate(getItem(), predicate, description);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the received item is {@code null}.
-     * The assertion first checks that the {@link io.smallrye.mutiny.Uni} has completed successfully.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> assertItemIsNull() {
-        shouldHaveCompleted(hasCompletedSuccessfully, failure, null);
-        if (getItem() != null) {
-            throw new AssertionError("Expected a null item but received <" + getItem() + ">");
-        }
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Inspect the received item using a consumer.
-     * The consumer is expected to throw an {@link AssertionError} if the item does not meet expectations.
-     * The assertion first checks that the {@link io.smallrye.mutiny.Uni} has completed successfully.
-     *
-     * @param consumer the consumer to inspect the item, must not be {@code null}
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> inspectItem(Consumer<? super T> consumer) {
-        shouldHaveCompleted(hasCompletedSuccessfully, failure, null);
-        consumer.accept(getItem());
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the {@link io.smallrye.mutiny.Uni} has failed.
-     *
-     * @param expectedTypeOfFailure the expected failure type
-     * @param expectedMessage a message that is expected to be contained in the failure message
-     * @return this {@link UniAssertSubscriber}
-     */
-    public UniAssertSubscriber<T> assertFailedWith(Class<? extends Throwable> expectedTypeOfFailure,
-            String expectedMessage) {
-        shouldHaveFailed(hasCompletedSuccessfully, failure, expectedTypeOfFailure, expectedMessage);
-        return this;
+    public UniAssertSubscriber<T> assertFailedWith(Class<? extends Throwable> expectedTypeOfFailure, String expectedMessage) {
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the {@link io.smallrye.mutiny.Uni} has failed.
-     *
-     * @param expectedTypeOfFailure the expected failure type
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> assertFailedWith(Class<? extends Throwable> expectedTypeOfFailure) {
-        shouldHaveFailed(hasCompletedSuccessfully, failure, expectedTypeOfFailure, null);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the name of the thread that called {@link UniAssertSubscriber#onItem(Object)}, if any.
-     *
-     * @return the thread name
-     */
     public String getOnItemThreadName() {
-        return onResultThreadName;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the name of the thread that called {@link UniAssertSubscriber#onFailure(Throwable)}, if any.
-     *
-     * @return the thread name
-     */
     public String getOnFailureThreadName() {
-        return onErrorThreadName;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the name of the thread that called {@link UniAssertSubscriber#onSubscribe(UniSubscription)}, if any.
-     *
-     * @return the thread name
-     */
     public String getOnSubscribeThreadName() {
-        return onSubscribeThreadName;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Cancel the subscription.
-     */
     public void cancel() {
-        signals.add(new OnCancellationUniSignal());
-        if (subscription == null) {
-            cancelImmediatelyOnSubscription = true;
-        } else {
-            subscription.cancel();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the {@link io.smallrye.mutiny.Uni} has terminated.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> assertTerminated() {
-        shouldBeTerminated(hasCompletedSuccessfully, failure);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the {@link io.smallrye.mutiny.Uni} has not terminated.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> assertNotTerminated() {
-        shouldNotBeTerminatedUni(hasCompletedSuccessfully, failure);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the {@link io.smallrye.mutiny.Uni} has been subscribed.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> assertSubscribed() {
-        shouldBeSubscribed(subscription == null ? 0 : 1);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that the {@link io.smallrye.mutiny.Uni} has not been subscribed.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> assertNotSubscribed() {
-        shouldNotBeSubscribed(subscription == null ? 0 : 1);
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the {@link UniSignal} audit trail for this subscriber.
-     *
-     * @return the signals in receive order
-     */
     public List<UniSignal> getSignals() {
-        return Collections.unmodifiableList(signals);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Assert that signals have been received in correct order.
-     * <p>
-     * An example of an legal sequence would be receiving {@code onSubscribe -> onItem}.
-     * An example of an illegal sequence would be receiving {@code onItem -> onSubscribe}.
-     *
-     * @return this {@link UniAssertSubscriber}
-     */
     public UniAssertSubscriber<T> assertSignalsReceivedInOrder() {
-        if (signals.isEmpty()) {
-            return this;
-        }
-        UniSignal firstSignal = signals.get(0);
-        if (!(firstSignal instanceof OnSubscribeUniSignal)
-                && !(firstSignal instanceof OnCancellationUniSignal)) {
-            throw new AssertionError("The first signal is neither onSubscribe nor cancel but " + firstSignal);
-        }
-        int[] occurrences = new int[3]; // onSubscribe | onItem | onFailure
-        for (UniSignal signal : signals) {
-            if (signal instanceof OnSubscribeUniSignal) {
-                occurrences[0]++;
-            } else if (signal instanceof OnItemUniSignal) {
-                occurrences[1]++;
-            } else if (signal instanceof OnFailureUniSignal) {
-                occurrences[2]++;
-            }
-        }
-        if (occurrences[0] > 1) {
-            throw new AssertionError("There are more than 1 onSubscribe signals in " + signals);
-        }
-        if (occurrences[1] > 1) {
-            throw new AssertionError("There are more than 1 onItem signals in " + signals);
-        }
-        if (occurrences[2] > 1) {
-            throw new AssertionError("There are more than 1 onFailure signals in " + signals);
-        }
-        if (occurrences[1] == 1 && occurrences[2] == 1) {
-            throw new AssertionError("There are both onItem and onFailure signals in " + signals);
-        }
-        return this;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

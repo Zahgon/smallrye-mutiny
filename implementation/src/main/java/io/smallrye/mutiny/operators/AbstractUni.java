@@ -1,7 +1,5 @@
 package io.smallrye.mutiny.operators;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -9,9 +7,7 @@ import java.util.function.Predicate;
 import io.smallrye.mutiny.Context;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.converters.uni.UniToMultiPublisher;
 import io.smallrye.mutiny.groups.*;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.operators.uni.*;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 
@@ -19,133 +15,117 @@ public abstract class AbstractUni<T> implements Uni<T> {
 
     public abstract void subscribe(UniSubscriber<? super T> subscriber);
 
-    /**
-     * Encapsulates subscription to slightly optimize the AbstractUni case.
-     * <p>
-     * In the case of AbstractUni, it avoid creating the UniSubscribe group instance.
-     *
-     * @param upstream the upstream, must not be {@code null} (not checked)
-     * @param subscriber the subscriber, must not be {@code null} (not checked)
-     * @param <T> the type of item
-     */
     @SuppressWarnings("unchecked")
     public static <T> void subscribe(Uni<? extends T> upstream, UniSubscriber<? super T> subscriber) {
-        if (upstream instanceof AbstractUni abstractUni) {
-            UniSubscriber actualSubscriber = Infrastructure.onUniSubscription(upstream, subscriber);
-            abstractUni.subscribe(actualSubscriber);
-        } else {
-            upstream.subscribe().withSubscriber(subscriber);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniSubscribe<T> subscribe() {
-        return new UniSubscribe<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniOnItem<T> onItem() {
-        return new UniOnItem<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniIfNoItem<T> ifNoItem() {
-        return new UniIfNoItem<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniOnFailure<T, Throwable> onFailure() {
-        return new UniOnFailure<>(this, Throwable.class, null);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniOnFailure<T, Throwable> onFailure(Predicate<? super Throwable> predicate) {
-        return new UniOnFailure<>(this, Throwable.class, predicate);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public <E extends Throwable> UniOnFailure<T, E> onFailure(Class<E> typeOfFailure) {
-        return new UniOnFailure<>(this, typeOfFailure, typeOfFailure::isInstance);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniOnSubscribe<T> onSubscription() {
-        return new UniOnSubscribe<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniOnItemOrFailure<T> onItemOrFailure() {
-        return new UniOnItemOrFailure<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniAwait<T> await() {
-        return awaitUsing(Context.empty());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniAwait<T> awaitUsing(Context context) {
-        return new UniAwait<>(this, context);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Uni<T> emitOn(Executor executor) {
-        return Infrastructure.onUniCreation(
-                new UniEmitOn<>(this, nonNull(executor, "executor")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Uni<T> runSubscriptionOn(Executor executor) {
-        return Infrastructure.onUniCreation(
-                new UniRunSubscribeOn<>(this, executor));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniMemoize<T> memoize() {
-        return new UniMemoize<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public Uni<T> cache() {
-        return Infrastructure.onUniCreation(new UniMemoizeOp<>(this));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniConvert<T> convert() {
-        return new UniConvert<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Multi<T> toMulti() {
-        return Multi.createFrom().safePublisher(new UniToMultiPublisher<>(this));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniRepeat<T> repeat() {
-        return new UniRepeat<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniOnTerminate<T> onTermination() {
-        return new UniOnTerminate<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public UniOnCancel<T> onCancellation() {
-        return new UniOnCancel<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Uni<T> log(String identifier) {
-        return Infrastructure.onUniCreation(new UniLogger<>(this, identifier));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Uni<T> log() {
-        return log("Uni." + this.getClass().getSimpleName());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public <R> Uni<R> withContext(BiFunction<Uni<T>, Context, Uni<R>> builder) {
-        return Infrastructure.onUniCreation(new UniWithContext<>(this, nonNull(builder, "builder")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

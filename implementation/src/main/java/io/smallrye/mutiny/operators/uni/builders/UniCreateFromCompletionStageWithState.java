@@ -1,11 +1,9 @@
 package io.smallrye.mutiny.operators.uni.builders;
 
-import java.util.Objects;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import io.smallrye.mutiny.helpers.EmptyUniSubscription;
 import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 
@@ -20,6 +18,7 @@ import io.smallrye.mutiny.subscription.UniSubscriber;
 public class UniCreateFromCompletionStageWithState<T, S> extends AbstractUni<T> {
 
     private final Function<S, ? extends CompletionStage<? extends T>> mapper;
+
     private final StateHolder<S> holder;
 
     public UniCreateFromCompletionStageWithState(Supplier<S> stateSupplier,
@@ -30,26 +29,6 @@ public class UniCreateFromCompletionStageWithState<T, S> extends AbstractUni<T> 
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        S state;
-        try {
-            state = holder.get();
-            // get() throws an NPE is the produced state is null.
-        } catch (Throwable err) {
-            subscriber.onSubscribe(EmptyUniSubscription.DONE);
-            subscriber.onFailure(err);
-            return;
-        }
-
-        CompletionStage<? extends T> stage;
-        try {
-            stage = mapper.apply(state);
-            Objects.requireNonNull(stage, "The produced CompletionStage is `null`");
-        } catch (Throwable err) {
-            subscriber.onSubscribe(EmptyUniSubscription.DONE);
-            subscriber.onFailure(err);
-            return;
-        }
-
-        new UniCreateFromCompletionStage.CompletionStageUniSubscription<T>(subscriber, stage).forward();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

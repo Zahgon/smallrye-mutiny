@@ -10,8 +10,6 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.jakarta.streams.Engine;
 import io.smallrye.mutiny.jakarta.streams.operators.ProcessingStage;
 import io.smallrye.mutiny.jakarta.streams.operators.ProcessingStageFactory;
-import io.smallrye.mutiny.jakarta.streams.utils.Casts;
-import mutiny.zero.flow.adapters.AdaptersToFlow;
 
 /**
  * Implementation of the {@link Stage.FlatMap} stage. Be aware it behaves as a RX `concatMap`.
@@ -22,12 +20,13 @@ public class FlatMapStageFactory implements ProcessingStageFactory<Stage.FlatMap
 
     @Override
     public <I, O> ProcessingStage<I, O> create(Engine engine, Stage.FlatMap stage) {
-        Function<I, Graph> mapper = Casts.cast(stage.getMapper());
-        return new FlatMapStage<>(engine, mapper);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static class FlatMapStage<I, O> implements ProcessingStage<I, O> {
+
         private final Engine engine;
+
         private final Function<I, Graph> mapper;
 
         private FlatMapStage(Engine engine, Function<I, Graph> mapper) {
@@ -37,11 +36,7 @@ public class FlatMapStageFactory implements ProcessingStageFactory<Stage.FlatMap
 
         @Override
         public Multi<O> apply(Multi<I> source) {
-            return source
-                    .onItem().transformToMultiAndConcatenate(item -> {
-                        Graph graph = mapper.apply(item);
-                        return AdaptersToFlow.publisher(engine.buildPublisher(Objects.requireNonNull(graph)));
-                    });
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

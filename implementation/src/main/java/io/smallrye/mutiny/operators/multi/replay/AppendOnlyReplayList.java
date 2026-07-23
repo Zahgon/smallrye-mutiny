@@ -1,7 +1,5 @@
 package io.smallrye.mutiny.operators.multi.replay;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
 /*
  * Replay is being captured using a custom linked list, while consumers can make progress using cursors.
  *
@@ -22,75 +20,56 @@ public class AppendOnlyReplayList {
     public class Cursor {
 
         private Cell current = SENTINEL_EMPTY;
+
         private boolean start = true;
+
         private boolean currentHasBeenRead = false;
 
         public boolean hasNext() {
-            if (current == SENTINEL_EMPTY) {
-                Cell currentHead = head;
-                if (currentHead != SENTINEL_EMPTY) {
-                    current = currentHead;
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if (!currentHasBeenRead) {
-                return true;
-            } else {
-                return current.next != SENTINEL_END;
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public void moveToNext() {
-            if (start) {
-                start = false;
-                return;
-            }
-            assert current.next != SENTINEL_END;
-            current = current.next;
-            currentHasBeenRead = false;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public Object read() {
-            currentHasBeenRead = true;
-            return current.value;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public boolean hasReachedCompletion() {
-            return current.value instanceof Completion;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public boolean willReachCompletion() {
-            return currentHasBeenRead && !hasReachedCompletion() && current.next.value instanceof Completion;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public boolean willReachFailure() {
-            return currentHasBeenRead && !hasReachedFailure() && current.next.value instanceof Failure;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public boolean hasReachedFailure() {
-            return current.value instanceof Failure;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public Throwable readFailure() {
-            currentHasBeenRead = true;
-            return ((Failure) current.value).failure;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public void readCompletion() {
-            currentHasBeenRead = true;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
     private static abstract class Terminal {
-
     }
 
     private static final class Completion extends Terminal {
-
     }
 
     private static final class Failure extends Terminal {
+
         final Throwable failure;
 
         Failure(Throwable failure) {
@@ -99,7 +78,9 @@ public class AppendOnlyReplayList {
     }
 
     private static class Cell {
+
         final Object value;
+
         volatile Cell next;
 
         Cell(Object value, Cell next) {
@@ -109,11 +90,15 @@ public class AppendOnlyReplayList {
     }
 
     private static final Cell SENTINEL_END = new Cell(null, null);
+
     private static final Cell SENTINEL_EMPTY = new Cell(null, SENTINEL_END);
 
     private final long itemsToReplay;
+
     private long numberOfItemsRecorded = 0L;
+
     private volatile Cell head = SENTINEL_EMPTY;
+
     private volatile Cell tail = SENTINEL_EMPTY;
 
     public AppendOnlyReplayList(long numberOfItemsToReplay) {
@@ -129,33 +114,18 @@ public class AppendOnlyReplayList {
     }
 
     public void push(Object item) {
-        assert !(tail.value instanceof Terminal);
-        Cell newCell = new Cell(nonNull(item, "item"), SENTINEL_END);
-        if (head == SENTINEL_EMPTY) {
-            head = newCell;
-        } else {
-            tail.next = newCell;
-        }
-        tail = newCell;
-        if (itemsToReplay != Long.MAX_VALUE && !(item instanceof Terminal)) {
-            numberOfItemsRecorded++;
-            if (numberOfItemsRecorded > itemsToReplay) {
-                synchronized (this) {
-                    head = head.next;
-                }
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public void pushFailure(Throwable failure) {
-        push(new Failure(failure));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public void pushCompletion() {
-        push(new Completion());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public Cursor newCursor() {
-        return new Cursor();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

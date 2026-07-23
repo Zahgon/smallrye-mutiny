@@ -1,7 +1,5 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.smallrye.mutiny.Multi;
@@ -18,7 +16,7 @@ public class MultiOnCompletionInvoke<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new MultiOnCompletionInvokeProcessor(nonNull(downstream, "downstream")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     class MultiOnCompletionInvokeProcessor extends MultiOperatorProcessor<T, T> {
@@ -31,14 +29,7 @@ public class MultiOnCompletionInvoke<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onCompletion() {
-            if (actionInvoked.compareAndSet(false, true)) {
-                try {
-                    action.run();
-                    super.onCompletion();
-                } catch (Throwable err) {
-                    super.onFailure(err);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

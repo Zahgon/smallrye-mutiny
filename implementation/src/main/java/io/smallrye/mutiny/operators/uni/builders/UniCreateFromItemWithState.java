@@ -3,7 +3,6 @@ package io.smallrye.mutiny.operators.uni.builders;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import io.smallrye.mutiny.helpers.EmptyUniSubscription;
 import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 
@@ -18,6 +17,7 @@ import io.smallrye.mutiny.subscription.UniSubscriber;
 public class UniCreateFromItemWithState<T, S> extends AbstractUni<T> {
 
     private final Function<S, ? extends T> mapper;
+
     private final StateHolder<S> holder;
 
     public UniCreateFromItemWithState(Supplier<S> stateSupplier, Function<S, ? extends T> mapper) {
@@ -27,23 +27,6 @@ public class UniCreateFromItemWithState<T, S> extends AbstractUni<T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        subscriber.onSubscribe(EmptyUniSubscription.DONE);
-        S state;
-        try {
-            state = holder.get();
-            // get() throws an NPE is the produced state is null.
-        } catch (Throwable err) {
-            subscriber.onFailure(err);
-            return;
-        }
-
-        T item;
-        try {
-            item = mapper.apply(state);
-        } catch (Throwable err) {
-            subscriber.onFailure(err);
-            return;
-        }
-        subscriber.onItem(item);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -1,15 +1,11 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 
-import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.subscription.Cancellable;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
@@ -24,12 +20,13 @@ public class MultiOnTerminationCall<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new MultiOnTerminationCallProcessor(nonNull(downstream, "downstream")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     class MultiOnTerminationCallProcessor extends MultiOperatorProcessor<T, T> {
 
         private volatile Cancellable cancellable;
+
         private final AtomicBoolean mapperInvoked = new AtomicBoolean();
 
         public MultiOnTerminationCallProcessor(MultiSubscriber<? super T> downstream) {
@@ -38,34 +35,17 @@ public class MultiOnTerminationCall<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void cancel() {
-            if (cancellable != null) {
-                cancellable.cancel();
-                super.cancel();
-            } else {
-                execute(null, true).subscribe().with(
-                        context(),
-                        ignored -> super.cancel(),
-                        ignored -> {
-                            Infrastructure.handleDroppedException(ignored);
-                            super.cancel();
-                        });
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            cancellable = execute(failure, false).subscribe().with(
-                    context(),
-                    ignored -> super.onFailure(failure),
-                    err -> super.onFailure(new CompositeException(failure, err)));
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            cancellable = execute(null, false).subscribe().with(
-                    context(),
-                    ignored -> super.onCompletion(),
-                    super::onFailure);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private Uni<?> execute(Throwable err, Boolean cancelled) {

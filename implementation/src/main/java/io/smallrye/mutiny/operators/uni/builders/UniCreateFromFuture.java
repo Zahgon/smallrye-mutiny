@@ -16,6 +16,7 @@ import io.smallrye.mutiny.subscription.UniSubscriber;
 public class UniCreateFromFuture<T> extends AbstractUni<T> {
 
     private final Supplier<? extends Future<? extends T>> supplier;
+
     private final Duration timeout;
 
     public UniCreateFromFuture(Supplier<? extends Future<? extends T>> supplier) {
@@ -23,21 +24,15 @@ public class UniCreateFromFuture<T> extends AbstractUni<T> {
     }
 
     public UniCreateFromFuture(Supplier<? extends Future<? extends T>> supplier, Duration timeout) {
-        this.supplier = supplier; // Already checked
-        this.timeout = timeout; // Already checked
+        // Already checked
+        this.supplier = supplier;
+        // Already checked
+        this.timeout = timeout;
     }
 
     @Override
     public void subscribe(UniSubscriber<? super T> downstream) {
-        Future<? extends T> future = obtainFuture(downstream);
-        if (future == null) {
-            return;
-        }
-        if (future.isDone()) {
-            dispatchImmediateResult(future, downstream);
-        } else {
-            dispatchDeferredResult(future, downstream);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private Future<? extends T> obtainFuture(UniSubscriber<? super T> downstream) {

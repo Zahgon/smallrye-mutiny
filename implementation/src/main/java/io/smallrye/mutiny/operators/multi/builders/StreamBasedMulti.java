@@ -6,8 +6,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.operators.AbstractMulti;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
@@ -21,38 +19,7 @@ public class StreamBasedMulti<T> extends AbstractMulti<T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        ParameterValidation.nonNullNpe(downstream, "subscriber");
-
-        Stream<? extends T> stream;
-
-        try {
-            stream = supplier.get();
-        } catch (Throwable e) {
-            Subscriptions.fail(downstream, e);
-            return;
-        }
-
-        if (stream == null) {
-            Subscriptions.fail(downstream, new NullPointerException(ParameterValidation.SUPPLIER_PRODUCED_NULL));
-            return;
-        }
-
-        Iterator<? extends T> iterator;
-        try {
-            iterator = stream.iterator();
-
-            if (!iterator.hasNext()) {
-                Subscriptions.complete(downstream);
-                closeQuietly(stream);
-                return;
-            }
-        } catch (Throwable ex) {
-            Subscriptions.fail(downstream, ex);
-            closeQuietly(stream);
-            return;
-        }
-
-        downstream.onSubscribe(new StreamSubscription<>(downstream, iterator, stream));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static void closeQuietly(AutoCloseable source) {
@@ -69,9 +36,13 @@ public class StreamBasedMulti<T> extends AbstractMulti<T> {
     private static class StreamSubscription<T> implements Subscription {
 
         private final Iterator<? extends T> iterator;
+
         private final AutoCloseable closeable;
+
         private final AtomicLong requested = new AtomicLong();
+
         private final MultiSubscriber<T> downstream;
+
         private volatile boolean cancelled;
 
         StreamSubscription(MultiSubscriber<T> downstream, Iterator<? extends T> iterator, AutoCloseable closeable) {
@@ -82,59 +53,11 @@ public class StreamBasedMulti<T> extends AbstractMulti<T> {
 
         @Override
         public void request(long n) {
-            if (n > 0) {
-                if (Subscriptions.add(requested, n) == 0L) {
-                    pull(n);
-                }
-            } else {
-                cancelled = true;
-                downstream.onFailure(Subscriptions.getInvalidRequestException());
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public void pull(long n) {
-            long emitted = 0L;
-            for (;;) {
-                if (cancelled) {
-                    closeQuietly(closeable);
-                    return;
-                } else {
-                    T item;
-                    try {
-                        item = iterator.next();
-                        if (item == null) {
-                            throw new NullPointerException("The stream iterator produced `null`");
-                        }
-                    } catch (Throwable ex) {
-                        downstream.onFailure(ex);
-                        cancelled = true;
-                        continue;
-                    }
-
-                    if (cancelled) {
-                        closeQuietly(closeable);
-                        return;
-                    }
-
-                    downstream.onItem(item);
-
-                    if (cancelled || handleCompletion()) {
-                        continue;
-                    }
-
-                    if (++emitted != n) {
-                        continue;
-                    }
-                }
-
-                n = requested.get();
-                if (emitted == n) {
-                    if (requested.compareAndSet(n, 0L)) {
-                        break;
-                    }
-                    n = requested.get();
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private boolean handleCompletion() {
@@ -154,8 +77,7 @@ public class StreamBasedMulti<T> extends AbstractMulti<T> {
 
         @Override
         public void cancel() {
-            cancelled = true;
-            request(1L);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

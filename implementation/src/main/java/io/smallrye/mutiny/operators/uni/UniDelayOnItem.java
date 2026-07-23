@@ -6,15 +6,15 @@ import static io.smallrye.mutiny.helpers.ParameterValidation.validate;
 import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.operators.UniOperator;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 
 public class UniDelayOnItem<T> extends UniOperator<T, T> {
+
     private final Duration duration;
+
     private final ScheduledExecutorService executor;
 
     public UniDelayOnItem(Uni<T> upstream, Duration duration, ScheduledExecutorService executor) {
@@ -25,7 +25,7 @@ public class UniDelayOnItem<T> extends UniOperator<T, T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        AbstractUni.subscribe(upstream(), new UniDelayOnItemProcessor(subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class UniDelayOnItemProcessor extends UniOperatorProcessor<T, T> {
@@ -38,28 +38,12 @@ public class UniDelayOnItem<T> extends UniOperator<T, T> {
 
         @Override
         public void cancel() {
-            if (!isCancelled()) {
-                super.cancel();
-                if (scheduledFuture != null) {
-                    scheduledFuture.cancel(false);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T item) {
-            if (!isCancelled()) {
-                try {
-                    Runnable dispatch = () -> {
-                        if (!isCancelled()) {
-                            downstream.onItem(item);
-                        }
-                    };
-                    scheduledFuture = executor.schedule(dispatch, duration.toMillis(), TimeUnit.MILLISECONDS);
-                } catch (Throwable err) {
-                    downstream.onFailure(err);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

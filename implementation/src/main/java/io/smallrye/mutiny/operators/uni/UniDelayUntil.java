@@ -4,17 +4,17 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;
 
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.operators.UniOperator;
 import io.smallrye.mutiny.subscription.Cancellable;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 
 public class UniDelayUntil<T> extends UniOperator<T, T> {
+
     private final Function<? super T, Uni<?>> function;
+
     private final ScheduledExecutorService executor;
 
-    public UniDelayUntil(Uni<T> upstream, Function<? super T, Uni<?>> function,
-            ScheduledExecutorService executor) {
+    public UniDelayUntil(Uni<T> upstream, Function<? super T, Uni<?>> function, ScheduledExecutorService executor) {
         super(upstream);
         this.function = function;
         this.executor = executor;
@@ -22,7 +22,7 @@ public class UniDelayUntil<T> extends UniOperator<T, T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        AbstractUni.subscribe(upstream(), new UniDelayUntilProcessor(subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class UniDelayUntilProcessor extends UniOperatorProcessor<T, T> {
@@ -35,30 +35,12 @@ public class UniDelayUntil<T> extends UniOperator<T, T> {
 
         @Override
         public void onItem(T item) {
-            if (!isCancelled()) {
-                try {
-                    Uni<?> uni = function.apply(item);
-                    if (uni == null) {
-                        super.onFailure(new NullPointerException("The function returned `null` instead of a valid `Uni`"));
-                        return;
-                    }
-                    delayCancellable = uni.runSubscriptionOn(executor).subscribe().with(
-                            context(),
-                            ignored -> super.onItem(item),
-                            super::onFailure);
-                } catch (Throwable err) {
-                    super.onFailure(err);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            Cancellable c = delayCancellable;
-            if (c != null) {
-                c.cancel();
-            }
-            super.cancel();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

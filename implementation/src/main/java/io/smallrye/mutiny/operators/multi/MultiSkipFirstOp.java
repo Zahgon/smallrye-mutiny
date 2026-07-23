@@ -22,12 +22,7 @@ public final class MultiSkipFirstOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> actual) {
-        if (numberOfItems == 0) {
-            // Pass-through
-            upstream.subscribe(actual);
-        } else {
-            upstream.subscribe(new SkipFirstProcessor<>(actual, numberOfItems));
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class SkipFirstProcessor<T> extends MultiOperatorProcessor<T, T> {
@@ -41,25 +36,12 @@ public final class MultiSkipFirstOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Subscription subscription) {
-            if (compareAndSetUpstreamSubscription(null, subscription)) {
-                downstream.onSubscribe(this);
-                long l = remaining.get();
-                // Do not request 0
-                if (l > 0) {
-                    subscription.request(l);
-                }
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T t) {
-            long r = remaining.getAndDecrement();
-            if (r <= 0L) {
-                downstream.onItem(t);
-            }
-            // Other elements are skipped.
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

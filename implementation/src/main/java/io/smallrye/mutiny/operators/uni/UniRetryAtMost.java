@@ -8,14 +8,14 @@ import java.util.function.Predicate;
 
 import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.operators.UniOperator;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 import io.smallrye.mutiny.subscription.UniSubscription;
 
 public class UniRetryAtMost<T> extends UniOperator<T, T> {
+
     private final Predicate<? super Throwable> predicate;
+
     private final long maxAttempts;
 
     public UniRetryAtMost(Uni<T> upstream, Predicate<? super Throwable> predicate, long maxAttempts) {
@@ -26,7 +26,7 @@ public class UniRetryAtMost<T> extends UniOperator<T, T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        AbstractUni.subscribe(upstream(), new UniRetryAtMostProcessor<>(this, subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static class UniRetryAtMostProcessor<T> extends UniOperatorProcessor<T, T> {
@@ -34,6 +34,7 @@ public class UniRetryAtMost<T> extends UniOperator<T, T> {
         private final UniRetryAtMost<T> uniRetryAtMost;
 
         private volatile int counter = 0;
+
         private static final AtomicIntegerFieldUpdater<UniRetryAtMostProcessor> counterUpdater = AtomicIntegerFieldUpdater
                 .newUpdater(UniRetryAtMostProcessor.class, "counter");
 
@@ -44,34 +45,12 @@ public class UniRetryAtMost<T> extends UniOperator<T, T> {
 
         @Override
         public void onSubscribe(UniSubscription subscription) {
-            int count = counterUpdater.incrementAndGet(this);
-            if (compareAndSetUpstreamSubscription(null, subscription)) {
-                if (count == 1) {
-                    downstream.onSubscribe(this);
-                }
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            if (isCancelled()) {
-                Infrastructure.handleDroppedException(failure);
-                return;
-            }
-            if (!testPredicate(failure)) {
-                return;
-            }
-            if (counter > uniRetryAtMost.maxAttempts) {
-                downstream.onFailure(failure);
-                return;
-            }
-            UniSubscription previousSubscription = getAndSetUpstreamSubscription(null);
-            if (previousSubscription != null) {
-                previousSubscription.cancel();
-            }
-            AbstractUni.subscribe(uniRetryAtMost.upstream(), this);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private boolean testPredicate(Throwable failure) {

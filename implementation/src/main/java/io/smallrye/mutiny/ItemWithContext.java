@@ -1,7 +1,5 @@
 package io.smallrye.mutiny;
 
-import java.util.Objects;
-
 /**
  * Models an item flowing along a Mutiny pipeline with its subscriber context attached.
  *
@@ -12,6 +10,7 @@ import java.util.Objects;
 public final class ItemWithContext<T> {
 
     private final Context context;
+
     private final T item;
 
     /**
@@ -28,46 +27,26 @@ public final class ItemWithContext<T> {
         this.item = item;
     }
 
-    /**
-     * Gives the context.
-     *
-     * @return the context
-     */
     public Context context() {
-        return context;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Gives the item.
-     *
-     * @return the item
-     */
     public T get() {
-        return item;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "ItemWithContext{" +
-                "context=" + context +
-                ", item=" + item +
-                '}';
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ItemWithContext<?> that = (ItemWithContext<?>) o;
-        return Objects.equals(context, that.context) && Objects.equals(item, that.item);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(context, item);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

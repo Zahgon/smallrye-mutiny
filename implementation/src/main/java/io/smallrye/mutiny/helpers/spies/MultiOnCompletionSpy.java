@@ -11,12 +11,11 @@ public class MultiOnCompletionSpy<T> extends MultiSpyBase<T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.onCompletion().invoke(this::incrementInvocationCount)
-                .subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "MultiOnCompletionSpy{} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

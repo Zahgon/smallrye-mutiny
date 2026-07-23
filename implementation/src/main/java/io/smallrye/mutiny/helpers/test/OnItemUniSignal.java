@@ -4,6 +4,7 @@ package io.smallrye.mutiny.helpers.test;
  * A onItem signal.
  */
 public final class OnItemUniSignal<T> implements UniSignal {
+
     private final T item;
 
     public OnItemUniSignal(T item) {
@@ -12,13 +13,11 @@ public final class OnItemUniSignal<T> implements UniSignal {
 
     @Override
     public T value() {
-        return item;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "OnItemSignal{" +
-                "item=" + item +
-                '}';
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

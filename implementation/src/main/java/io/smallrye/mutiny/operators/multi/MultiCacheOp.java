@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import io.smallrye.mutiny.Context;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.subscription.ContextSupport;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
@@ -32,6 +31,7 @@ public class MultiCacheOp<T> extends AbstractMultiOperator<T, T> implements Subs
      * The current set of downstream subscribers.
      */
     private final List<CacheSubscription<T>> subscribers = new CopyOnWriteArrayList<>();
+
     private volatile boolean terminated;
 
     private final CopyOnWriteArrayList<Node<T>> history = new CopyOnWriteArrayList<>();
@@ -54,21 +54,7 @@ public class MultiCacheOp<T> extends AbstractMultiOperator<T, T> implements Subs
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        CacheSubscription<T> consumer = new CacheSubscription<>(downstream, this);
-        downstream.onSubscribe(consumer);
-        addDownstreamSubscription(consumer);
-
-        if (hasSubscribedToUpstream.compareAndSet(false, true)) {
-            if (downstream instanceof ContextSupport) {
-                this.context = ((ContextSupport) downstream).context();
-            } else {
-                this.context = Context.empty();
-            }
-            upstream.subscribe().withSubscriber(this);
-        } else {
-            // replay
-            consumer.replay();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private synchronized void addDownstreamSubscription(CacheSubscription<T> consumer) {
@@ -84,43 +70,27 @@ public class MultiCacheOp<T> extends AbstractMultiOperator<T, T> implements Subs
 
     @Override
     public void onSubscribe(Subscription s) {
-        s.request(Long.MAX_VALUE);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public synchronized void onNext(T item) {
-        history.add(new Node<>(item));
-        for (CacheSubscription<T> consumer : subscribers) {
-            // replay
-            consumer.replay();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onError(Throwable t) {
-        if (done) {
-            return;
-        }
-        failure = t;
-        done = true;
-        terminated = true;
-        for (CacheSubscription<T> consumer : subscribers) {
-            consumer.replay();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onComplete() {
-        done = true;
-        terminated = true;
-        for (CacheSubscription<T> consumer : subscribers) {
-            consumer.replay();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Context context() {
-        return this.context;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -132,9 +102,13 @@ public class MultiCacheOp<T> extends AbstractMultiOperator<T, T> implements Subs
     static final class CacheSubscription<T> implements Subscription {
 
         private final MultiSubscriber<? super T> downstream;
+
         private final MultiCacheOp<T> cache;
+
         private final AtomicLong requested = new AtomicLong();
+
         private final AtomicInteger wip = new AtomicInteger();
+
         private int lastIndex;
 
         CacheSubscription(MultiSubscriber<? super T> downstream, MultiCacheOp<T> cache) {
@@ -145,63 +119,20 @@ public class MultiCacheOp<T> extends AbstractMultiOperator<T, T> implements Subs
 
         @Override
         public void request(long n) {
-            if (n > 0) {
-                Subscriptions.add(requested, n);
-                replay();
-            } else {
-                cancel();
-                downstream.onFailure(Subscriptions.getInvalidRequestException());
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public void replay() {
-            if (wip.getAndIncrement() != 0) {
-                return;
-            }
-            int missed = 1;
-            CopyOnWriteArrayList<Node<T>> history = cache.history;
-
-            for (;;) {
-
-                if (cache.done && !hasNext()) {
-                    if (cache.failure != null) {
-                        downstream.onError(cache.failure);
-                    } else {
-                        downstream.onCompletion();
-                    }
-                    return;
-                }
-
-                long consumerRequested = requested.get();
-                if (consumerRequested == Long.MIN_VALUE) { // cancelled.
-                    return;
-                }
-
-                if (consumerRequested > 0L && hasNext()) {
-                    lastIndex = lastIndex + 1;
-                    Node<T> node = history.get(lastIndex);
-                    downstream.onItem(node.item);
-                    Subscriptions.subtract(requested, 1);
-                    continue;
-                }
-
-                missed = wip.addAndGet(-missed);
-                if (missed == 0) {
-                    break;
-                }
-            }
-
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (requested.getAndSet(Long.MIN_VALUE) != Long.MIN_VALUE) {
-                cache.remove(this);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         boolean hasNext() {
-            return lastIndex < cache.history.size() - 1;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 

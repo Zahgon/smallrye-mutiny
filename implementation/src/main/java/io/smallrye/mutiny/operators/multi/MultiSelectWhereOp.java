@@ -1,8 +1,5 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.Subscriptions.CANCELLED;
-
-import java.util.concurrent.Flow.Subscription;
 import java.util.function.Predicate;
 
 import io.smallrye.mutiny.Multi;
@@ -25,13 +22,13 @@ public class MultiSelectWhereOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        ParameterValidation.nonNullNpe(subscriber, "subscriber");
-        upstream.subscribe().withSubscriber(new MultiSelectWhereProcessor<>(subscriber, predicate));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class MultiSelectWhereProcessor<T> extends MultiOperatorProcessor<T, T> {
 
         private final Predicate<? super T> predicate;
+
         private boolean requestedMax = false;
 
         MultiSelectWhereProcessor(MultiSubscriber<? super T> downstream, Predicate<? super T> predicate) {
@@ -41,38 +38,12 @@ public class MultiSelectWhereOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onItem(T t) {
-            if (isDone()) {
-                return;
-            }
-
-            boolean passed;
-            try {
-                passed = predicate.test(t);
-            } catch (Throwable exception) {
-                failAndCancel(exception);
-                return;
-            }
-
-            if (passed) {
-                downstream.onItem(t);
-            } else if (!requestedMax) {
-                request(1);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long numberOfItems) {
-            Subscription subscription = getUpstreamSubscription();
-            if (subscription != CANCELLED) {
-                if (numberOfItems <= 0) {
-                    onFailure(new IllegalArgumentException("Invalid number of request, must be greater than 0"));
-                    return;
-                }
-                if (numberOfItems == Long.MAX_VALUE) {
-                    requestedMax = true;
-                }
-                subscription.request(numberOfItems);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

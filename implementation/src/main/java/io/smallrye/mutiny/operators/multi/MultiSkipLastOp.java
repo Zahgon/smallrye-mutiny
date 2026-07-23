@@ -23,17 +23,13 @@ public final class MultiSkipLastOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> actual) {
-        if (numberOfItems == 0) {
-            upstream.subscribe().withSubscriber(actual);
-        } else {
-            upstream.subscribe().withSubscriber(new SkipLastProcessor<>(actual, numberOfItems));
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    static final class SkipLastProcessor<T>
-            extends MultiOperatorProcessor<T, T> {
+    static final class SkipLastProcessor<T> extends MultiOperatorProcessor<T, T> {
 
         private final int numberOfItems;
+
         private final ArrayDeque<T> queue = new ArrayDeque<>();
 
         SkipLastProcessor(MultiSubscriber<? super T> actual, int numberOfItems) {
@@ -43,39 +39,27 @@ public final class MultiSkipLastOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Subscription subscription) {
-            if (compareAndSetUpstreamSubscription(null, subscription)) {
-                // Propagate subscription to downstream.
-                downstream.onSubscribe(this);
-                subscription.request(numberOfItems);
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T t) {
-            if (queue.size() == numberOfItems) {
-                downstream.onItem(queue.pollFirst());
-            }
-            queue.offerLast(t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable t) {
-            queue.clear();
-            super.onFailure(t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            queue.clear();
-            super.onCompletion();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            super.cancel();
-            queue.clear();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

@@ -20,16 +20,17 @@ public class UniCreateFromKnownItem<T> extends AbstractUni<T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        new KnownItemSubscription(subscriber).forward();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public T getItem() {
-        return item;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class KnownItemSubscription implements UniSubscription {
 
         private final UniSubscriber<? super T> subscriber;
+
         private volatile boolean cancelled = false;
 
         private KnownItemSubscription(UniSubscriber<? super T> subscriber) {
@@ -45,7 +46,7 @@ public class UniCreateFromKnownItem<T> extends AbstractUni<T> {
 
         @Override
         public void cancel() {
-            cancelled = true;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

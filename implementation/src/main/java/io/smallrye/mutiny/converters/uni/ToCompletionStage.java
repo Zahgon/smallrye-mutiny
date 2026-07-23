@@ -15,6 +15,6 @@ public class ToCompletionStage<T> implements Function<Uni<T>, CompletionStage<T>
 
     @Override
     public CompletionStage<T> apply(Uni<T> uni) {
-        return uni.subscribeAsCompletionStage();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

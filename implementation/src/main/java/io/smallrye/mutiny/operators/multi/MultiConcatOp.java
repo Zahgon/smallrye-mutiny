@@ -2,10 +2,7 @@ package io.smallrye.mutiny.operators.multi;
 
 import java.util.concurrent.Flow.Publisher;
 
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.helpers.Subscriptions;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.operators.AbstractMulti;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
@@ -30,30 +27,6 @@ public class MultiConcatOp<T> extends AbstractMulti<T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> actual) {
-        if (actual == null) {
-            throw new NullPointerException("The subscriber must not be `null`");
-        }
-        if (publishers.length == 0) {
-            Subscriptions.complete(actual);
-            return;
-        }
-
-        if (publishers.length == 1) {
-            publishers[0].subscribe(Infrastructure.onMultiSubscription(publishers[0], actual));
-            return;
-        }
-
-        if (postponeFailurePropagation) {
-            Multi.createFrom().items(publishers)
-                    .onItem().transformToMulti(publisher -> publisher)
-                    .collectFailures()
-                    .concatenate()
-                    .subscribe().withSubscriber(actual);
-        } else {
-            Multi.createFrom().items(publishers)
-                    .onItem().transformToMulti(publisher -> publisher)
-                    .concatenate()
-                    .subscribe().withSubscriber(actual);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

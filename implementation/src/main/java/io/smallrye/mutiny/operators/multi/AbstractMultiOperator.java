@@ -26,10 +26,7 @@ public abstract class AbstractMultiOperator<I, O> extends AbstractMulti<O> imple
         this.upstream = ParameterValidation.nonNull(upstream, "upstream");
     }
 
-    /**
-     * @return the upstream.
-     */
     public Multi<? extends I> upstream() {
-        return upstream;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

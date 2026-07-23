@@ -11,28 +11,23 @@ public class MultiOnCancellationSpy<T> extends MultiSpyBase<T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.onCancellation().invoke(this::incrementInvocationCount)
-                .subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public boolean isCancelled() {
-        return invoked();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "MultiOnCancellationSpy{} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public void assertCancelled() {
-        if (!isCancelled()) {
-            throw new AssertionError("Expected downstream cancellation, but it did not happen");
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public void assertNotCancelled() {
-        if (isCancelled()) {
-            throw new AssertionError("Did not expect to receive a downstream cancellation");
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

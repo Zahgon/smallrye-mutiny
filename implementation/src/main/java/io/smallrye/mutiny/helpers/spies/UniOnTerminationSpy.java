@@ -13,37 +13,29 @@ public class UniOnTerminationSpy<T> extends UniSpyBase<T> {
     }
 
     public T lastTerminationItem() throws IllegalStateException {
-        return (lastTermination == null) ? null : lastTermination.getItem1();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public Throwable lastTerminationFailure() throws IllegalStateException {
-        return (lastTermination == null) ? null : lastTermination.getItem2();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public boolean lastTerminationWasCancelled() throws IllegalStateException {
-        return (lastTermination != null) && lastTermination.getItem3();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void reset() {
-        super.reset();
-        lastTermination = null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(UniSubscriber<? super T> downstream) {
-        upstream()
-                .onTermination().invoke((i, f, c) -> {
-                    incrementInvocationCount();
-                    lastTermination = Tuple3.of(i, f, c);
-                })
-                .subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "UniOnTerminationSpy{" +
-                "lastTermination=" + lastTermination +
-                "} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

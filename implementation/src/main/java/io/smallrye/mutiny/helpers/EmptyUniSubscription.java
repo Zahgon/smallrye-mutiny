@@ -27,21 +27,12 @@ public class EmptyUniSubscription implements UniSubscription {
         // Avoid direct instantiation.
     }
 
-    /**
-     * Propagates a failure to the given downstream subscriber.
-     * The subscriber receive the {@code CANCELLED} subscription followed with the failure.
-     *
-     * @param subscriber the subscriber, must not be {@code null}
-     * @param failure the failure, must not be {@code null}
-     * @param <T> the expected item type
-     */
     public static <T> void propagateFailureEvent(UniSubscriber<T> subscriber, Throwable failure) {
-        subscriber.onSubscribe(DONE);
-        subscriber.onFailure(failure);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        // Ignored.
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -1,4 +1,3 @@
-
 package io.smallrye.mutiny.operators.multi;
 
 import java.util.function.BiFunction;
@@ -23,12 +22,13 @@ public final class MultiScanOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new ScanProcessor<>(downstream, accumulator));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class ScanProcessor<T> extends MultiOperatorProcessor<T, T> {
 
         private final BiFunction<T, ? super T, T> accumulator;
+
         private T current;
 
         ScanProcessor(MultiSubscriber<? super T> downstream, BiFunction<T, ? super T, T> accumulator) {
@@ -38,39 +38,17 @@ public final class MultiScanOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onItem(T item) {
-            if (isDone()) {
-                return;
-            }
-
-            T result = item;
-            if (current != null) {
-                try {
-                    result = accumulator.apply(current, item);
-                } catch (Throwable e) {
-                    onFailure(e);
-                    return;
-                }
-                if (result == null) {
-                    onFailure(new NullPointerException(ParameterValidation.MAPPER_RETURNED_NULL));
-                    return;
-                }
-            }
-
-            current = result;
-            downstream.onItem(result);
-
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            super.onFailure(failure);
-            current = null;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            super.onCompletion();
-            current = null;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

@@ -6,10 +6,15 @@ import io.smallrye.mutiny.subscription.UniSubscriber;
 public class UniGlobalSpy<T> extends UniSpyBase<T> {
 
     private final UniOnCancellationSpy<T> onCancellationSpy;
+
     private final UniOnFailureSpy<T> onFailureSpy;
+
     private final UniOnItemOrFailureSpy<T> onItemOrFailureSpy;
+
     private final UniOnItemSpy<T> onItemSpy;
+
     private final UniOnSubscribeSpy<T> onSubscribeSpy;
+
     private final UniOnTerminationSpy<T> onTerminationSpy;
 
     UniGlobalSpy(Uni<T> upstream) {
@@ -23,64 +28,51 @@ public class UniGlobalSpy<T> extends UniSpyBase<T> {
     }
 
     public UniOnCancellationSpy<T> onCancellationSpy() {
-        return onCancellationSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public UniOnFailureSpy<T> onFailureSpy() {
-        return onFailureSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public UniOnItemOrFailureSpy<T> onItemOrFailureSpy() {
-        return onItemOrFailureSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public UniOnItemSpy<T> onItemSpy() {
-        return onItemSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public UniOnSubscribeSpy<T> onSubscribeSpy() {
-        return onSubscribeSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public UniOnTerminationSpy<T> onTerminationSpy() {
-        return onTerminationSpy;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public long invocationCount() {
-        return onCancellationSpy.invocationCount() + onFailureSpy.invocationCount() + onItemSpy.invocationCount()
-                + onItemOrFailureSpy.invocationCount() + onSubscribeSpy.invocationCount() + onTerminationSpy.invocationCount();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public boolean invoked() {
-        return invocationCount() > 0;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void reset() {
-        onCancellationSpy.reset();
-        onFailureSpy.reset();
-        onItemSpy.reset();
-        onItemOrFailureSpy.reset();
-        onSubscribeSpy.reset();
-        onTerminationSpy.reset();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(UniSubscriber<? super T> downstream) {
-        onTerminationSpy.subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "UniGlobalSpy{" +
-                "onCancellationSpy=" + onCancellationSpy +
-                ", onFailureSpy=" + onFailureSpy +
-                ", onItemOrFailureSpy=" + onItemOrFailureSpy +
-                ", onItemSpy=" + onItemSpy +
-                ", onSubscribeSpy=" + onSubscribeSpy +
-                ", onTerminationSpy=" + onTerminationSpy +
-                "} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

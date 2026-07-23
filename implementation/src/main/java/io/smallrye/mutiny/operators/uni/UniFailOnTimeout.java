@@ -1,26 +1,23 @@
 package io.smallrye.mutiny.operators.uni;
 
-import static io.smallrye.mutiny.helpers.EmptyUniSubscription.CANCELLED;
-
 import java.time.Duration;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.helpers.EmptyUniSubscription;
 import io.smallrye.mutiny.helpers.ParameterValidation;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.operators.UniOperator;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 import io.smallrye.mutiny.subscription.UniSubscription;
 
 public class UniFailOnTimeout<I> extends UniOperator<I, I> {
+
     private final Duration timeout;
+
     private final Supplier<? extends Throwable> supplier;
+
     private final ScheduledExecutorService executor;
 
     public UniFailOnTimeout(Uni<I> upstream, Duration timeout, Supplier<? extends Throwable> supplier,
@@ -33,7 +30,7 @@ public class UniFailOnTimeout<I> extends UniOperator<I, I> {
 
     @Override
     public void subscribe(UniSubscriber<? super I> subscriber) {
-        AbstractUni.subscribe(upstream(), new UniFailOnTimeoutProcessor(subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class UniFailOnTimeoutProcessor extends UniOperatorProcessor<I, I> {
@@ -46,49 +43,22 @@ public class UniFailOnTimeout<I> extends UniOperator<I, I> {
 
         @Override
         public void onSubscribe(UniSubscription subscription) {
-            try {
-                timeoutFuture = executor.schedule(this::doTimeout, timeout.toMillis(), TimeUnit.MILLISECONDS);
-            } catch (RejectedExecutionException e) {
-                // Executor out of service.
-                getAndSetUpstreamSubscription(CANCELLED);
-                subscription.cancel();
-                downstream.onSubscribe(EmptyUniSubscription.DONE);
-                downstream.onFailure(e);
-                return;
-            }
-            super.onSubscribe(subscription);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(I item) {
-            UniSubscription sub = getAndSetUpstreamSubscription(CANCELLED);
-            if (sub != CANCELLED) {
-                if (timeoutFuture != null) {
-                    timeoutFuture.cancel(false);
-                }
-                downstream.onItem(item);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            UniSubscription sub = getAndSetUpstreamSubscription(CANCELLED);
-            if (sub != CANCELLED) {
-                if (timeoutFuture != null) {
-                    timeoutFuture.cancel(false);
-                }
-                downstream.onFailure(failure);
-            } else {
-                Infrastructure.handleDroppedException(failure);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (timeoutFuture != null) {
-                timeoutFuture.cancel(false);
-            }
-            super.cancel();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void doTimeout() {
@@ -96,7 +66,6 @@ public class UniFailOnTimeout<I> extends UniOperator<I, I> {
                 return;
             }
             super.cancel();
-
             Throwable throwable;
             try {
                 throwable = supplier.get();

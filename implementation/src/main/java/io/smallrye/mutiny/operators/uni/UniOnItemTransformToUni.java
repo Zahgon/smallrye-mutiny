@@ -22,7 +22,7 @@ public class UniOnItemTransformToUni<I, O> extends UniOperator<I, O> {
 
     @Override
     public void subscribe(UniSubscriber<? super O> subscriber) {
-        AbstractUni.subscribe(upstream(), new UniOnItemTransformToUniProcessor(subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // Note: serves as a subscription/subscriber for both the upstream and the Uni.
@@ -37,30 +37,13 @@ public class UniOnItemTransformToUni<I, O> extends UniOperator<I, O> {
 
         @Override
         public void onSubscribe(UniSubscription subscription) {
-            if (getCurrentUpstreamSubscription() == null) {
-                super.onSubscribe(subscription);
-            } else if (isCancelled()) {
-                subscription.cancel();
-            } else if (innerSubscription == null) {
-                this.innerSubscription = subscription;
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         @SuppressWarnings("unchecked")
         public void onItem(I item) {
-            if (isCancelled()) {
-                return;
-            }
-            if (innerSubscription == null) {
-                // Input item from upstream
-                performInnerSubscription(item);
-            } else {
-                // Output item from the inner Uni
-                downstream.onItem((O) item); // not a pretty cast
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @SuppressWarnings("unchecked")
@@ -80,15 +63,13 @@ public class UniOnItemTransformToUni<I, O> extends UniOperator<I, O> {
                 downstream.onFailure(new NullPointerException(MAPPER_RETURNED_NULL));
                 return;
             }
-            AbstractUni.subscribe(uni, (UniSubscriber) this); // not a pretty cast
+            // not a pretty cast
+            AbstractUni.subscribe(uni, (UniSubscriber) this);
         }
 
         @Override
         public void cancel() {
-            if (innerSubscription != null) {
-                innerSubscription.cancel();
-            }
-            super.cancel();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

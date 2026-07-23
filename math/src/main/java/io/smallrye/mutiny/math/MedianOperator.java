@@ -18,33 +18,19 @@ public class MedianOperator<T extends Number & Comparable<T>> implements Functio
 
     // Using the same initial capacity 11 as PriorityQueue
     private final Queue<T> minHeap = new PriorityBlockingQueue<>(11);
+
     private final Queue<T> maxHeap = new PriorityBlockingQueue<>(11, Comparator.reverseOrder());
 
     @Override
     public Multi<Double> apply(Multi<T> multi) {
-        return multi
-                .onItem().transform(x -> {
-                    push(x);
-                    return getMedian();
-                });
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     void push(T num) {
-        if (minHeap.size() == maxHeap.size()) {
-            maxHeap.offer(num);
-            minHeap.offer(maxHeap.poll());
-        } else {
-            minHeap.offer(num);
-            maxHeap.offer(minHeap.poll());
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     double getMedian() {
-        if (minHeap.size() > maxHeap.size()) {
-            return minHeap.peek().doubleValue();
-        } else {
-            return (minHeap.peek().doubleValue() + maxHeap.peek().doubleValue()) / 2.0d;
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

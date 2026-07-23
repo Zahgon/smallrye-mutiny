@@ -9,10 +9,7 @@ import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.operators.AbstractMulti;
-import io.smallrye.mutiny.subscription.BackPressureFailure;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
 /**
@@ -53,14 +50,8 @@ public class BroadcastProcessor<T> extends AbstractMulti<T> implements Processor
      */
     Throwable failure;
 
-    /**
-     * Creates a new {@code BroadcastProcessor}
-     *
-     * @param <T> the type of item
-     * @return the new {@code BroadcastProcessor}
-     */
     public static <T> BroadcastProcessor<T> create() {
-        return new BroadcastProcessor<>();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -71,7 +62,7 @@ public class BroadcastProcessor<T> extends AbstractMulti<T> implements Processor
     }
 
     public SerializedProcessor<T, T> serialized() {
-        return new SerializedProcessor<>(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -89,84 +80,35 @@ public class BroadcastProcessor<T> extends AbstractMulti<T> implements Processor
         return current.add(sub);
     }
 
-    /**
-     * Atomically removes the given subscriber if it is subscribed to this processor.
-     *
-     * @param sub the subscription wrapping a subscriber to remove
-     */
     void remove(BroadcastSubscription<T> sub) {
-        List<BroadcastSubscription<T>> current = subscribers.get();
-        if (current == TERMINATED || current.isEmpty()) {
-            return;
-        }
-        current.remove(sub);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        BroadcastSubscription<T> subscription = new BroadcastSubscription<>(downstream, this);
-        downstream.onSubscribe(subscription);
-        if (addSubscription(subscription)) {
-            // if cancellation happened while a successful add, the remove() didn't work so we need to do it again
-            if (subscription.isCancelled()) {
-                remove(subscription);
-            }
-        } else {
-            Throwable ex = failure;
-            if (ex != null) {
-                downstream.onFailure(ex);
-            } else {
-                downstream.onCompletion();
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onSubscribe(Subscription subscription) {
-        if (subscribers.get() == TERMINATED) {
-            subscription.cancel();
-            return;
-        }
-        subscription.request(Long.MAX_VALUE);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onNext(T item) {
-        ParameterValidation.nonNullNpe(item, "item");
-        List<BroadcastSubscription<T>> subscriptions = subscribers.get();
-        if (subscriptions != TERMINATED) {
-            for (BroadcastSubscription<T> s : subscriptions) {
-                s.onNext(item);
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void onError(Throwable failure) {
-        ParameterValidation.nonNullNpe(failure, "failure");
-        List<BroadcastSubscription<?>> subscriptions = subscribers.getAndSet((List) TERMINATED);
-        if (subscriptions == TERMINATED) {
-            return;
-        }
-        this.failure = failure;
-        for (BroadcastSubscription<?> s : subscriptions) {
-            s.onError(failure);
-        }
-        subscriptions.clear();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void onComplete() {
-        List<BroadcastSubscription<?>> subscriptions = subscribers.getAndSet((List) TERMINATED);
-        if (subscriptions == TERMINATED) {
-            return;
-        }
-        for (BroadcastSubscription<?> s : subscriptions) {
-            s.onComplete();
-        }
-        subscriptions.clear();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -179,7 +121,7 @@ public class BroadcastProcessor<T> extends AbstractMulti<T> implements Processor
 
         /**
          * The actual subscriber.
-         **/
+         */
         private final Subscriber<? super T> downstream;
 
         /**
@@ -205,50 +147,29 @@ public class BroadcastProcessor<T> extends AbstractMulti<T> implements Processor
         }
 
         public void onNext(T t) {
-            long r = requests.get();
-            if (r == Long.MIN_VALUE) {
-                return;
-            }
-            if (r != 0L) {
-                downstream.onNext(t);
-                Subscriptions.producedAndHandleAlreadyCancelled(requests, 1);
-            } else {
-                cancel();
-                downstream.onError(new BackPressureFailure("Could not emit item downstream due to lack of requests"));
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public void onError(Throwable t) {
-            if (requests.get() != Long.MIN_VALUE) {
-                downstream.onError(t);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public void onComplete() {
-            if (requests.get() != Long.MIN_VALUE) {
-                downstream.onComplete();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long n) {
-            if (n > 0) {
-                Subscriptions.addAndHandledAlreadyCancelled(requests, n);
-            } else {
-                cancel();
-                downstream.onError(Subscriptions.getInvalidRequestException());
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (requests.getAndSet(Long.MIN_VALUE) != Long.MIN_VALUE) {
-                parent.remove(this);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public boolean isCancelled() {
-            return requests.get() == Long.MIN_VALUE;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

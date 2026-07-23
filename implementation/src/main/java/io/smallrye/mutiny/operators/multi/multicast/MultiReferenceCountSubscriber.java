@@ -2,14 +2,15 @@ package io.smallrye.mutiny.operators.multi.multicast;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.operators.multi.MultiOperatorProcessor;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
 public class MultiReferenceCountSubscriber<T> extends MultiOperatorProcessor<T, T> {
 
     private final AtomicBoolean done = new AtomicBoolean();
+
     private final MultiReferenceCount<T> parent;
+
     private final ConnectableMultiConnection connection;
 
     MultiReferenceCountSubscriber(MultiSubscriber<? super T> downstream, MultiReferenceCount<T> parent,
@@ -21,32 +22,21 @@ public class MultiReferenceCountSubscriber<T> extends MultiOperatorProcessor<T, 
 
     @Override
     public void onItem(T t) {
-        downstream.onItem(t);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onFailure(Throwable failure) {
-        if (done.compareAndSet(false, true)) {
-            parent.terminated(connection);
-            super.onFailure(failure);
-        } else {
-            Infrastructure.handleDroppedException(failure);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onCompletion() {
-        if (done.compareAndSet(false, true)) {
-            parent.terminated(connection);
-            super.onCompletion();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        super.cancel();
-        if (done.compareAndSet(false, true)) {
-            parent.cancel(connection);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

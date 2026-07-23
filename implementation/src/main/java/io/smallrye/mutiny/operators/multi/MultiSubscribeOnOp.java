@@ -15,11 +15,8 @@
  */
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.Subscriptions.CANCELLED;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.Flow;
-import java.util.concurrent.RejectedExecutionException;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.helpers.ParameterValidation;
@@ -35,17 +32,14 @@ public class MultiSubscribeOnOp<T> extends AbstractMultiOperator<T, T> {
 
     private final Executor executor;
 
-    public MultiSubscribeOnOp(
-            Multi<? extends T> upstream,
-            Executor executor) {
+    public MultiSubscribeOnOp(Multi<? extends T> upstream, Executor executor) {
         super(upstream);
         this.executor = ParameterValidation.nonNull(executor, "executor");
     }
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        SubscribeOnProcessor<T> sub = new SubscribeOnProcessor<>(downstream, executor);
-        sub.scheduleSubscription(upstream, downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class SubscribeOnProcessor<T> extends MultiOperatorProcessor<T, T> {
@@ -58,32 +52,12 @@ public class MultiSubscribeOnOp<T> extends AbstractMultiOperator<T, T> {
         }
 
         public void scheduleSubscription(Multi<? extends T> upstream, MultiSubscriber<? super T> downstream) {
-            try {
-                executor.execute(() -> upstream.subscribe().withSubscriber(this));
-            } catch (RejectedExecutionException rejection) {
-                onFailure(rejection);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long numberOfItems) {
-            if (numberOfItems <= 0) {
-                onFailure(new IllegalArgumentException("Invalid number of request, must be greater than 0"));
-                return;
-            }
-            if (!isDone()) {
-                try {
-                    executor.execute(() -> {
-                        Flow.Subscription subscription = getUpstreamSubscription();
-                        if (subscription != CANCELLED) {
-                            subscription.request(numberOfItems);
-                        }
-                    });
-                } catch (RejectedExecutionException rejected) {
-                    onFailure(rejected);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

@@ -1,10 +1,5 @@
 package io.smallrye.mutiny.math;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-
-import java.util.Objects;
-
 /**
  * A state object for collecting statistics such as count, average, min, max, variance, standard deviation, skewness,
  * and kurtosis.
@@ -32,11 +27,17 @@ import java.util.Objects;
 public class Statistic<T> {
 
     final long n;
+
     final double m1;
+
     final double m2;
+
     final double m3;
+
     final double m4;
+
     final T min;
+
     final T max;
 
     public Statistic(long n, double m1, double m2, double m3, double m4, T min, T max) {
@@ -49,93 +50,50 @@ public class Statistic<T> {
         this.max = max;
     }
 
-    /**
-     * @return the average (mean) of the emitted items.
-     */
     public double getAverage() {
-        return m1;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * @return the variance of the emitted items
-     */
     public double getVariance() {
-        return m2 / (n - 1.0);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * @return the standard deviation
-     */
     public double getStandardDeviation() {
-        return sqrt(getVariance());
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * @return the skewness, can be {@code NaN}
-     */
     public double getSkewness() {
-        return sqrt(((double) n)) * m3 / pow(m2, 1.5);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * @return the kurtosis, can be {@code Nan}
-     */
     public double getKurtosis() {
-        return ((double) n) * m4 / (m2 * m2) - 3.0;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * @return the number of items
-     */
     public long getCount() {
-        return n;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * @return the minimum item, {@code null} if no items have been emitted
-     */
     public T getMin() {
-        return min;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * @return the maximum item, {@code null} if no items have been emitted
-     */
     public T getMax() {
-        return max;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Statistic<?> statistic = (Statistic<?>) o;
-        return n == statistic.n && Double.compare(statistic.m1, m1) == 0
-                && Double.compare(statistic.m2, m2) == 0 && Double.compare(statistic.m3, m3) == 0
-                && Double.compare(statistic.m4, m4) == 0 && Objects.equals(min, statistic.min)
-                && Objects.equals(max, statistic.max);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(n, m1, m2, m3, m4, min, max);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "Statistic{" +
-                "size=" + n +
-                ", min=" + min +
-                ", max=" + max +
-                ", average=" + getAverage() +
-                ", variance=" + getVariance() +
-                ", stdDeviation=" + getStandardDeviation() +
-                ", skewness=" + getSkewness() +
-                ", kurtosis=" + getKurtosis() +
-                '}';
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

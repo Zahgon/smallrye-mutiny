@@ -21,7 +21,7 @@ public class MultiOnRequestCall<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new MultiOnRequestCallOperator(nonNull(downstream, "downstream")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     class MultiOnRequestCallOperator extends MultiOperatorProcessor<T, T> {
@@ -35,29 +35,12 @@ public class MultiOnRequestCall<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void request(long numberOfItems) {
-            if (numberOfItems <= 0) {
-                onFailure(new IllegalArgumentException("Invalid number of request, must be greater than 0"));
-                return;
-            }
-            cancellable.set(execute(numberOfItems).subscribe().with(
-                    context(),
-                    ignored -> {
-                        cancellable.set(null);
-                        super.request(numberOfItems);
-                    },
-                    throwable -> {
-                        cancellable.set(null);
-                        super.onFailure(throwable);
-                    }));
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            super.cancel();
-            Cancellable uni = cancellable.getAndSet(null);
-            if (uni != null) {
-                uni.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private Uni<?> execute(long numberOfItems) {

@@ -25,6 +25,7 @@ public class UniMemoizeOp<I> extends UniOperator<I, I> implements UniSubscriber<
     private Context currentContext = Context.empty();
 
     private enum State {
+
         INIT,
         WAITING_FOR_UPSTREAM,
         CACHING
@@ -51,41 +52,7 @@ public class UniMemoizeOp<I> extends UniOperator<I, I> implements UniSubscriber<
 
     @Override
     public void subscribe(UniSubscriber<? super I> subscriber) {
-        nonNull(subscriber, "subscriber");
-
-        boolean shouldSubscribeUpstream = false;
-        Object cached = null;
-        boolean wasInCachingState = false;
-
-        internalLock.lock();
-        try {
-            checkForInvalidation(); // May throw an exception
-            switch (state) {
-                case INIT:
-                    state = State.WAITING_FOR_UPSTREAM;
-                    awaiters.add(subscriber);
-                    currentContext = subscriber.context();
-                    shouldSubscribeUpstream = true;
-                    break;
-                case WAITING_FOR_UPSTREAM:
-                    awaiters.add(subscriber);
-                    break;
-                case CACHING:
-                    cached = cachedResult;
-                    wasInCachingState = true;
-                    break;
-            }
-        } finally {
-            internalLock.unlock();
-        }
-
-        subscriber.onSubscribe(new MemoizedSubscription(subscriber));
-
-        if (shouldSubscribeUpstream) {
-            upstream().subscribe().withSubscriber(this);
-        } else if (wasInCachingState) {
-            forwardTo(subscriber, cached);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void checkForInvalidation() {
@@ -100,24 +67,12 @@ public class UniMemoizeOp<I> extends UniOperator<I, I> implements UniSubscriber<
 
     @Override
     public void onSubscribe(UniSubscription subscription) {
-        internalLock.lock();
-        this.currentUpstreamSubscription = subscription;
-        internalLock.unlock();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onItem(I item) {
-        internalLock.lock();
-        List<UniSubscriber<? super I>> toNotify = null;
-        if (state == State.WAITING_FOR_UPSTREAM) {
-            state = State.CACHING;
-            cachedResult = item;
-            toNotify = gatherAwaiters();
-        }
-        internalLock.unlock();
-        if (toNotify != null) {
-            notifyAwaiters(toNotify, item);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private List<UniSubscriber<? super I>> gatherAwaiters() {
@@ -137,17 +92,7 @@ public class UniMemoizeOp<I> extends UniOperator<I, I> implements UniSubscriber<
 
     @Override
     public void onFailure(Throwable failure) {
-        internalLock.lock();
-        List<UniSubscriber<? super I>> toNotify = null;
-        if (state == State.WAITING_FOR_UPSTREAM) {
-            state = State.CACHING;
-            cachedResult = new FailureHolder(failure);
-            toNotify = gatherAwaiters();
-        }
-        internalLock.unlock();
-        if (toNotify != null) {
-            notifyAwaiters(toNotify, new FailureHolder(failure));
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings("unchecked")
@@ -161,7 +106,7 @@ public class UniMemoizeOp<I> extends UniOperator<I, I> implements UniSubscriber<
 
     @Override
     public Context context() {
-        return currentContext;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class MemoizedSubscription implements UniSubscription {
@@ -174,12 +119,7 @@ public class UniMemoizeOp<I> extends UniOperator<I, I> implements UniSubscriber<
 
         @Override
         public void cancel() {
-            internalLock.lock();
-            try {
-                awaiters.remove(subscriber);
-            } finally {
-                internalLock.unlock();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

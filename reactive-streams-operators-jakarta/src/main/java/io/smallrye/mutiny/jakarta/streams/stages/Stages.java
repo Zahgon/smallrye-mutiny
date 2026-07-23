@@ -2,10 +2,8 @@ package io.smallrye.mutiny.jakarta.streams.stages;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import org.eclipse.microprofile.reactive.streams.operators.spi.Stage;
-import org.eclipse.microprofile.reactive.streams.operators.spi.UnsupportedStageException;
 
 import io.smallrye.mutiny.jakarta.streams.operators.Operator;
 import io.smallrye.mutiny.jakarta.streams.operators.ProcessorOperator;
@@ -21,7 +19,6 @@ public class Stages {
 
     static {
         ALL = new ArrayList<>();
-
         ALL.add(new ProcessorOperator<>(Stage.Distinct.class, new DistinctStageFactory()));
         ALL.add(new ProcessorOperator<>(Stage.Filter.class, new FilterStageFactory()));
         ALL.add(new ProcessorOperator<>(Stage.FlatMap.class, new FlatMapStageFactory()));
@@ -40,15 +37,12 @@ public class Stages {
         ALL.add(new ProcessorOperator<>(Stage.Limit.class, new LimitStageFactory()));
         ALL.add(new ProcessorOperator<>(Stage.Skip.class, new SkipStageFactory()));
         ALL.add(new ProcessorOperator<>(Stage.Coupled.class, new CoupledStageFactory()));
-
         ALL.add(new PublisherOperator<>(Stage.Concat.class, new ConcatStageFactory()));
         ALL.add(new PublisherOperator<>(Stage.Failed.class, new FailedPublisherStageFactory()));
         ALL.add(new PublisherOperator<>(Stage.Of.class, new FromIterableStageFactory()));
         ALL.add(new PublisherOperator<>(Stage.PublisherStage.class, new FromPublisherStageFactory()));
         ALL.add(new PublisherOperator<>(Stage.FromCompletionStage.class, new FromCompletionStageFactory()));
-        ALL.add(new PublisherOperator<>(Stage.FromCompletionStageNullable.class,
-                new FromCompletionStageNullableFactory()));
-
+        ALL.add(new PublisherOperator<>(Stage.FromCompletionStageNullable.class, new FromCompletionStageNullableFactory()));
         ALL.add(new TerminalOperator<>(Stage.Cancel.class, new CancelStageFactory()));
         ALL.add(new TerminalOperator<>(Stage.Collect.class, new CollectStageFactory()));
         ALL.add(new TerminalOperator<>(Stage.FindFirst.class, new FindFirstStageFactory()));
@@ -57,13 +51,10 @@ public class Stages {
 
     @SuppressWarnings("unchecked")
     public static <T extends Stage> Operator<T> lookup(T stage) {
-        Objects.requireNonNull(stage, "The stage must not be `null`");
-        return ALL.stream().filter(p -> p.test(stage)).findAny()
-                .orElseThrow(() -> new UnsupportedStageException(stage));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private Stages() {
         // Avoid direct instantiation.
     }
-
 }

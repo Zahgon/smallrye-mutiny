@@ -13,8 +13,6 @@ import java.util.function.Function;
 
 import io.smallrye.mutiny.Context;
 import io.smallrye.mutiny.helpers.Subscriptions;
-import io.smallrye.mutiny.helpers.queues.Queues;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.operators.AbstractMulti;
 import io.smallrye.mutiny.subscription.ContextSupport;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
@@ -22,13 +20,14 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
 public final class MultiZipOp<O> extends AbstractMulti<O> {
 
     private final List<Publisher<?>> upstreams;
+
     private final Function<List<?>, ? extends O> combinator;
+
     private final int bufferSize;
+
     private final boolean collectFailures;
 
-    public MultiZipOp(Iterable<? extends Publisher<?>> upstreams,
-            Function<List<?>, ? extends O> combinator,
-            int bufferSize,
+    public MultiZipOp(Iterable<? extends Publisher<?>> upstreams, Function<List<?>, ? extends O> combinator, int bufferSize,
             boolean collectFailures) {
         this.upstreams = new LinkedList<>();
         upstreams.forEach(this.upstreams::add);
@@ -39,43 +38,40 @@ public final class MultiZipOp<O> extends AbstractMulti<O> {
 
     @Override
     public void subscribe(MultiSubscriber<? super O> downstream) {
-        if (upstreams.isEmpty()) {
-            Subscriptions.complete(downstream);
-            return;
-        }
-        ZipCoordinator<O> coordinator = new ZipCoordinator<>(downstream, combinator, upstreams.size(), bufferSize,
-                collectFailures);
-        downstream.onSubscribe(coordinator);
-        coordinator.subscribe(upstreams);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class ZipCoordinator<R> implements Flow.Subscription {
 
         private final AtomicInteger wip = new AtomicInteger();
+
         private final MultiSubscriber<? super R> downstream;
+
         private final List<ZipSubscriber<R>> subscribers;
 
         private final Function<List<?>, ? extends R> combinator;
+
         private final AtomicLong requested = new AtomicLong();
+
         private final AtomicReference<Throwable> failures = new AtomicReference<>();
+
         private final boolean collectFailures;
 
         private volatile boolean cancelled;
+
         private final List<Object> current;
 
-        ZipCoordinator(MultiSubscriber<? super R> downstream,
-                Function<List<?>, ? extends R> combinator, int n, int prefetch, boolean collectFailures) {
+        ZipCoordinator(MultiSubscriber<? super R> downstream, Function<List<?>, ? extends R> combinator, int n, int prefetch,
+                boolean collectFailures) {
             this.downstream = downstream;
             this.combinator = combinator;
             this.collectFailures = collectFailures;
-
             Context context;
             if (downstream instanceof ContextSupport) {
                 context = ((ContextSupport) downstream).context();
             } else {
                 context = Context.empty();
             }
-
             subscribers = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 subscribers.add(new ZipSubscriber<>(context, this, prefetch));
@@ -84,58 +80,35 @@ public final class MultiZipOp<O> extends AbstractMulti<O> {
         }
 
         void subscribe(List<Publisher<?>> sources) {
-            for (int i = 0; i < sources.size(); i++) {
-                if (cancelled || (!collectFailures && failures.get() != null)) {
-                    return;
-                }
-                Publisher<?> publisher = sources.get(i);
-                publisher.subscribe(Infrastructure.onMultiSubscription(publisher, subscribers.get(i)));
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long n) {
-            if (n > 0) {
-                Subscriptions.add(requested, n);
-                drain();
-            } else {
-                failures.set(Subscriptions.getInvalidRequestException());
-                drain();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (!cancelled) {
-                cancelled = true;
-                cancelAll();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void error(ZipSubscriber<R> inner, Throwable e) {
-            if (Subscriptions.addFailure(failures, e)) {
-                inner.done = true;
-                drain();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void cancelAll() {
-            for (ZipSubscriber<R> s : subscribers) {
-                s.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void drain() {
             if (wip.getAndIncrement() != 0) {
                 return;
             }
-
             final List<ZipSubscriber<R>> qs = subscribers;
             final int n = qs.size();
             List<Object> values = current;
-
             int missed = 1;
-
             for (;;) {
                 long requests = requested.get();
                 long emitted = 0L;
@@ -148,17 +121,13 @@ public final class MultiZipOp<O> extends AbstractMulti<O> {
                         Subscriptions.terminateAndPropagate(failures, downstream);
                         return;
                     }
-
                     boolean empty = false;
-
                     for (int j = 0; j < n; j++) {
                         ZipSubscriber<R> inner = qs.get(j);
                         if (values.get(j) == null) {
                             boolean d = inner.done;
                             Queue<Object> q = inner.queue;
-
                             Object v = q != null ? q.poll() : null;
-
                             boolean sourceEmpty = v == null;
                             if (d && sourceEmpty) {
                                 cancelAll();
@@ -172,16 +141,12 @@ public final class MultiZipOp<O> extends AbstractMulti<O> {
                             }
                         }
                     }
-
                     if (empty) {
                         break;
                     }
-
                     R v;
-
                     try {
                         v = combinator.apply(List.copyOf(values));
-
                         if (v == null) {
                             throw new NullPointerException("The zipper method returned `null`");
                         }
@@ -191,30 +156,25 @@ public final class MultiZipOp<O> extends AbstractMulti<O> {
                         Subscriptions.terminateAndPropagate(failures, downstream);
                         return;
                     }
-
                     downstream.onItem(v);
                     emitted++;
                     values.clear();
                 }
-
                 if (requests == emitted) {
                     if (cancelled) {
                         return;
                     }
-
                     if (!collectFailures && failures.get() != null) {
                         cancelAll();
                         Subscriptions.terminateAndPropagate(failures, downstream);
                         return;
                     }
-
                     for (int j = 0; j < n; j++) {
                         ZipSubscriber<R> inner = qs.get(j);
                         if (values.get(j) == null) {
                             boolean d = inner.done;
                             Queue<Object> q = inner.queue;
                             Object v = q != null ? q.poll() : null;
-
                             boolean empty = v == null;
                             if (d && empty) {
                                 cancelAll();
@@ -226,20 +186,15 @@ public final class MultiZipOp<O> extends AbstractMulti<O> {
                             }
                         }
                     }
-
                 }
-
                 if (emitted != 0L) {
-
                     for (ZipSubscriber<R> inner : qs) {
                         inner.request(emitted);
                     }
-
                     if (requests != Long.MAX_VALUE) {
                         requested.addAndGet(-emitted);
                     }
                 }
-
                 missed = wip.addAndGet(-missed);
                 if (missed == 0) {
                     break;
@@ -251,12 +206,19 @@ public final class MultiZipOp<O> extends AbstractMulti<O> {
     static final class ZipSubscriber<R> implements MultiSubscriber<Object>, Flow.Subscription, ContextSupport {
 
         private final AtomicReference<Flow.Subscription> upstream = new AtomicReference<>();
+
         private final ZipCoordinator<R> parent;
+
         private final int prefetch;
+
         private final int limit;
+
         private final Context context;
+
         private Queue<Object> queue;
+
         private long produced;
+
         private volatile boolean done;
 
         ZipSubscriber(Context context, ZipCoordinator<R> parent, int prefetch) {
@@ -268,52 +230,37 @@ public final class MultiZipOp<O> extends AbstractMulti<O> {
 
         @Override
         public void onSubscribe(Flow.Subscription s) {
-            if (upstream.compareAndSet(null, s)) {
-                queue = Queues.get(prefetch).get();
-                s.request(prefetch);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(Object item) {
-            queue.offer(item);
-            parent.drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable t) {
-            parent.error(this, t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            done = true;
-            parent.drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            Subscriptions.cancel(upstream);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long n) {
-            if (n <= 0) {
-                onFailure(Subscriptions.getInvalidRequestException());
-                return;
-            }
-            long p = produced + n;
-            if (p >= limit) {
-                produced = 0L;
-                upstream.get().request(p);
-            } else {
-                produced = p;
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public Context context() {
-            return context;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
@@ -337,12 +284,12 @@ public final class MultiZipOp<O> extends AbstractMulti<O> {
 
         @Override
         public void clear() {
-            fill(size);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public int size() {
-            return size;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

@@ -6,7 +6,6 @@ import java.util.function.Predicate;
 
 import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 import io.smallrye.mutiny.subscription.SwitchableSubscriptionSubscriber;
 
@@ -19,6 +18,7 @@ import io.smallrye.mutiny.subscription.SwitchableSubscriptionSubscriber;
 public final class MultiRetryOp<T> extends AbstractMultiOperator<T, T> {
 
     private final long times;
+
     private final Predicate<? super Throwable> onFailurePredicate;
 
     public MultiRetryOp(Multi<? extends T> upstream, Predicate<? super Throwable> onFailurePredicate, long times) {
@@ -29,21 +29,17 @@ public final class MultiRetryOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        RetrySubscriber<T> subscriber = new RetrySubscriber<>(upstream, onFailurePredicate, downstream, times);
-
-        downstream.onSubscribe(subscriber);
-
-        if (!subscriber.isCancelled()) {
-            subscriber.resubscribe();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class RetrySubscriber<T> extends SwitchableSubscriptionSubscriber<T> {
 
         private final Flow.Publisher<? extends T> upstream;
+
         private final AtomicInteger wip = new AtomicInteger();
 
         private long remaining;
+
         long produced;
 
         private final Predicate<? super Throwable> onFailurePredicate;
@@ -58,26 +54,12 @@ public final class MultiRetryOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onItem(T t) {
-            produced++;
-            downstream.onItem(t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable t) {
-            if (testOnFailurePredicate(t)) {
-                return;
-            }
-
-            long r = remaining;
-            if (r != Long.MAX_VALUE) {
-                if (r == 0) {
-                    // Forward
-                    downstream.onFailure(t);
-                    return;
-                }
-                remaining = r - 1;
-            }
-            resubscribe();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private boolean testOnFailurePredicate(Throwable t) {
@@ -97,19 +79,7 @@ public final class MultiRetryOp<T> extends AbstractMultiOperator<T, T> {
         }
 
         void resubscribe() {
-            if (wip.getAndIncrement() == 0) {
-                do {
-                    if (isCancelled()) {
-                        return;
-                    }
-                    long c = produced;
-                    if (c != 0L) {
-                        produced = 0L;
-                        emitted(c);
-                    }
-                    upstream.subscribe(Infrastructure.onMultiSubscription(upstream, this));
-                } while (wip.decrementAndGet() != 0);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

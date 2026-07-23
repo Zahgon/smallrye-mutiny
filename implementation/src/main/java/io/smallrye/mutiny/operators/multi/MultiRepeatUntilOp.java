@@ -5,13 +5,15 @@ import java.util.function.Predicate;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.helpers.ParameterValidation;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 import io.smallrye.mutiny.subscription.SwitchableSubscriptionSubscriber;
 
 public class MultiRepeatUntilOp<T> extends AbstractMultiOperator<T, T> implements Multi<T> {
+
     private final Predicate<T> predicate;
+
     private final long times;
+
     private final Uni<?> delay;
 
     public MultiRepeatUntilOp(Multi<T> upstream, long times, Uni<?> delay) {
@@ -30,26 +32,25 @@ public class MultiRepeatUntilOp<T> extends AbstractMultiOperator<T, T> implement
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        ParameterValidation.nonNullNpe(downstream, "downstream");
-        RepeatUntilProcessor<T> processor = new RepeatUntilProcessor<>(upstream, downstream,
-                times != Long.MAX_VALUE ? times - 1 : Long.MAX_VALUE,
-                predicate, delay);
-        downstream.onSubscribe(processor);
-        upstream.subscribe(processor);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static abstract class RepeatProcessor<T> extends SwitchableSubscriptionSubscriber<T> {
 
         protected final Multi<? extends T> upstream;
+
         protected final Predicate<T> predicate;
+
         protected final AtomicInteger wip = new AtomicInteger();
+
         private final Uni<?> delay;
 
         protected long remaining;
+
         protected long emitted;
 
-        public RepeatProcessor(Multi<? extends T> upstream, MultiSubscriber<? super T> downstream,
-                long times, Predicate<T> predicate, Uni<?> delay) {
+        public RepeatProcessor(Multi<? extends T> upstream, MultiSubscriber<? super T> downstream, long times,
+                Predicate<T> predicate, Uni<?> delay) {
             super(downstream);
             this.upstream = upstream;
             this.predicate = predicate;
@@ -57,21 +58,8 @@ public class MultiRepeatUntilOp<T> extends AbstractMultiOperator<T, T> implement
             this.delay = delay;
         }
 
-        /**
-         * Subscribes to the source again via trampolining.
-         */
         protected void subscribeNext() {
-            if (delay == null) {
-                drainLoop();
-            } else {
-                delay.subscribe().with(
-                        context(),
-                        ignored -> drainLoop(),
-                        f -> {
-                            cancel();
-                            downstream.onFailure(f);
-                        });
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void drainLoop() {
@@ -104,38 +92,19 @@ public class MultiRepeatUntilOp<T> extends AbstractMultiOperator<T, T> implement
          */
         private boolean passed = true;
 
-        public RepeatUntilProcessor(Multi<? extends T> upstream, MultiSubscriber<? super T> downstream,
-                long times, Predicate<T> predicate, Uni<?> delay) {
+        public RepeatUntilProcessor(Multi<? extends T> upstream, MultiSubscriber<? super T> downstream, long times,
+                Predicate<T> predicate, Uni<?> delay) {
             super(upstream, downstream, times, predicate, delay);
         }
 
         @Override
         public void onItem(T t) {
-            try {
-                passed = !predicate.test(t);
-            } catch (Throwable failure) {
-                cancel();
-                downstream.onFailure(failure);
-                return;
-            }
-            if (passed) {
-                emitted++;
-                downstream.onNext(t);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            long r = remaining;
-            if (r != Long.MAX_VALUE) {
-                remaining = r - 1;
-            }
-            if (r != 0L && passed) {
-                subscribeNext();
-            } else {
-                downstream.onComplete();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

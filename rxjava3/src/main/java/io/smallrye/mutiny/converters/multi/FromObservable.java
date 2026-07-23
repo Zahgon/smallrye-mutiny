@@ -1,10 +1,8 @@
 package io.smallrye.mutiny.converters.multi;
 
-import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Observable;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.converters.MultiConverter;
-import mutiny.zero.flow.adapters.AdaptersToFlow;
 
 @SuppressWarnings("rawtypes")
 public class FromObservable<T> implements MultiConverter<Observable<T>, T> {
@@ -17,6 +15,6 @@ public class FromObservable<T> implements MultiConverter<Observable<T>, T> {
 
     @Override
     public Multi<T> from(Observable<T> instance) {
-        return Multi.createFrom().publisher(AdaptersToFlow.publisher(instance.toFlowable(BackpressureStrategy.BUFFER)));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -5,8 +5,6 @@ import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
 import java.util.concurrent.atomic.AtomicLong;
 
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.operators.UniOperator;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 import io.smallrye.mutiny.subscription.UniSubscription;
@@ -14,6 +12,7 @@ import io.smallrye.mutiny.subscription.UniSubscription;
 public class UniLogger<T> extends UniOperator<T, T> {
 
     private final String identifier;
+
     private final AtomicLong increment = new AtomicLong(0L);
 
     public UniLogger(Uni<? extends T> upstream, String identifier) {
@@ -27,7 +26,7 @@ public class UniLogger<T> extends UniOperator<T, T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        AbstractUni.subscribe(upstream(), new UniLoggerProcessor(subscriber, increment.getAndIncrement()));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class UniLoggerProcessor extends UniOperatorProcessor<T, T> {
@@ -41,34 +40,22 @@ public class UniLogger<T> extends UniOperator<T, T> {
 
         @Override
         public void onSubscribe(UniSubscription subscription) {
-            if (!isCancelled()) {
-                Infrastructure.logFromOperator(processorIdentifier, "onSubscribe", null, null);
-                super.onSubscribe(subscription);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T item) {
-            if (!isCancelled()) {
-                Infrastructure.logFromOperator(processorIdentifier, "onItem", item, null);
-                super.onItem(item);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            if (!isCancelled()) {
-                Infrastructure.logFromOperator(processorIdentifier, "onFailure", null, failure);
-                super.onFailure(failure);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (!isCancelled()) {
-                Infrastructure.logFromOperator(processorIdentifier, "cancel", null, null);
-                super.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

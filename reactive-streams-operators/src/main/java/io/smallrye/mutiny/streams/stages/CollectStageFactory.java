@@ -1,6 +1,5 @@
 package io.smallrye.mutiny.streams.stages;
 
-import java.util.Objects;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collector;
 
@@ -22,9 +21,7 @@ public class CollectStageFactory implements TerminalStageFactory<Stage.Collect> 
     @SuppressWarnings("unchecked")
     @Override
     public <I, O> TerminalStage<I, O> create(Engine engine, Stage.Collect stage) {
-        Collector<I, Object, O> collector = (Collector<I, Object, O>) Objects.requireNonNull(stage).getCollector();
-        Objects.requireNonNull(collector);
-        return new CollectStage<>(collector);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static class CollectStage<I, O> implements TerminalStage<I, O> {
@@ -37,8 +34,7 @@ public class CollectStageFactory implements TerminalStageFactory<Stage.Collect> 
 
         @Override
         public CompletionStage<O> apply(Multi<I> source) {
-            return source.collect().with(collector).subscribeAsCompletionStage();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

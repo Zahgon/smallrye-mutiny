@@ -33,84 +33,38 @@ public class DemandPauser {
 
     volatile PausableMulti multi;
 
-    /**
-     * Binds this handle to a pausable channel.
-     * This is typically called internally when creating a pausable stream.
-     *
-     * @param multi the pausable channel to bind to
-     */
     public void bind(PausableMulti multi) {
-        this.multi = multi;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Pauses the stream. Already requested items will be handled according to the configured buffer strategy.
-     *
-     * @throws IllegalStateException if the handle is not bound to a channel
-     */
     public void pause() {
-        ensureBound();
-        multi.pause();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Resumes the stream. Buffered items (if any) will be delivered before new items are requested.
-     *
-     * @throws IllegalStateException if the handle is not bound to a channel
-     */
     public void resume() {
-        ensureBound();
-        multi.resume();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Checks if the stream is currently paused.
-     *
-     * @return {@code true} if paused, {@code false} otherwise
-     * @throws IllegalStateException if the handle is not bound to a channel
-     */
     public boolean isPaused() {
-        ensureBound();
-        return multi.isPaused();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Returns the current buffer size (number of items in the buffer).
-     * Only applicable when using BUFFER strategy.
-     *
-     * @return the number of buffered items
-     * @throws IllegalStateException if the handle is not bound to a channel
-     */
     public int bufferSize() {
-        ensureBound();
-        return multi.bufferSize();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Clears the buffer if the stream is currently paused.
-     * Only applicable when using BUFFER strategy.
-     *
-     * @return {@code true} if the buffer was cleared, {@code false} if not paused or no buffer
-     * @throws IllegalStateException if the handle is not bound to a channel
-     */
     public boolean clearBuffer() {
-        ensureBound();
-        return multi.clearBuffer();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Checks if this handle is bound to a channel.
-     *
-     * @return {@code true} if bound, {@code false} otherwise
-     */
     public boolean isBound() {
-        return multi != null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void ensureBound() {
         if (multi == null) {
-            throw new IllegalStateException("DemandPauser is not bound to a stream. " +
-                    "Make sure to use .pauseDemand().using(pauser) in the pausable configuration.");
+            throw new IllegalStateException("DemandPauser is not bound to a stream. "
+                    + "Make sure to use .pauseDemand().using(pauser) in the pausable configuration.");
         }
     }
 }

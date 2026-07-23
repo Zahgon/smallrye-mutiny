@@ -15,11 +15,11 @@ public class FixedDemandPacer implements DemandPacer {
 
     @Override
     public Request initial() {
-        return request;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Request apply(Request previousRequest, long observedItemsCount) {
-        return request;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

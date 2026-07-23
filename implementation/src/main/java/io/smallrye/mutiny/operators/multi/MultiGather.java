@@ -22,14 +22,17 @@ public class MultiGather<I, ACC, O> extends AbstractMultiOperator<I, O> {
 
     @Override
     public void subscribe(MultiSubscriber<? super O> subscriber) {
-        upstream.subscribe().withSubscriber(new MultiGatherProcessor(subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     class MultiGatherProcessor extends MultiOperatorProcessor<I, O> {
 
         private ACC acc;
+
         private final AtomicLong demand = new AtomicLong();
+
         private volatile boolean upstreamHasCompleted;
+
         private final AtomicInteger drainWip = new AtomicInteger();
 
         public MultiGatherProcessor(MultiSubscriber<? super O> downstream) {
@@ -38,79 +41,22 @@ public class MultiGather<I, ACC, O> extends AbstractMultiOperator<I, O> {
 
         @Override
         public void onSubscribe(Flow.Subscription subscription) {
-            try {
-                this.acc = gatherer.accumulator();
-                if (this.acc == null) {
-                    throw new NullPointerException("The initial accumulator cannot be null");
-                }
-            } catch (Throwable err) {
-                downstream.onSubscribe(Subscriptions.CANCELLED);
-                onFailure(err);
-                return;
-            }
-            super.onSubscribe(subscription);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long numberOfItems) {
-            if (numberOfItems <= 0) {
-                onFailure(new IllegalArgumentException("The number of items requested must be strictly positive"));
-                return;
-            }
-            if (upstream != Subscriptions.CANCELLED) {
-                Subscriptions.add(demand, numberOfItems);
-                if (upstreamHasCompleted) {
-                    drainRemainingElements();
-                } else {
-                    upstream.request(1L);
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(I item) {
-            if (upstream == Subscriptions.CANCELLED) {
-                return;
-            }
-            try {
-                acc = gatherer.accumulate(acc, item);
-                if (acc == null) {
-                    throw new NullPointerException("The accumulator returned a null value");
-                }
-                Optional<Extraction<ACC, O>> mapping = gatherer.extract(acc, false);
-                if (mapping == null) {
-                    throw new NullPointerException("The extractor returned a null value");
-                }
-                if (mapping.isPresent()) {
-                    Extraction<ACC, O> result = mapping.get();
-                    acc = result.nextAccumulator();
-                    O value = result.nextItem();
-                    if (acc == null) {
-                        throw new NullPointerException("The extractor returned a null accumulator value");
-                    }
-                    if (value == null) {
-                        throw new NullPointerException("The extractor returned a null value to emit");
-                    }
-                    long remaining = demand.decrementAndGet();
-                    downstream.onItem(value);
-                    if (remaining > 0L) {
-                        upstream.request(1L);
-                    }
-                } else {
-                    upstream.request(1L);
-                }
-            } catch (Throwable err) {
-                onFailure(err);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            if (upstream == Subscriptions.CANCELLED) {
-                return;
-            }
-            upstreamHasCompleted = true;
-            drainRemainingElements();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void drainRemainingElements() {

@@ -15,6 +15,6 @@ public class FromCompletionStage<T> implements UniConverter<CompletionStage<T>, 
 
     @Override
     public Uni<T> from(CompletionStage<T> instance) {
-        return Uni.createFrom().completionStage(instance);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

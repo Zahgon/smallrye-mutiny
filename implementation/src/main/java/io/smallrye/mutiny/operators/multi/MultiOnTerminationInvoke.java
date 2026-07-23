@@ -1,13 +1,9 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
-import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
 public class MultiOnTerminationInvoke<T> extends AbstractMultiOperator<T, T> {
@@ -21,7 +17,7 @@ public class MultiOnTerminationInvoke<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new MultiOnTerminationInvokeProcessor(nonNull(downstream, "downstream")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     class MultiOnTerminationInvokeProcessor extends MultiOperatorProcessor<T, T> {
@@ -34,37 +30,22 @@ public class MultiOnTerminationInvoke<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onFailure(Throwable failure) {
-            try {
-                execute(failure, false);
-                super.onFailure(failure);
-            } catch (Throwable err) {
-                super.onFailure(new CompositeException(failure, err));
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T item) {
-            downstream.onItem(item);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            try {
-                execute(null, false);
-                super.onCompletion();
-            } catch (Throwable err) {
-                super.onFailure(err);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            try {
-                execute(null, true);
-            } catch (Throwable ignored) {
-                Infrastructure.handleDroppedException(ignored);
-            }
-            super.cancel();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void execute(Throwable err, Boolean cancelled) {

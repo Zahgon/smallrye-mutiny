@@ -1,7 +1,6 @@
 package io.smallrye.mutiny.infrastructure;
 
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 
 /**
@@ -12,32 +11,11 @@ import io.smallrye.mutiny.subscription.UniSubscriber;
  */
 public interface UniInterceptor extends MutinyInterceptor {
 
-    /**
-     * Method called when a new instance of {@link Uni} is created. If can return a new {@code Uni},
-     * or the passed {@code Uni} (default behavior) if the interceptor is not interested by this {@code uni}.
-     * <p>
-     * One use case for this method is the capture of a context at creation time (when the method is called) and
-     * restored when a subscriber subscribed to the produced {@code uni}. It is recommended to extend
-     * {@link AbstractUni} to produce a new {@link Uni} instance.
-     *
-     * @param uni the created uni
-     * @param <T> the type of item produced by the uni
-     * @return the passed uni or a new instance, must not be {@code null}
-     */
     default <T> Uni<T> onUniCreation(Uni<T> uni) {
-        return uni;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Method called when a subscriber subscribes to a {@link Uni}.
-     * This method lets you substitute the subscriber.
-     *
-     * @param instance the instance of uni
-     * @param subscriber the subscriber
-     * @param <T> the type of item
-     * @return the subscriber to use instead of the passed one. By default, it returns the given subscriber.
-     */
     default <T> UniSubscriber<? super T> onSubscription(Uni<T> instance, UniSubscriber<? super T> subscriber) {
-        return subscriber;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

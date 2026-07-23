@@ -1,7 +1,6 @@
 package io.smallrye.mutiny.infrastructure;
 
 import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-import static io.smallrye.mutiny.helpers.ParameterValidation.positive;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,8 +10,6 @@ import java.util.ServiceLoader;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Flow;
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,13 +27,13 @@ import java.util.function.UnaryOperator;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.groups.MultiOverflowStrategy;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 import io.smallrye.mutiny.tuples.Functions;
 
 public class Infrastructure {
 
     private static final String DISABLE_CALLBACK_DECORATORS_PROP_NAME = "mutiny.disableCallBackDecorators";
+
     private static final boolean DISABLE_CALLBACK_DECORATORS = Boolean.getBoolean(DISABLE_CALLBACK_DECORATORS_PROP_NAME);
 
     static {
@@ -48,327 +45,188 @@ public class Infrastructure {
         } else {
             setDefaultExecutor();
         }
-
         reload();
-
         resetCanCallerThreadBeBlockedSupplier();
     }
 
     private static ScheduledExecutorService DEFAULT_SCHEDULER;
 
     private static Executor DEFAULT_EXECUTOR;
+
     private static UniInterceptor[] UNI_INTERCEPTORS;
+
     private static MultiInterceptor[] MULTI_INTERCEPTORS;
+
     private static CallbackDecorator[] CALLBACK_DECORATORS;
+
     private static UnaryOperator<CompletableFuture<?>> completableFutureWrapper;
+
     private static Consumer<Throwable> droppedExceptionHandler = PrintAndDumpThrowableConsumer.INSTANCE;
+
     private static BooleanSupplier canCallerThreadBeBlockedSupplier;
+
     private static OperatorLogger operatorLogger = PrintOperatorEventOperatorLogger.INSTANCE;
 
     private static int multiOverflowDefaultBufferSize = 128;
 
     private static int bufferSizeXs = 32;
+
     private static int bufferSizeS = 256;
 
     public static void reload() {
-        clearInterceptors();
-        reloadUniInterceptors();
-        reloadMultiInterceptors();
-        reloadCallbackDecorators();
-        multiOverflowDefaultBufferSize = 128;
-        bufferSizeXs = 32;
-        bufferSizeS = 256;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Configure or reset the executors.
-     */
     public static void setDefaultExecutor() {
-        ExecutorService scheduler = Executors.newCachedThreadPool();
-        setDefaultExecutor(scheduler);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Changes the default executor, and shuts the previous executor down.
-     *
-     * @param s the new executor
-     */
     public static void setDefaultExecutor(Executor s) {
-        setDefaultExecutor(s, true);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Changes the default executor, and shuts the previous executor down when {@code shutdownPrevious} is {@code true}.
-     *
-     * @param executor the new executor
-     * @param shutdownPrevious {@code true} when the previous executor needs to be shut down, {@code false} otherwise
-     */
     public static void setDefaultExecutor(Executor executor, boolean shutdownPrevious) {
-        if (executor == DEFAULT_EXECUTOR) {
-            return;
-        }
-        if (shutdownPrevious) {
-            Executor existing = DEFAULT_EXECUTOR;
-            if (existing instanceof ExecutorService) {
-                ((ExecutorService) existing).shutdownNow();
-            }
-            if (DEFAULT_SCHEDULER != null) {
-                DEFAULT_SCHEDULER.shutdownNow();
-            }
-        }
-        DEFAULT_EXECUTOR = executor;
-        DEFAULT_SCHEDULER = (executor instanceof ScheduledExecutorService) ? (ScheduledExecutorService) executor
-                : new MutinyScheduler(executor);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static ScheduledExecutorService getDefaultWorkerPool() {
-        return DEFAULT_SCHEDULER;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static Executor getDefaultExecutor() {
-        return DEFAULT_EXECUTOR;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <T> Uni<T> onUniCreation(Uni<T> instance) {
-        Uni<T> current = instance;
-        for (UniInterceptor itcp : UNI_INTERCEPTORS) {
-            current = itcp.onUniCreation(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <T> Multi<T> onMultiCreation(Multi<T> instance) {
-        Multi<T> current = instance;
-        for (MultiInterceptor interceptor : MULTI_INTERCEPTORS) {
-            current = interceptor.onMultiCreation(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <T> UniSubscriber<? super T> onUniSubscription(Uni<T> instance, UniSubscriber<? super T> subscriber) {
-        UniSubscriber<? super T> current = subscriber;
-        for (UniInterceptor interceptor : UNI_INTERCEPTORS) {
-            current = interceptor.onSubscription(instance, current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <T> Subscriber<? super T> onMultiSubscription(Flow.Publisher<? extends T> instance,
             Subscriber<? super T> subscriber) {
-        Subscriber<? super T> current = subscriber;
-        for (MultiInterceptor itcp : MULTI_INTERCEPTORS) {
-            current = itcp.onSubscription(instance, current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <T> Supplier<T> decorate(Supplier<T> supplier) {
-        Supplier<T> current = supplier;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <T> Consumer<T> decorate(Consumer<T> consumer) {
-        Consumer<T> current = consumer;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static LongConsumer decorate(LongConsumer consumer) {
-        LongConsumer current = consumer;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <R> LongFunction<R> decorate(LongFunction<R> function) {
-        LongFunction<R> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static Runnable decorate(Runnable runnable) {
-        Runnable current = runnable;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <V> Callable<V> decorate(Callable<V> callable) {
-        Callable<V> current = callable;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <T1, T2> BiConsumer<T1, T2> decorate(BiConsumer<T1, T2> consumer) {
-        BiConsumer<T1, T2> current = consumer;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I1, I2, I3, O> Functions.Function3<I1, I2, I3, O> decorate(Functions.Function3<I1, I2, I3, O> function) {
-        Functions.Function3<I1, I2, I3, O> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I1, I2, I3, I4, O> Functions.Function4<I1, I2, I3, I4, O> decorate(
             Functions.Function4<I1, I2, I3, I4, O> function) {
-        Functions.Function4<I1, I2, I3, I4, O> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I1, I2, I3, I4, I5, O> Functions.Function5<I1, I2, I3, I4, I5, O> decorate(
             Functions.Function5<I1, I2, I3, I4, I5, O> function) {
-        Functions.Function5<I1, I2, I3, I4, I5, O> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I1, I2, I3, I4, I5, I6, O> Functions.Function6<I1, I2, I3, I4, I5, I6, O> decorate(
             Functions.Function6<I1, I2, I3, I4, I5, I6, O> function) {
-        Functions.Function6<I1, I2, I3, I4, I5, I6, O> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I1, I2, I3, I4, I5, I6, I7, O> Functions.Function7<I1, I2, I3, I4, I5, I6, I7, O> decorate(
             Functions.Function7<I1, I2, I3, I4, I5, I6, I7, O> function) {
-        Functions.Function7<I1, I2, I3, I4, I5, I6, I7, O> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I1, I2, I3, I4, I5, I6, I7, I8, O> Functions.Function8<I1, I2, I3, I4, I5, I6, I7, I8, O> decorate(
             Functions.Function8<I1, I2, I3, I4, I5, I6, I7, I8, O> function) {
-        Functions.Function8<I1, I2, I3, I4, I5, I6, I7, I8, O> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I1, I2, I3, I4, I5, I6, I7, I8, I9, O> Functions.Function9<I1, I2, I3, I4, I5, I6, I7, I8, I9, O> decorate(
             Functions.Function9<I1, I2, I3, I4, I5, I6, I7, I8, I9, O> function) {
-        Functions.Function9<I1, I2, I3, I4, I5, I6, I7, I8, I9, O> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I, O> Function<I, O> decorate(Function<I, O> function) {
-        Function<I, O> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I1, I2, O> BiFunction<I1, I2, O> decorate(BiFunction<I1, I2, O> function) {
-        BiFunction<I1, I2, O> current = function;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <T> BinaryOperator<T> decorate(BinaryOperator<T> operator) {
-        BinaryOperator<T> current = operator;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    public static <T1, T2, T3> Functions.TriConsumer<T1, T2, T3> decorate(
-            Functions.TriConsumer<T1, T2, T3> consumer) {
-        Functions.TriConsumer<T1, T2, T3> current = consumer;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+    public static <T1, T2, T3> Functions.TriConsumer<T1, T2, T3> decorate(Functions.TriConsumer<T1, T2, T3> consumer) {
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static void setCompletableFutureWrapper(UnaryOperator<CompletableFuture<?>> wrapper) {
-        completableFutureWrapper = wrapper;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings("unchecked")
     public static <T> CompletableFuture<T> wrapCompletableFuture(CompletableFuture<T> future) {
-        UnaryOperator<CompletableFuture<?>> wrapper = completableFutureWrapper;
-        return wrapper != null ? (CompletableFuture<T>) wrapper.apply(future) : future;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static void handleDroppedException(Throwable throwable) {
-        droppedExceptionHandler.accept(throwable);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Defines a custom caller thread blocking check supplier.
-     *
-     * @param supplier the supplier, must not be {@code null} and must not throw an exception or it will also be lost.
-     */
     public static void setCanCallerThreadBeBlockedSupplier(BooleanSupplier supplier) {
-        nonNull(supplier, "supplier");
-        canCallerThreadBeBlockedSupplier = supplier;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static boolean canCallerThreadBeBlocked() {
-        return canCallerThreadBeBlockedSupplier.getAsBoolean();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Defines a custom dropped exception handler.
-     *
-     * @param handler the handler, must not be {@code null} and must not throw an exception or it will also be lost.
-     */
     public static void setDroppedExceptionHandler(Consumer<Throwable> handler) {
-        nonNull(handler, "handler");
-        droppedExceptionHandler = handler;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static void reloadUniInterceptors() {
-        ServiceLoader<UniInterceptor> loader = ServiceLoader.load(UniInterceptor.class);
-        List<UniInterceptor> interceptors = toInterceptorList(loader);
-        UNI_INTERCEPTORS = interceptors.toArray(UNI_INTERCEPTORS);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static void reloadMultiInterceptors() {
-        ServiceLoader<MultiInterceptor> loader = ServiceLoader.load(MultiInterceptor.class);
-        List<MultiInterceptor> interceptors = toInterceptorList(loader);
-        MULTI_INTERCEPTORS = interceptors.toArray(MULTI_INTERCEPTORS);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static void reloadCallbackDecorators() {
-        if (!DISABLE_CALLBACK_DECORATORS) {
-            ServiceLoader<CallbackDecorator> loader = ServiceLoader.load(CallbackDecorator.class);
-            List<CallbackDecorator> interceptors = toInterceptorList(loader);
-            CALLBACK_DECORATORS = interceptors.toArray(CALLBACK_DECORATORS);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static <T extends MutinyInterceptor> List<T> toInterceptorList(ServiceLoader<T> loader) {
@@ -381,19 +239,17 @@ public class Infrastructure {
     }
 
     public static void clearInterceptors() {
-        UNI_INTERCEPTORS = new UniInterceptor[0];
-        MULTI_INTERCEPTORS = new MultiInterceptor[0];
-        CALLBACK_DECORATORS = new CallbackDecorator[0];
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // For testing purpose only
     public static void resetDroppedExceptionHandler() {
-        droppedExceptionHandler = PrintAndDumpThrowableConsumer.INSTANCE;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // For testing purpose only
     public static void resetCanCallerThreadBeBlockedSupplier() {
-        canCallerThreadBeBlockedSupplier = AlwaysTrueBooleanSupplier.INSTANCE;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private Infrastructure() {
@@ -401,111 +257,48 @@ public class Infrastructure {
     }
 
     public static BooleanSupplier decorate(BooleanSupplier supplier) {
-        BooleanSupplier current = supplier;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <T> Predicate<T> decorate(Predicate<T> predicate) {
-        Predicate<T> current = predicate;
-        for (CallbackDecorator interceptor : CALLBACK_DECORATORS) {
-            current = interceptor.decorate(current);
-        }
-        return current;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Log from an operator.
-     * <p>
-     * This method should never be called directly but only from {@link Multi#log(String)} and {@link Uni#log(String)}.
-     *
-     * @param identifier the event identifier
-     * @param event the event as a string
-     * @param value the value, if any or {@code null}
-     * @param failure the failure, if any or {@code null}
-     */
     public static void logFromOperator(String identifier, String event, Object value, Throwable failure) {
-        operatorLogger.log(identifier, event, value, failure);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Defines operator logging behavior for {@link Multi#log(String)} and {@link Uni#log(String)}.
-     *
-     * @param operatorLogger the new operator logger
-     */
     public static void setOperatorLogger(OperatorLogger operatorLogger) {
-        Infrastructure.operatorLogger = nonNull(operatorLogger, "operatorLogger");
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     // For testing purpose only
     public static void resetOperatorLogger() {
-        Infrastructure.operatorLogger = PrintOperatorEventOperatorLogger.INSTANCE;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the default overflow buffer size for {@link MultiOverflowStrategy#buffer()}.
-     *
-     * @return the default value
-     */
     public static int getMultiOverflowDefaultBufferSize() {
-        return multiOverflowDefaultBufferSize;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Sets the default overflow buffer size for {@link MultiOverflowStrategy#buffer()}.
-     *
-     * @param size the buffer size, must be strictly positive
-     */
     public static void setMultiOverflowDefaultBufferSize(int size) {
-        multiOverflowDefaultBufferSize = positive(size, "size");
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the xs buffer size (for internal usage).
-     *
-     * @return the buffer size
-     */
     public static int getBufferSizeXs() {
-        String propVal = System.getProperty("mutiny.buffer-size.xs");
-        if (propVal != null) {
-            return Math.max(8, Integer.parseInt(propVal));
-        } else {
-            return bufferSizeXs;
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Set the xs buffer size (for internal usage).
-     *
-     * @param size the buffer size
-     */
     public static void setBufferSizeXs(int size) {
-        bufferSizeXs = positive(size, "size");
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the s buffer size (for internal usage).
-     *
-     * @return the buffer size
-     */
     public static int getBufferSizeS() {
-        String propVal = System.getProperty("mutiny.buffer-size.s");
-        if (propVal != null) {
-            return Math.max(16, Integer.parseInt(propVal));
-        } else {
-            return bufferSizeS;
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Set the s buffer size (for internal usage).
-     *
-     * @param size the buffer size
-     */
     public static void setBufferSizeS(int size) {
-        bufferSizeS = positive(size, "size");
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -531,7 +324,7 @@ public class Infrastructure {
 
         @Override
         public int compare(MutinyInterceptor o1, MutinyInterceptor o2) {
-            return Integer.compare(o1.ordinal(), o2.ordinal());
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
@@ -541,7 +334,7 @@ public class Infrastructure {
 
         @Override
         public boolean getAsBoolean() {
-            return true;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
@@ -551,11 +344,7 @@ public class Infrastructure {
 
         @Override
         public void accept(Throwable throwable) {
-            System.err.println("[-- Mutiny had to drop the following exception --]");
-            StackTraceElement element = Thread.currentThread().getStackTrace()[3];
-            System.err.println("Exception received by: " + element.toString());
-            throwable.printStackTrace();
-            System.err.println("[------------------------------------------------]");
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
@@ -565,18 +354,7 @@ public class Infrastructure {
 
         @Override
         public void log(String identifier, String event, Object value, Throwable failure) {
-            String message = "[--> " + identifier + " | " + event;
-            if (failure == null) {
-                if (value != null) {
-                    message = message + "(" + value + ")";
-                } else {
-                    message = message + "()";
-                }
-            } else {
-                message = message + "(" + failure.getClass().getName() + "(\"" + failure.getMessage() + "\"))";
-            }
-            System.out.println(message);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

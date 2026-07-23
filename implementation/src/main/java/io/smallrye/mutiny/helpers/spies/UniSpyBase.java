@@ -10,15 +10,15 @@ abstract class UniSpyBase<T> extends UniOperator<T, T> {
     private final AtomicLong invocationCount = new AtomicLong();
 
     protected void incrementInvocationCount() {
-        invocationCount.incrementAndGet();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public long invocationCount() {
-        return invocationCount.get();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public boolean invoked() {
-        return invocationCount() > 0;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     UniSpyBase(Uni<T> upstream) {
@@ -26,13 +26,11 @@ abstract class UniSpyBase<T> extends UniOperator<T, T> {
     }
 
     public void reset() {
-        invocationCount.set(0);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "UniSpyBase{" +
-                "invocationCount=" + invocationCount +
-                "}";
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

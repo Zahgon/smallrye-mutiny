@@ -1,7 +1,5 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static java.util.Objects.requireNonNull;
-
 import java.util.concurrent.Flow;
 import java.util.concurrent.Flow.Publisher;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
@@ -12,7 +10,6 @@ import java.util.function.Function;
 import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Context;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.subscription.ContextSupport;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
@@ -37,8 +34,7 @@ public class MultiConcatMapOp<I, O> extends AbstractMultiOperator<I, O> {
 
     private final boolean postponeFailurePropagation;
 
-    public MultiConcatMapOp(Multi<? extends I> upstream,
-            Function<? super I, ? extends Publisher<? extends O>> mapper,
+    public MultiConcatMapOp(Multi<? extends I> upstream, Function<? super I, ? extends Publisher<? extends O>> mapper,
             boolean postponeFailurePropagation) {
         super(upstream);
         this.mapper = mapper;
@@ -47,14 +43,11 @@ public class MultiConcatMapOp<I, O> extends AbstractMultiOperator<I, O> {
 
     @Override
     public void subscribe(MultiSubscriber<? super O> subscriber) {
-        if (subscriber == null) {
-            throw new NullPointerException("The subscriber must not be `null`");
-        }
-        MainSubscriber<? super I, O> sub = new MainSubscriber<>(mapper, postponeFailurePropagation, subscriber);
-        upstream.subscribe(Infrastructure.onMultiSubscription(upstream, sub));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private enum State {
+
         INIT,
         READY,
         PUBLISHER_REQUESTED,
@@ -66,21 +59,29 @@ public class MultiConcatMapOp<I, O> extends AbstractMultiOperator<I, O> {
     private static class MainSubscriber<I, O> implements MultiSubscriber<I>, Flow.Subscription, ContextSupport {
 
         private final Function<? super I, ? extends Publisher<? extends O>> mapper;
+
         private final boolean postponeFailurePropagation;
+
         private final MultiSubscriber<? super O> downstream;
 
         private volatile State state = State.INIT;
+
         private static final AtomicReferenceFieldUpdater<MainSubscriber, State> STATE_UPDATER = AtomicReferenceFieldUpdater
                 .newUpdater(MainSubscriber.class, State.class, "state");
 
         private volatile long demand = 0L;
+
         private static final AtomicLongFieldUpdater<MainSubscriber> DEMAND_UPDATER = AtomicLongFieldUpdater
                 .newUpdater(MainSubscriber.class, "demand");
 
         private final InnerSubscriber innerSubscriber = new InnerSubscriber();
+
         private final ReentrantLock stateLock = new ReentrantLock();
+
         private volatile Throwable failure;
+
         private Flow.Subscription mainUpstream;
+
         private volatile Flow.Subscription innerUpstream;
 
         private MainSubscriber(Function<? super I, ? extends Publisher<? extends O>> mapper, boolean postponeFailurePropagation,
@@ -92,12 +93,7 @@ public class MultiConcatMapOp<I, O> extends AbstractMultiOperator<I, O> {
 
         @Override
         public void onSubscribe(Flow.Subscription subscription) {
-            if (STATE_UPDATER.compareAndSet(this, State.INIT, State.READY)) {
-                mainUpstream = subscription;
-                downstream.onSubscribe(this);
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void innerOnSubscribe(Flow.Subscription subscription) {
@@ -112,17 +108,7 @@ public class MultiConcatMapOp<I, O> extends AbstractMultiOperator<I, O> {
 
         @Override
         public void onItem(I item) {
-            if (STATE_UPDATER.compareAndSet(this, State.PUBLISHER_REQUESTED, State.EMITTING)) {
-                try {
-                    Publisher<? extends O> publisher = requireNonNull(mapper.apply(item),
-                            "The mapper produced a null publisher");
-                    publisher.subscribe(innerSubscriber);
-                } catch (Throwable err) {
-                    state = State.DONE;
-                    mainUpstream.cancel();
-                    downstream.onFailure(addFailure(err));
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void innerOnItem(O item) {
@@ -136,21 +122,7 @@ public class MultiConcatMapOp<I, O> extends AbstractMultiOperator<I, O> {
 
         @Override
         public void onFailure(Throwable failure) {
-            stateLock.lock();
-            if (state != State.DONE) {
-                state = State.DONE;
-                addFailure(failure);
-                Throwable accumulated = this.failure;
-                Flow.Subscription inner = innerUpstream;
-                stateLock.unlock();
-                if (inner != null) {
-                    inner.cancel();
-                }
-                downstream.onFailure(accumulated);
-            } else {
-                stateLock.unlock();
-                Infrastructure.handleDroppedException(failure);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void innerOnFailure(Throwable failure) {
@@ -208,21 +180,7 @@ public class MultiConcatMapOp<I, O> extends AbstractMultiOperator<I, O> {
 
         @Override
         public void onCompletion() {
-            stateLock.lock();
-            switch (state) {
-                case EMITTING:
-                    state = State.EMITTING_FINAL;
-                    stateLock.unlock();
-                    break;
-                case READY:
-                case PUBLISHER_REQUESTED:
-                    stateLock.unlock();
-                    terminate();
-                    break;
-                default:
-                    stateLock.unlock();
-                    break;
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private void innerOnCompletion() {
@@ -261,92 +219,44 @@ public class MultiConcatMapOp<I, O> extends AbstractMultiOperator<I, O> {
 
         @Override
         public void request(long n) {
-            if (n <= 0) {
-                stateLock.lock();
-                if (state != State.DONE) {
-                    state = State.DONE;
-                    Flow.Subscription inner = innerUpstream;
-                    stateLock.unlock();
-                    mainUpstream.cancel();
-                    if (inner != null) {
-                        inner.cancel();
-                    }
-                    downstream.onFailure(Subscriptions.getInvalidRequestException());
-                } else {
-                    stateLock.unlock();
-                }
-            } else {
-                stateLock.lock();
-                Subscriptions.add(DEMAND_UPDATER, this, n);
-                switch (state) {
-                    case EMITTING:
-                    case EMITTING_FINAL:
-                        Flow.Subscription inner = innerUpstream;
-                        stateLock.unlock();
-                        if (inner != null) {
-                            inner.request(n);
-                        }
-                        break;
-                    case READY:
-                        state = State.PUBLISHER_REQUESTED;
-                        stateLock.unlock();
-                        mainUpstream.request(1L);
-                        break;
-                    default:
-                        stateLock.unlock();
-                        break;
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (STATE_UPDATER.getAndSet(this, State.DONE) != State.DONE) {
-                mainUpstream.cancel();
-                if (innerUpstream != null) {
-                    innerUpstream.cancel();
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public Context context() {
-            if (downstream instanceof ContextSupport) {
-                return ((ContextSupport) downstream).context();
-            } else {
-                return Context.empty();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private class InnerSubscriber implements MultiSubscriber<O>, ContextSupport {
 
             @Override
             public void onSubscribe(Flow.Subscription subscription) {
-                innerOnSubscribe(subscription);
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
 
             @Override
             public void onItem(O item) {
-                innerOnItem(item);
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
 
             @Override
             public void onFailure(Throwable failure) {
-                innerOnFailure(failure);
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
 
             @Override
             public void onCompletion() {
-                innerOnCompletion();
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
 
             @Override
             public Context context() {
-                if (downstream instanceof ContextSupport) {
-                    return ((ContextSupport) downstream).context();
-                } else {
-                    return Context.empty();
-                }
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
     }

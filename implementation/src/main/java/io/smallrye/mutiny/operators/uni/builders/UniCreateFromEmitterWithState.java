@@ -3,7 +3,6 @@ package io.smallrye.mutiny.operators.uni.builders;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import io.smallrye.mutiny.helpers.EmptyUniSubscription;
 import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.subscription.UniEmitter;
 import io.smallrye.mutiny.subscription.UniSubscriber;
@@ -19,6 +18,7 @@ import io.smallrye.mutiny.subscription.UniSubscriber;
 public class UniCreateFromEmitterWithState<T, S> extends AbstractUni<T> {
 
     private final BiConsumer<S, UniEmitter<? super T>> consumer;
+
     private final StateHolder<S> holder;
 
     public UniCreateFromEmitterWithState(Supplier<S> stateSupplier, BiConsumer<S, UniEmitter<? super T>> consumer) {
@@ -28,25 +28,6 @@ public class UniCreateFromEmitterWithState<T, S> extends AbstractUni<T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        S state;
-        try {
-            state = holder.get();
-            // get() throws an NPE is the produced state is null.
-        } catch (Throwable err) {
-            subscriber.onSubscribe(EmptyUniSubscription.DONE);
-            subscriber.onFailure(err);
-            return;
-        }
-
-        DefaultUniEmitter<? super T> emitter = new DefaultUniEmitter<>(subscriber);
-        subscriber.onSubscribe(emitter);
-        try {
-            consumer.accept(state, emitter);
-        } catch (Throwable err) {
-            // we use the emitter to be sure that if the failure happens after the first event being fired, it
-            // will be dropped.
-            emitter.fail(err);
-        }
-
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

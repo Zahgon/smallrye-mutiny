@@ -1,7 +1,5 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNullNpe;
-
 import java.util.Comparator;
 
 import io.smallrye.mutiny.Multi;
@@ -27,13 +25,13 @@ public final class MultiSkipRepetitionsOp<T> extends AbstractMultiOperator<T, T>
 
     @Override
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        nonNullNpe(subscriber, "subscriber");
-        upstream.subscribe().withSubscriber(new MultiSkipRepetitionsProcessor<>(subscriber, comparator));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class MultiSkipRepetitionsProcessor<T> extends MultiOperatorProcessor<T, T> {
 
         private final Comparator<? super T> comparator;
+
         private T last;
 
         public MultiSkipRepetitionsProcessor(MultiSubscriber<? super T> subscriber, Comparator<? super T> comparator) {
@@ -43,44 +41,26 @@ public final class MultiSkipRepetitionsOp<T> extends AbstractMultiOperator<T, T>
             } else {
                 this.comparator = comparator;
             }
-
         }
 
         @Override
         public void onItem(T t) {
-            if (isDone()) {
-                return;
-            }
-            try {
-                if (last == null || comparator.compare(last, t) != 0) {
-                    last = t;
-                    downstream.onItem(t);
-                } else {
-                    // Request the next one, as that item is dropped.
-                    request(1);
-                }
-            } catch (Exception e) {
-                onFailure(e);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable t) {
-            super.onFailure(t);
-            last = null;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            super.onCompletion();
-            last = null;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            super.cancel();
-            last = null;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

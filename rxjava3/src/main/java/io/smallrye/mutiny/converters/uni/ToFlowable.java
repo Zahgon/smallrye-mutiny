@@ -4,9 +4,9 @@ import java.util.function.Function;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.smallrye.mutiny.Uni;
-import mutiny.zero.flow.adapters.AdaptersToReactiveStreams;
 
 public class ToFlowable<T> implements Function<Uni<T>, Flowable<T>> {
+
     public static final ToFlowable INSTANCE = new ToFlowable();
 
     private ToFlowable() {
@@ -15,6 +15,6 @@ public class ToFlowable<T> implements Function<Uni<T>, Flowable<T>> {
 
     @Override
     public Flowable<T> apply(Uni<T> uni) {
-        return Flowable.fromPublisher(AdaptersToReactiveStreams.publisher(uni.convert().toPublisher()));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

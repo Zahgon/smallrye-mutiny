@@ -4,6 +4,7 @@ package io.smallrye.mutiny.helpers.test;
  * A onFailure signal.
  */
 public final class OnFailureUniSignal implements UniSignal {
+
     private final Throwable failure;
 
     public OnFailureUniSignal(Throwable failure) {
@@ -12,13 +13,11 @@ public final class OnFailureUniSignal implements UniSignal {
 
     @Override
     public Throwable value() {
-        return failure;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "OnFailureSignal{" +
-                "failure=" + failure +
-                '}';
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

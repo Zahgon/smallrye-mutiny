@@ -10,6 +10,7 @@ import org.reactivestreams.Subscription;
 public class WrappedSubscription implements Subscription {
 
     private final Subscription subscription;
+
     private final Runnable cancellationHandler;
 
     WrappedSubscription(Subscription subscription, Runnable onCancellation) {
@@ -19,14 +20,11 @@ public class WrappedSubscription implements Subscription {
 
     @Override
     public void request(long n) {
-        subscription.request(n);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        if (cancellationHandler != null) {
-            cancellationHandler.run();
-        }
-        subscription.cancel();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

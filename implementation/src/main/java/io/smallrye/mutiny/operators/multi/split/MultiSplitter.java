@@ -12,8 +12,6 @@ import java.util.function.Function;
 import io.smallrye.common.annotation.CheckReturnValue;
 import io.smallrye.mutiny.Context;
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.helpers.Subscriptions;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.operators.AbstractMulti;
 import io.smallrye.mutiny.subscription.ContextSupport;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
@@ -49,9 +47,13 @@ import io.smallrye.mutiny.subscription.MultiSubscriber;
 public class MultiSplitter<T, K extends Enum<K>> {
 
     private final Multi<? extends T> upstream;
+
     private final Function<T, K> splitter;
+
     private final ConcurrentHashMap<K, SplitMulti.Split> splits;
+
     private final int requiredNumberOfSubscribers;
+
     private final Class<K> keyType;
 
     public MultiSplitter(Multi<? extends T> upstream, Class<K> keyType, Function<T, K> splitter) {
@@ -66,27 +68,17 @@ public class MultiSplitter<T, K extends Enum<K>> {
         this.requiredNumberOfSubscribers = keyType.getEnumConstants().length;
     }
 
-    /**
-     * Get a {@link Multi} for a given key.
-     *
-     * @param key the key
-     * @return a new {@link Multi}
-     */
     @CheckReturnValue
     public Multi<T> get(K key) {
-        return Infrastructure.onMultiCreation(new SplitMulti(key));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Get the (enum) key type.
-     *
-     * @return the key type
-     */
     public Class<K> keyType() {
-        return keyType;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private enum State {
+
         INIT,
         AWAITING_SUBSCRIPTION,
         SUBSCRIBED,
@@ -183,42 +175,27 @@ public class MultiSplitter<T, K extends Enum<K>> {
 
         @Override
         public void onItem(T item) {
-            if (state.get() != State.SUBSCRIBED) {
-                return;
-            }
-            onUpstreamItem(item);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            if (state.compareAndSet(State.SUBSCRIBED, State.FAILED)) {
-                terminalFailure = failure;
-                onUpstreamFailure();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            if (state.compareAndSet(State.SUBSCRIBED, State.COMPLETED)) {
-                onUpstreamCompletion();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onSubscribe(Flow.Subscription subscription) {
-            if (state.get() != State.AWAITING_SUBSCRIPTION) {
-                subscription.cancel();
-            } else {
-                upstreamSubscription = subscription;
-                state.set(State.SUBSCRIBED);
-                // In case all splits would be subscribed...
-                onSplitRequest();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public Context context() {
-            return context;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
@@ -232,41 +209,13 @@ public class MultiSplitter<T, K extends Enum<K>> {
 
         @Override
         public void subscribe(MultiSubscriber<? super T> subscriber) {
-            nonNull(subscriber, "subscriber");
-
-            // First subscription triggers upstream subscription
-            if (state.compareAndSet(State.INIT, State.AWAITING_SUBSCRIPTION)) {
-                // Assumption: all split subscribers share the same context, if any
-                upstream.subscribe().withSubscriber(new Forwarder(subscriber));
-            }
-
-            // Early exits
-            State stateWhenSubscribing = state.get();
-            if (stateWhenSubscribing == State.FAILED) {
-                subscriber.onSubscribe(Subscriptions.CANCELLED);
-                subscriber.onFailure(terminalFailure);
-                return;
-            }
-            if (stateWhenSubscribing == State.COMPLETED) {
-                subscriber.onSubscribe(Subscriptions.CANCELLED);
-                subscriber.onCompletion();
-                return;
-            }
-
-            // Regular subscription path
-            Split split = new Split(subscriber);
-            Split previous = splits.putIfAbsent(key, split);
-            if (previous == null) {
-                subscriber.onSubscribe(split);
-            } else {
-                subscriber.onSubscribe(Subscriptions.CANCELLED);
-                subscriber.onError(new IllegalStateException("There is already a subscriber for key " + key));
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private class Split implements Flow.Subscription {
 
             MultiSubscriber<? super T> downstream;
+
             AtomicLong demand = new AtomicLong();
 
             private Split(MultiSubscriber<? super T> subscriber) {
@@ -275,18 +224,12 @@ public class MultiSplitter<T, K extends Enum<K>> {
 
             @Override
             public void request(long n) {
-                if (n <= 0) {
-                    cancel();
-                    downstream.onError(Subscriptions.getInvalidRequestException());
-                    return;
-                }
-                Subscriptions.add(demand, n);
-                onSplitRequest();
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
 
             @Override
             public void cancel() {
-                splits.remove(key);
+                throw new UnsupportedOperationException("STUB: not implemented");
             }
         }
     }

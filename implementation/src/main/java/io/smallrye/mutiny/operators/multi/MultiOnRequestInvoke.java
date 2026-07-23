@@ -1,7 +1,5 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-
 import java.util.function.LongConsumer;
 
 import io.smallrye.mutiny.Multi;
@@ -18,7 +16,7 @@ public class MultiOnRequestInvoke<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new MultiOnRequestInvokeOperator(nonNull(downstream, "downstream")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     class MultiOnRequestInvokeOperator extends MultiOperatorProcessor<T, T> {
@@ -29,12 +27,7 @@ public class MultiOnRequestInvoke<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void request(long numberOfItems) {
-            try {
-                consumer.accept(numberOfItems);
-                super.request(numberOfItems);
-            } catch (Throwable err) {
-                super.onFailure(err);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

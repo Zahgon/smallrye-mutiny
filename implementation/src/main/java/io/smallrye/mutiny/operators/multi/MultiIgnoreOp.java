@@ -1,6 +1,5 @@
 package io.smallrye.mutiny.operators.multi;
 
-import java.util.Objects;
 import java.util.concurrent.Flow;
 
 import io.smallrye.mutiny.Multi;
@@ -14,37 +13,28 @@ public class MultiIgnoreOp<T> extends AbstractMultiOperator<T, Void> {
 
     @Override
     public void subscribe(MultiSubscriber<? super Void> downstream) {
-        upstream.subscribe().withSubscriber(new MultiIgnoreProcessor<>(Objects.requireNonNull(downstream)));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static class MultiIgnoreProcessor<T> extends MultiOperatorProcessor<T, Void> {
+
         public MultiIgnoreProcessor(MultiSubscriber<? super Void> downstream) {
             super(downstream);
         }
 
         @Override
         public void onSubscribe(Flow.Subscription subscription) {
-            if (compareAndSetUpstreamSubscription(null, subscription)) {
-                // Propagate subscription to downstream.
-                downstream.onSubscribe(this);
-                subscription.request(Long.MAX_VALUE);
-            } else {
-                subscription.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long numberOfItems) {
-            // Request is handled by the onSubscribe method
-            // Just validate the parameter for compliance with Reactive Streams.
-            if (numberOfItems <= 0) {
-                onFailure(new IllegalArgumentException("Invalid number of request, must be greater than 0"));
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T ignored) {
-            // Ignoring
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

@@ -20,8 +20,6 @@ public class SumOperator<T extends Number> implements Function<Multi<T>, Multi<D
 
     @Override
     public Multi<Double> apply(Multi<T> multi) {
-        return multi
-                .onItem().transform(x -> sum.updateAndGet(cur -> cur + x.doubleValue()))
-                .onCompletion().ifEmpty().continueWith(0.0d);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

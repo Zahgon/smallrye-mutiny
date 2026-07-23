@@ -21,12 +21,13 @@ public class MultiOnCompletionCall<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new MultiOnCompletionCallProcessor(nonNull(downstream, "downstream")));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     class MultiOnCompletionCallProcessor extends MultiOperatorProcessor<T, T> {
 
         private final AtomicBoolean supplierInvoked = new AtomicBoolean();
+
         private volatile Cancellable cancellable;
 
         public MultiOnCompletionCallProcessor(MultiSubscriber<? super T> downstream) {
@@ -35,18 +36,12 @@ public class MultiOnCompletionCall<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onCompletion() {
-            cancellable = execute().subscribe().with(
-                    context(),
-                    ignored -> super.onCompletion(),
-                    super::onFailure);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (cancellable != null) {
-                cancellable.cancel();
-            }
-            super.cancel();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private Uni<?> execute() {

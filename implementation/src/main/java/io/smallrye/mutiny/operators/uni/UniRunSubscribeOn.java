@@ -6,7 +6,6 @@ import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
 import java.util.concurrent.Executor;
 
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.operators.UniOperator;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 
@@ -21,17 +20,7 @@ public class UniRunSubscribeOn<I> extends UniOperator<I, I> {
 
     @Override
     public void subscribe(UniSubscriber<? super I> subscriber) {
-        try {
-            executor.execute(() -> {
-                try {
-                    AbstractUni.subscribe(upstream(), new UniRunSubscribeOnProcessor(subscriber));
-                } catch (Throwable woops) {
-                    forwardFailure(subscriber, woops);
-                }
-            });
-        } catch (Throwable err) {
-            forwardFailure(subscriber, err);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void forwardFailure(UniSubscriber<? super I> subscriber, Throwable failure) {
@@ -42,6 +31,7 @@ public class UniRunSubscribeOn<I> extends UniOperator<I, I> {
     // Note we plug a UniOperatorProcessor for ensuring an unwrapped subscription.
     // This may be revisited in future iterations.
     private class UniRunSubscribeOnProcessor extends UniOperatorProcessor<I, I> {
+
         public UniRunSubscribeOnProcessor(UniSubscriber<? super I> downstream) {
             super(downstream);
         }

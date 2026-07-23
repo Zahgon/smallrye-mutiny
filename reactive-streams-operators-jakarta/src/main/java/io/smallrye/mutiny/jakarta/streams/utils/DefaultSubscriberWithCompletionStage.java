@@ -8,6 +8,7 @@ import org.reactivestreams.Processor;
 import org.reactivestreams.Subscriber;
 
 public class DefaultSubscriberWithCompletionStage<T, R> implements SubscriberWithCompletionStage<T, R> {
+
     private final CompletionSubscriber<T, R> subscriber;
 
     public DefaultSubscriberWithCompletionStage(Processor<T, T> processor, CompletionStage<R> result) {
@@ -16,11 +17,11 @@ public class DefaultSubscriberWithCompletionStage<T, R> implements SubscriberWit
 
     @Override
     public CompletionStage<R> getCompletion() {
-        return subscriber.getCompletion();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Subscriber<T> getSubscriber() {
-        return subscriber;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

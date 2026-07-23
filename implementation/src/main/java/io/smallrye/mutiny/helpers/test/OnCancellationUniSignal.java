@@ -7,11 +7,11 @@ public final class OnCancellationUniSignal implements UniSignal {
 
     @Override
     public Void value() {
-        return null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "OnCancellationSignal{}";
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

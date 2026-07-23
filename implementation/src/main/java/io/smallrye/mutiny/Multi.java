@@ -1,8 +1,5 @@
 package io.smallrye.mutiny;
 
-import static io.smallrye.mutiny.helpers.ParameterValidation.nonNull;
-import static io.smallrye.mutiny.helpers.ParameterValidation.positive;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.Flow.Publisher;
 import java.util.concurrent.Flow.Subscriber;
@@ -18,18 +15,12 @@ public interface Multi<T> extends Publisher<T> {
 
     @CheckReturnValue
     static MultiCreate createFrom() {
-        return MultiCreate.INSTANCE;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Creates new instances of {@link Multi} by merging, concatenating or associating items from others {@link Multi}
-     * and {@link Publisher}.
-     *
-     * @return the object to configure the creation process.
-     */
     @CheckReturnValue
     static MultiCreateBy createBy() {
-        return MultiCreateBy.INSTANCE;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -48,28 +39,9 @@ public interface Multi<T> extends Publisher<T> {
     @CheckReturnValue
     MultiOnItem<T> onItem();
 
-    /**
-     * Allows structuring the pipeline by creating a logic separation:
-     *
-     * <pre>
-     * {@code
-     *     Multi multi = upstream
-     *      .stage(m -> { ...})
-     *      .stage(m -> { ...})
-     *      .stage(m -> { ...})
-     * }
-     * </pre>
-     * <p>
-     * With `stage` you can structure and chain groups of processing.
-     *
-     * @param stage the function receiving this {@link Multi} as parameter and producing the outcome (can be a
-     *        {@link Multi} or something else), must not be {@code null}.
-     * @param <O> the outcome type
-     * @return the outcome of the function.
-     */
     @CheckReturnValue
     default <O> O stage(Function<Multi<T>, O> stage) {
-        return nonNull(stage, "stage").apply(this);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -330,157 +302,44 @@ public interface Multi<T> extends Publisher<T> {
     @CheckReturnValue
     MultiConvert<T> convert();
 
-    /**
-     * Produces a new {@link Multi} with items from the upstream {@link Multi} matching the predicate.
-     * <p>
-     * Items that do not satisfy the predicate are discarded.
-     * <p>
-     * This method is a shortcut for {@code multi.select().where(predicate)}.
-     *
-     * @param predicate a predicate, must not be {@code null}
-     * @return the new {@link Multi}
-     */
     @CheckReturnValue
     default Multi<T> filter(Predicate<? super T> predicate) {
-        return select().where(predicate);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a new {@link Multi} invoking the given function for each item emitted by the upstream {@link Multi}.
-     * <p>
-     * The function receives the received item as parameter, and can transform it. The returned object is sent
-     * downstream as {@code item} event.
-     * <p>
-     * This method is a shortcut for {@code multi.onItem().transform(mapper)}.
-     *
-     * @param mapper the mapper function, must not be {@code null}
-     * @param <O> the type of item produced by the mapper function
-     * @return the new {@link Multi}
-     */
     @CheckReturnValue
     default <O> Multi<O> map(Function<? super T, ? extends O> mapper) {
-        return onItem().transform(mapper);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a {@link Multi} containing the items from {@link Publisher} produced by the {@code mapper} for each
-     * item emitted by this {@link Multi}.
-     * <p>
-     * The operation behaves as follows:
-     * <ul>
-     * <li>for each item emitted by this {@link Multi}, the mapper is called and produces a {@link Publisher}
-     * (potentially a {@code Multi}). The mapper must not return {@code null}</li>
-     * <li>The items emitted by each of the produced {@link Publisher} are then <strong>merged</strong> in the
-     * produced {@link Multi}. The flatten process may interleaved items.</li>
-     * </ul>
-     * This method is a shortcut for {@code multi.onItem().transformToMulti(mapper).merge()}.
-     *
-     * @param mapper the {@link Function} producing {@link Publisher} / {@link Multi} for each items emitted by the
-     *        upstream {@link Multi}
-     * @param <O> the type of item emitted by the {@link Publisher} produced by the {@code mapper}
-     * @return the produced {@link Multi}
-     */
     @CheckReturnValue
     default <O> Multi<O> flatMap(Function<? super T, ? extends Publisher<? extends O>> mapper) {
-        return onItem().transformToMultiAndMerge(mapper);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a new {@link Multi} invoking the given @{code action} when an {@code item} event is received. Note that
-     * the received item cannot be {@code null}.
-     * <p>
-     * Unlike {@link #invoke(Consumer)}, the passed function returns a {@link Uni}. When the produced {@code Uni} sends
-     * its result, the result is discarded, and the original {@code item} is forwarded downstream. If the produced
-     * {@code Uni} fails, the failure is propagated downstream.
-     * <p>
-     * If the asynchronous action throws an exception, this exception is propagated downstream.
-     * <p>
-     * This method preserves the order of the items, meaning that the downstream received the items in the same order
-     * as the upstream has emitted them.
-     *
-     * @param action the function taking the item and returning a {@link Uni}, must not be {@code null}
-     * @return the new {@link Multi}
-     */
     @CheckReturnValue
     default Multi<T> call(Function<? super T, Uni<?>> action) {
-        return onItem().call(action);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a new {@link Multi} invoking the given @{code action} when an {@code item} event is received, but
-     * ignoring it in the callback.
-     * <p>
-     * Unlike {@link #invoke(Consumer)}, the passed function returns a {@link Uni}. When the produced {@code Uni} sends
-     * its result, the result is discarded, and the original {@code item} is forwarded downstream. If the produced
-     * {@code Uni} fails, the failure is propagated downstream.
-     * <p>
-     * If the asynchronous action throws an exception, this exception is propagated downstream.
-     * <p>
-     * This method preserves the order of the items, meaning that the downstream received the items in the same order
-     * as the upstream has emitted them.
-     *
-     * @param action the function taking the item and returning a {@link Uni}, must not be {@code null}
-     * @return the new {@link Multi}
-     */
     @CheckReturnValue
     default Multi<T> call(Supplier<Uni<?>> action) {
-        return onItem().call(action);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a new {@link Multi} invoking the given callback when an {@code item} event is fired by the upstream.
-     * Note that the received item cannot be {@code null}.
-     * <p>
-     * If the callback throws an exception, this exception is propagated to the downstream as failure. No more items
-     * will be consumed.
-     * <p>
-     * This method is a shortcut on {@link MultiOnItem#invoke(Consumer)}.
-     *
-     * @param callback the callback, must not be {@code null}
-     * @return the new {@link Multi}
-     */
     @CheckReturnValue
     default Multi<T> invoke(Consumer<? super T> callback) {
-        return onItem().invoke(nonNull(callback, "callback"));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a new {@link Multi} invoking the given callback when an {@code item} event is fired by the upstream.
-     * <p>
-     * If the callback throws an exception, this exception is propagated to the downstream as failure. No more items
-     * will be consumed.
-     * <p>
-     *
-     * @param callback the callback, must not be {@code null}
-     * @return the new {@link Multi}
-     */
     @CheckReturnValue
     default Multi<T> invoke(Runnable callback) {
-        return onItem().invoke(callback);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Produces a {@link Multi} containing the items from {@link Publisher} produced by the {@code mapper} for each
-     * item emitted by this {@link Multi}.
-     * <p>
-     * The operation behaves as follows:
-     * <ul>
-     * <li>for each item emitted by this {@link Multi}, the mapper is called and produces a {@link Publisher}
-     * (potentially a {@code Multi}). The mapper must not return {@code null}</li>
-     * <li>The items emitted by each of the produced {@link Publisher} are then <strong>concatenated</strong> in the
-     * produced {@link Multi}. The flatten process makes sure that the items are not interleaved.
-     * </ul>
-     * <p>
-     * This method is equivalent to {@code multi.onItem().transformToMulti(mapper).concatenate(true)}.
-     *
-     * @param mapper the {@link Function} producing {@link Publisher} / {@link Multi} for each items emitted by the
-     *        upstream {@link Multi}
-     * @param <O> the type of item emitted by the {@link Publisher} produced by the {@code mapper}
-     * @return the produced {@link Multi}
-     */
     @CheckReturnValue
     default <O> Multi<O> concatMap(Function<? super T, ? extends Publisher<? extends O>> mapper) {
-        return onItem().transformToMultiAndConcatenate(mapper);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -507,18 +366,9 @@ public interface Multi<T> extends Publisher<T> {
     @CheckReturnValue
     MultiOnRequest<T> onRequest();
 
-    /**
-     * Plug a user-defined operator that does not belong to the existing Mutiny API.
-     *
-     * @param operatorProvider a function to create and bind a new operator instance, taking {@code this} {@link Multi} as a
-     *        parameter and returning a new {@link Multi}. Must neither be {@code null} nor return {@code null}.
-     * @param <R> the output type
-     * @return the new {@link Multi}
-     */
     @CheckReturnValue
     default <R> Multi<R> plug(Function<Multi<T>, Multi<R>> operatorProvider) {
-        Function<Multi<T>, Multi<R>> provider = nonNull(operatorProvider, "operatorProvider");
-        return Infrastructure.onMultiCreation(nonNull(provider.apply(this), "multi"));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -566,51 +416,14 @@ public interface Multi<T> extends Publisher<T> {
     @CheckReturnValue
     Multi<T> log();
 
-    /**
-     * Materialize the subscriber {@link Context} for a sub-pipeline.
-     *
-     * <p>
-     * The provided function takes this {@link Multi} and the {@link Context} as parameters, and returns a {@link Multi}
-     * to build the sub-pipeline, as in:
-     *
-     * <pre>
-     * {@code
-     * someMulti.withContext((multi, ctx) -> multi.onItem().transform(n -> n + "::" + ctx.getOrElse("foo", () -> "yolo")));
-     * }
-     * </pre>
-     *
-     * <p>
-     * Note that the {@code builder} function is called <strong>at subscription time</strong>, so it cannot see
-     * context updates from upstream operators yet.
-     *
-     * @param builder the function that builds the sub-pipeline from this {@link Multi} and the {@link Context},
-     *        must not be {@code null}, must not return {@code null}.
-     * @param <R> the resulting {@link Multi} type
-     * @return the resulting {@link Multi}
-     */
     @CheckReturnValue
     default <R> Multi<R> withContext(BiFunction<Multi<T>, Context, Multi<R>> builder) {
-        throw new UnsupportedOperationException("Default method added to limit binary incompatibility");
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Materialize the context by attaching it to items using the {@link ItemWithContext} wrapper class.
-     *
-     * <p>
-     * This is a shortcut for:
-     *
-     * <pre>
-     * {@code
-     * someMulti.withContext((multi, ctx) -> multi.onItem().transform(item -> new ItemWithContext<>(ctx, item)));
-     * }
-     * </pre>
-     *
-     * @return the resulting {@link Multi}
-     * @see #withContext(BiFunction)
-     */
     @CheckReturnValue
     default Multi<ItemWithContext<T>> attachContext() {
-        return this.withContext((multi, ctx) -> multi.onItem().transform(item -> new ItemWithContext<>(ctx, item)));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -637,64 +450,14 @@ public interface Multi<T> extends Publisher<T> {
     @CheckReturnValue
     MultiDemandPacing<T> paceDemand();
 
-    /**
-     * Allows pausing and resuming demand propagation to upstream using a {@link io.smallrye.mutiny.subscription.DemandPauser}.
-     * <p>
-     * Unlike cancellation which terminates the subscription, temporarily pausing suspends the demand without unsubscribing.
-     * This is useful for implementing flow control patterns where demand needs to be temporarily suspended based on
-     * external conditions (e.g., downstream system availability, rate limiting, resource constraints).
-     * <p>
-     * Example:
-     *
-     * <pre>
-     * {@code
-     * DemandPauser pauser = new DemandPauser();
-     *
-     * Multi.createFrom().range(0, 100)
-     *         .pauseDemand().using(pauser)
-     *         .onItem().call(i -> Uni.createFrom().nullItem()
-     *                 .onItem().delayIt().by(Duration.ofMillis(10)))
-     *         .subscribe().with(System.out::println);
-     *
-     * // Later, from anywhere in the application:
-     * pauser.pause(); // Stop requesting new items
-     * pauser.resume(); // Continue requesting items
-     * }
-     * </pre>
-     * <p>
-     * <strong>Reactive Streams Compliance:</strong>
-     * This operator is compliant with the Reactive Streams specification as long as the
-     * {@link io.smallrye.mutiny.subscription.DemandPauser} used to manage demand is eventually resumed.
-     * When the upstream signals completion,
-     * if the stream is paused, the completion signal is deferred until the stream is resumed, at which point
-     * all buffered items are delivered to downstream before the completion signal is propagated.
-     * When the upstream signals failure,
-     * any buffered items are discarded and the error is immediately propagated downstream.
-     *
-     * @return a {@link MultiDemandPausing} to configure the pausing behavior
-     * @see io.smallrye.mutiny.subscription.DemandPauser
-     */
     @CheckReturnValue
     default MultiDemandPausing<T> pauseDemand() {
-        throw new UnsupportedOperationException("Default method added to limit binary incompatibility");
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Cap all downstream subscriber requests to a maximum value.
-     * <p>
-     * This is a shortcut for:
-     *
-     * <pre>
-     * multi.capDemandsUsing(outstanding -&gt; Math.min(outstanding, actual))
-     * </pre>
-     *
-     * @param max the maximum demand
-     * @return the new {@link Multi}
-     */
     @CheckReturnValue
     default Multi<T> capDemandsTo(long max) {
-        long actual = positive(max, "max");
-        return capDemandsUsing(outstanding -> Math.min(outstanding, actual));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -712,31 +475,8 @@ public interface Multi<T> extends Publisher<T> {
     @CheckReturnValue
     Multi<T> capDemandsUsing(LongFunction<Long> function);
 
-    /**
-     * Splits this {@link Multi} into several co-operating {@link Multi} based on an enumeration and a mapping function.
-     * <p>
-     * Here is a sample where a stream of integers is split into streams for odd and even numbers:
-     *
-     * <pre>
-     * {@code
-     * // Split someMulti into 2 streams
-     * var splitter = someMulti.split(OddEven.class, n -> (n % 2 == 0) ? OddEven.EVEN : OddEven.ODD);
-     *
-     * // Stream for odd numbers
-     * vor odd = splitter.get(OddEven.ODD).subscribe().with(...);
-     *
-     * // Stream for even numbers
-     * vor even = splitter.get(OddEven.EVEN).subscribe().with(...);
-     * }
-     * </pre>
-     *
-     * @param keyType the key type
-     * @param splitter the splitter function
-     * @return a splitter
-     * @param <K> the key type
-     */
     @CheckReturnValue
     default <K extends Enum<K>> MultiSplitter<T, K> split(Class<K> keyType, Function<T, K> splitter) {
-        return new MultiSplitter<>(this, keyType, splitter);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

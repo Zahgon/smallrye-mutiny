@@ -1,14 +1,11 @@
-
 package io.smallrye.mutiny.operators.multi;
 
 import java.util.concurrent.Flow;
 import java.util.concurrent.Flow.Publisher;
 import java.util.function.Function;
 
-import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 import io.smallrye.mutiny.subscription.SwitchableSubscriptionSubscriber;
 
@@ -24,7 +21,7 @@ public class MultiOnFailureResumeOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.subscribe().withSubscriber(new ResumeSubscriber<>(downstream, next));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class ResumeSubscriber<T> extends SwitchableSubscriptionSubscriber<T> {
@@ -41,44 +38,17 @@ public class MultiOnFailureResumeOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Flow.Subscription su) {
-            if (!switched) {
-                downstream.onSubscribe(this);
-            }
-            super.setOrSwitchUpstream(su);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T item) {
-            downstream.onItem(item);
-
-            if (!switched) {
-                emitted(1);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            if (!switched) {
-                switched = true;
-                Publisher<? extends T> publisher;
-                try {
-                    publisher = next.apply(failure);
-                    if (publisher == null) {
-                        throw new NullPointerException(ParameterValidation.SUPPLIER_PRODUCED_NULL);
-                    }
-                } catch (Throwable e) {
-                    if (e == failure) { // Exception rethrown.
-                        super.onFailure(e);
-                    } else {
-                        super.onFailure(new CompositeException(failure, e));
-                    }
-                    return;
-                }
-                publisher.subscribe(Infrastructure.onMultiSubscription(publisher, this));
-            } else {
-                super.onFailure(failure);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
-
     }
 }

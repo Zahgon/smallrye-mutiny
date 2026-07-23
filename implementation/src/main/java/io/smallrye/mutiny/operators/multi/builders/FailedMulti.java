@@ -3,7 +3,6 @@ package io.smallrye.mutiny.operators.multi.builders;
 import java.util.function.Supplier;
 
 import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.operators.AbstractMulti;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
@@ -28,17 +27,6 @@ public class FailedMulti<T> extends AbstractMulti<T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> actual) {
-        try {
-            Throwable throwable = supplier.get();
-            if (throwable == null) {
-                Subscriptions.fail(actual, new NullPointerException(ParameterValidation.SUPPLIER_PRODUCED_NULL));
-            } else {
-                Subscriptions.fail(actual, throwable);
-            }
-        } catch (Throwable e) {
-            Subscriptions.fail(actual, e);
-        }
-
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

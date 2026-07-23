@@ -4,18 +4,12 @@ package _04_failures;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.subscription.UniEmitter;
 
 public class _04_Uni_Failure_Retry {
 
     public static void main(String[] args) {
-        System.out.println("⚡️ Uni failure retry");
-
-        Uni.createFrom().emitter(emitter -> generate(emitter))
-                .onFailure().invoke(() -> System.out.println("Failed"))
-                .onFailure().retry().indefinitely()
-                .subscribe().with(System.out::println);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static void generate(UniEmitter<? super Object> emitter) {

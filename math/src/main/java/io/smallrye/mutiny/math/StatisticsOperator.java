@@ -24,13 +24,12 @@ import io.smallrye.mutiny.Multi;
 public class StatisticsOperator<T extends Number & Comparable<T>> implements Function<Multi<T>, Multi<Statistic<T>>> {
 
     private final Statistic<T> EMPTY = new Statistic<>(0L, 0.0d, 0.0d, 0.0d, 0.0d, null, null);
+
     private final AtomicReference<Statistic<T>> currentStatistic = new AtomicReference<>(EMPTY);
 
     @Override
     public Multi<Statistic<T>> apply(Multi<T> multi) {
-        return multi
-                .onItem().transform(this::push)
-                .onCompletion().ifEmpty().continueWith(EMPTY);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private Statistic<T> push(T number) {
@@ -44,7 +43,6 @@ public class StatisticsOperator<T extends Number & Comparable<T>> implements Fun
             double m4 = stat.m4;
             T min = stat.min;
             T max = stat.max;
-
             delta = number.doubleValue() - stat.m1;
             delta_n = delta / n;
             delta_n2 = delta_n * delta_n;
@@ -53,7 +51,6 @@ public class StatisticsOperator<T extends Number & Comparable<T>> implements Fun
             m4 += term1 * delta_n2 * (n * n - 3 * n + 3) + 6 * delta_n2 * m2 - 4 * delta_n * m3;
             m3 += term1 * delta_n * (n - 2) - 3 * delta_n * m2;
             m2 += term1;
-
             if (min == null || min.compareTo(number) > 0) {
                 min = number;
             }

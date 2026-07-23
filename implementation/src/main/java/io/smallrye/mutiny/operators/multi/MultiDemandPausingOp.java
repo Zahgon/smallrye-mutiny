@@ -1,13 +1,11 @@
 package io.smallrye.mutiny.operators.multi;
 
 import java.util.Queue;
-import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.helpers.Subscriptions;
 import io.smallrye.mutiny.helpers.queues.Queues;
 import io.smallrye.mutiny.operators.MultiOperator;
 import io.smallrye.mutiny.subscription.BackPressureStrategy;
@@ -32,10 +30,15 @@ public class MultiDemandPausingOp<T> extends MultiOperator<T, T> implements Paus
     private volatile PausableProcessor processor;
 
     private final AtomicBoolean paused;
+
     private final AtomicBoolean subscribed = new AtomicBoolean();
+
     private final boolean lateSubscription;
+
     private final int bufferSize;
+
     private final boolean unbounded;
+
     private final BackPressureStrategy backPressureStrategy;
 
     public MultiDemandPausingOp(Multi<T> upstream, boolean initiallyPaused, boolean lateSubscription, int bufferSize,
@@ -50,64 +53,46 @@ public class MultiDemandPausingOp<T> extends MultiOperator<T, T> implements Paus
 
     @Override
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        processor = new PausableProcessor(subscriber);
-        if (!lateSubscription || !paused.get()) { // if late subscription is disabled, we can subscribe now.
-            subscribed.set(true);
-            upstream().subscribe(processor);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public boolean isPaused() {
-        return paused.get();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void pause() {
-        paused.set(true);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void resume() {
-        if (paused.compareAndSet(true, false)) {
-            PausableProcessor p = processor;
-            if (p != null) {
-                if (lateSubscription && subscribed.compareAndSet(false, true)) {
-                    upstream().subscribe(p);
-                }
-                p.resume();
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public int bufferSize() {
-        PausableProcessor p = processor;
-        if (p != null) {
-            return p.queueSize();
-        }
-        return 0;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public boolean clearBuffer() {
-        if (paused.get()) {
-            PausableProcessor p = processor;
-            if (p != null) {
-                p.clearQueue();
-                return true;
-            }
-        }
-        return false;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class PausableProcessor extends MultiOperatorProcessor<T, T> {
 
         private final AtomicLong demand = new AtomicLong();
+
         private final Queue<T> queue;
+
         private final AtomicInteger wip = new AtomicInteger();
+
         private final AtomicInteger strictBoundCounter = new AtomicInteger(0);
+
         private volatile boolean upstreamCompleted;
+
         private final AtomicBoolean clearQueue = new AtomicBoolean();
 
         PausableProcessor(MultiSubscriber<? super T> downstream) {
@@ -121,132 +106,44 @@ public class MultiDemandPausingOp<T> extends MultiOperator<T, T> implements Paus
         }
 
         void resume() {
-            Flow.Subscription subscription = getUpstreamSubscription();
-            if (subscription == Subscriptions.CANCELLED) {
-                return;
-            }
-            // Drain any buffered items first
-            drain();
-            long currentDemand = demand.get();
-            if (currentDemand > 0) {
-                Subscriptions.produced(demand, currentDemand);
-                subscription.request(currentDemand);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void drain() {
-            if (queue == null) {
-                if (upstreamCompleted) {
-                    super.onCompletion();
-                }
-                return;
-            }
-            if (wip.getAndIncrement() > 0) {
-                return;
-            }
-            while (true) {
-                Queue<T> qe = queue;
-                // Drain all buffered items - these were already requested from upstream
-                // so we don't need to check downstream demand here
-                while (!paused.get()) {
-                    T item = qe.poll();
-                    if (item == null) {
-                        // queue empty
-                        break;
-                    }
-                    if (!unbounded) {
-                        strictBoundCounter.decrementAndGet();
-                    }
-                    if (clearQueue.get()) {
-                        break;
-                    }
-                    downstream.onItem(item);
-                }
-                if (!paused.get() && upstreamCompleted) {
-                    super.onCompletion();
-                }
-                if (clearQueue.compareAndSet(true, false)) {
-                    queue.clear();
-                    strictBoundCounter.set(0);
-                }
-                if (wip.decrementAndGet() == 0) {
-                    return;
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void clearQueue() {
-            if (queue != null && clearQueue.compareAndSet(false, true) && wip.getAndIncrement() == 0) {
-                // nothing was currently dispatched, clearing the queue.
-                queue.clear();
-                clearQueue.set(false);
-                strictBoundCounter.set(0);
-                wip.decrementAndGet();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         int queueSize() {
-            return (queue != null) ? queue.size() : 0;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T item) {
-            if (backPressureStrategy != BackPressureStrategy.IGNORE && paused.get()) {
-                if (backPressureStrategy == BackPressureStrategy.DROP) {
-                    return;
-                }
-                // When paused buffer items if necessary
-                if ((!unbounded && strictBoundCounter.getAndIncrement() >= bufferSize) || !queue.offer(item)) {
-                    // Buffer is full, throw exception
-                    onFailure(new IllegalStateException("Buffer overflow: cannot buffer more than " + bufferSize + " items"));
-                }
-            } else {
-                super.onItem(item);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long numberOfItems) {
-            if (numberOfItems <= 0) {
-                onFailure(Subscriptions.getInvalidRequestException());
-                return;
-            }
-            Flow.Subscription subscription = getUpstreamSubscription();
-            if (subscription == Subscriptions.CANCELLED) {
-                return;
-            }
-            try {
-                Subscriptions.add(demand, numberOfItems);
-                if (paused.get()) {
-                    return;
-                }
-                long currentDemand = demand.get();
-                if (currentDemand > 0) {
-                    Subscriptions.produced(demand, currentDemand);
-                    subscription.request(currentDemand);
-                }
-            } catch (Throwable failure) {
-                onFailure(failure);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            clearQueue();
-            processor = null;
-            super.cancel();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            clearQueue();
-            super.onFailure(failure);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            upstreamCompleted = true;
-            drain();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

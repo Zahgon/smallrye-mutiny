@@ -1,12 +1,10 @@
 package io.smallrye.mutiny.subscription;
 
-import java.util.Objects;
 import java.util.concurrent.Flow;
 import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.smallrye.mutiny.Context;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 
 /**
  * Subscriber that makes sure signals are delivered sequentially in case the onNext, onError or onComplete methods are
@@ -42,187 +40,45 @@ public final class SerializedSubscriber<T> implements Subscription, MultiSubscri
 
     @Override
     public void onSubscribe(Subscription s) {
-        if (upstream.compareAndSet(null, s)) {
-            downstream.onSubscribe(this);
-        } else {
-            s.cancel();
-            Infrastructure.handleDroppedException(new IllegalStateException("Subscription already set"));
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onItem(T t) {
-        Objects.requireNonNull(t); // Reactive Streams requirement
-        if (cancelled || done) {
-            return;
-        }
-
-        synchronized (this) {
-            if (cancelled || done) {
-                return;
-            }
-
-            if (emitting) {
-                serAdd(t);
-                missed = true;
-                return;
-            }
-
-            emitting = true;
-        }
-
-        downstream.onNext(t);
-
-        serializedDrainLoop(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onFailure(Throwable t) {
-        if (cancelled || done) {
-            Infrastructure.handleDroppedException(t);
-            return;
-        }
-
-        synchronized (this) {
-            if (cancelled || done) {
-                Infrastructure.handleDroppedException(t);
-                return;
-            }
-
-            done = true;
-            failure = t;
-
-            if (emitting) {
-                missed = true;
-                return;
-            }
-        }
-
-        downstream.onError(t);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onCompletion() {
-        if (cancelled || done) {
-            return;
-        }
-
-        synchronized (this) {
-            if (cancelled || done) {
-                return;
-            }
-
-            done = true;
-
-            if (emitting) {
-                missed = true;
-                return;
-            }
-        }
-
-        downstream.onComplete();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void request(long n) {
-        upstream.get().request(n);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        cancelled = true;
-        upstream.get().cancel();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     void serAdd(T value) {
-        LinkedArrayNode<T> t = tail;
-
-        if (t == null) {
-            t = new LinkedArrayNode<>(value);
-
-            head = t;
-            tail = t;
-        } else {
-            if (t.count == LinkedArrayNode.DEFAULT_CAPACITY) {
-                LinkedArrayNode<T> n = new LinkedArrayNode<>(value);
-
-                t.next = n;
-                tail = n;
-            } else {
-                t.array[t.count++] = value;
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     void serializedDrainLoop(Flow.Subscriber<? super T> actual) {
-        for (;;) {
-
-            if (cancelled) {
-                return;
-            }
-
-            boolean d;
-            Throwable e;
-            LinkedArrayNode<T> n;
-
-            synchronized (this) {
-                if (cancelled) {
-                    return;
-                }
-
-                if (!missed) {
-                    emitting = false;
-                    return;
-                }
-
-                missed = false;
-
-                d = done;
-                e = failure;
-                n = head;
-
-                head = null;
-                tail = null;
-            }
-
-            while (n != null) {
-
-                T[] arr = n.array;
-                int c = n.count;
-
-                for (int i = 0; i < c; i++) {
-
-                    if (cancelled) {
-                        return;
-                    }
-
-                    actual.onNext(arr[i]);
-                }
-
-                n = n.next;
-            }
-
-            if (cancelled) {
-                return;
-            }
-
-            if (e != null) {
-                actual.onError(e);
-                return;
-            } else if (d) {
-                actual.onComplete();
-                return;
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Context context() {
-        if (downstream instanceof ContextSupport) {
-            return ((ContextSupport) downstream).context();
-        } else {
-            return Context.empty();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -235,6 +91,7 @@ public final class SerializedSubscriber<T> implements Subscription, MultiSubscri
         static final int DEFAULT_CAPACITY = 16;
 
         final T[] array;
+
         int count;
 
         LinkedArrayNode<T> next;

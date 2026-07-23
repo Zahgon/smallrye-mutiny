@@ -24,6 +24,7 @@ class SubscriptionObserver<X> {
      * The state ot the exchange.
      */
     private enum State {
+
         /**
          * Initialization - no subscriber yet
          */
@@ -82,56 +83,16 @@ class SubscriptionObserver<X> {
     }
 
     void setObserver(SubscriptionObserver other) {
-        this.observer.set(Objects.requireNonNull(other));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings("SubscriberImplementation")
     public void run() {
-        upstream.subscribe(new Subscriber<X>() {
-            @Override
-            public synchronized void onSubscribe(Subscription sub) {
-                if (manageCompletionOrErrorFromBeforeSubscription(sub) || manageAlreadySubscribed(sub)) {
-                    return;
-                }
-                if (downstream.get() == null) {
-                    sub.cancel();
-                }
-                // The subscription is set.
-                state.set(State.SUBSCRIBED);
-                injectSubscription(downstream.get(), sub);
-            }
-
-            @Override
-            public void onNext(X o) {
-                apply(downstream, d -> d.onNext(Objects.requireNonNull(o)));
-            }
-
-            @Override
-            public synchronized void onError(Throwable t) {
-                state.set(State.FAILED);
-                apply(downstream, d -> d.onError(Objects.requireNonNull(t)));
-                new Thread(() -> {
-                    apply(subscription, Subscription::cancel);
-                }).start();
-                failure.set(t);
-                apply(observer, obs -> obs.error(t));
-            }
-
-            @Override
-            public synchronized void onComplete() {
-                state.set(State.COMPLETED);
-                apply(downstream, Subscriber::onComplete);
-                new Thread(() -> {
-                    apply(subscription, Subscription::cancel);
-                }).start();
-                apply(observer, SubscriptionObserver::complete);
-            }
-        });
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void injectSubscription(Subscriber<? super X> subscriber, Subscription sub) {
-        subscriber.onSubscribe(new WrappedSubscription(sub,
-                // On cancellation, notify the observer and cleanup.
+        subscriber.onSubscribe(new WrappedSubscription(sub, // On cancellation, notify the observer and cleanup.
                 // The delegate subscription is going to be cancelled automatically.
                 () -> {
                     if (state.get() == State.SUBSCRIBED || state.get() == State.INIT) {
@@ -194,11 +155,7 @@ class SubscriptionObserver<X> {
     }
 
     public synchronized void complete() {
-        if (state.compareAndSet(State.SUBSCRIBED, State.COMPLETED)) {
-            apply(downstream, Subscriber::onComplete);
-            apply(subscription, Subscription::cancel);
-            downstream.set(null);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static <X> void apply(AtomicReference<X> ref, Consumer<X> consumer) {

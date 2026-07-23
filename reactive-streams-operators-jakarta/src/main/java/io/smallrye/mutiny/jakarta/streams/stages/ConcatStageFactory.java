@@ -9,8 +9,6 @@ import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.jakarta.streams.Engine;
 import io.smallrye.mutiny.jakarta.streams.operators.PublisherStage;
 import io.smallrye.mutiny.jakarta.streams.operators.PublisherStageFactory;
-import io.smallrye.mutiny.jakarta.streams.utils.CancellablePublisher;
-import mutiny.zero.flow.adapters.AdaptersToFlow;
 
 /**
  * Implementation of the {@link Stage.Concat} stage. Because both streams can emits on different thread,
@@ -23,16 +21,15 @@ public class ConcatStageFactory implements PublisherStageFactory<Stage.Concat> {
 
     @Override
     public <O> PublisherStage<O> create(Engine engine, Stage.Concat stage) {
-        Objects.requireNonNull(engine);
-        Objects.requireNonNull(stage);
-        Graph g1 = stage.getFirst();
-        Graph g2 = stage.getSecond();
-        return new ConcatStage<>(engine, g1, g2);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class ConcatStage<O> implements PublisherStage<O> {
+
         private final Engine engine;
+
         private final Graph first;
+
         private final Graph second;
 
         ConcatStage(Engine engine, Graph g1, Graph g2) {
@@ -43,10 +40,7 @@ public class ConcatStageFactory implements PublisherStageFactory<Stage.Concat> {
 
         @Override
         public Multi<O> get() {
-            CancellablePublisher<O> cancellable = new CancellablePublisher<>(engine.buildPublisher(second));
-            return Multi.createBy().concatenating()
-                    .streams(AdaptersToFlow.publisher(engine.buildPublisher(first)), AdaptersToFlow.publisher(cancellable))
-                    .onTermination().invoke(cancellable::cancelIfNotSubscribed);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

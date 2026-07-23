@@ -10,13 +10,7 @@ public class MultiBroadcaster {
 
     public static <T> Multi<T> publish(Multi<T> upstream, int numberOfSubscribers, boolean cancelWhenNoOneIsListening,
             Duration delayAfterLastDeparture) {
-
-        if (numberOfSubscribers > 0) {
-            return createPublishWithSubscribersThreshold(upstream, numberOfSubscribers, cancelWhenNoOneIsListening,
-                    delayAfterLastDeparture);
-        } else {
-            return createPublishImmediate(upstream, cancelWhenNoOneIsListening, delayAfterLastDeparture);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private static <T> Multi<T> createPublishImmediate(Multi<T> upstream, boolean cancelWhenNoOneIsListening,

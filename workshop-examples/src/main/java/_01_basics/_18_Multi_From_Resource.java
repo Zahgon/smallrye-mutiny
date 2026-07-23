@@ -7,23 +7,17 @@ import io.smallrye.mutiny.Multi;
 public class _18_Multi_From_Resource {
 
     public static void main(String[] args) {
-        System.out.println("⚡️ Multi from resource");
-
-        Multi.createFrom()
-                .resource(MyResource::new, MyResource::stream)
-                .withFinalizer(MyResource::close)
-                .subscribe().with(System.out::println);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static class MyResource {
 
         public Multi<Integer> stream() {
-            System.out.println("stream()");
-            return Multi.createFrom().range(0, 10);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public void close() {
-            System.out.println("close()");
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

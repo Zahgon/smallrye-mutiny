@@ -25,16 +25,8 @@ public class Transformer {
         }
     }
 
-    /**
-     * Calls the model.
-     *
-     * @param upstream the upstream
-     * @param <T> the type of data
-     * @return the decorated stream if needed
-     */
     @SuppressWarnings("unchecked")
     public static <T> Multi<T> apply(Multi<T> upstream) {
-        return INSTANCE.model.apply(upstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

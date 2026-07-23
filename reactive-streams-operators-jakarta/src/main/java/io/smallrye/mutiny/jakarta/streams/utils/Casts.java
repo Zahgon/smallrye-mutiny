@@ -23,23 +23,22 @@ public class Casts {
     }
 
     public static <I, O> Function<I, O> cast(Function<?, ?> fun) {
-        return (Function<I, O>) fun;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I> Predicate<I> cast(Predicate<?> p) {
-        return (Predicate<I>) p;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I, O> ProcessingStage<I, O> cast(ProcessingStage<?, ?> p) {
-        return (ProcessingStage<I, O>) p;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <I, O> Processor<I, O> cast(Processor<?, ?> p) {
-        return (Processor<I, O>) p;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public static <O> CompletionStage<O> cast(CompletionStage<?> cs) {
-        return (CompletionStage<O>) cs;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

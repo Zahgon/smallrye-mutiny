@@ -1,11 +1,7 @@
 package io.smallrye.mutiny.streams.stages;
 
-import java.util.Objects;
-import java.util.function.Predicate;
-
 import org.eclipse.microprofile.reactive.streams.operators.spi.Stage;
 
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.streams.Engine;
 import io.smallrye.mutiny.streams.operators.ProcessingStage;
 import io.smallrye.mutiny.streams.operators.ProcessingStageFactory;
@@ -20,8 +16,6 @@ public class FilterStageFactory implements ProcessingStageFactory<Stage.Filter> 
     @SuppressWarnings("unchecked")
     @Override
     public <I, O> ProcessingStage<I, O> create(Engine engine, Stage.Filter stage) {
-        Objects.requireNonNull(stage);
-        Predicate predicate = Objects.requireNonNull(stage.getPredicate());
-        return source -> (Multi<O>) source.select().where(predicate);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

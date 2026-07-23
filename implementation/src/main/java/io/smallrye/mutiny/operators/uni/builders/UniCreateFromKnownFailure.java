@@ -20,16 +20,17 @@ public class UniCreateFromKnownFailure<T> extends AbstractUni<T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        new KnownFailureSubscription(subscriber).forward();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public Throwable getFailure() {
-        return failure;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class KnownFailureSubscription implements UniSubscription {
 
         private final UniSubscriber<? super T> subscriber;
+
         private volatile boolean cancelled = false;
 
         private KnownFailureSubscription(UniSubscriber<? super T> subscriber) {
@@ -45,7 +46,7 @@ public class UniCreateFromKnownFailure<T> extends AbstractUni<T> {
 
         @Override
         public void cancel() {
-            cancelled = true;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

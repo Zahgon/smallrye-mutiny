@@ -67,27 +67,11 @@ public interface MultiEmitter<T> extends ContextSupport {
      */
     long requested();
 
-    /**
-     * Defines a callback for {@link Subscription#request(long)} signals.
-     * <p>
-     * This is useful to facilitate the implementation of back-pressured emissions.
-     *
-     * @param consumer the callback
-     * @return this emitter
-     */
     default MultiEmitter<T> onRequest(LongConsumer consumer) {
-        throw new UnsupportedOperationException("To be implemented");
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Defines a callback for {@link Subscription#cancel()} signals.
-     * <p>
-     * This is useful to facilitate the implementation of cancellation logic.
-     *
-     * @param onCancellation the callback
-     * @return this emitter
-     */
     default MultiEmitter<T> onCancellation(Runnable onCancellation) {
-        throw new UnsupportedOperationException("To be implemented");
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

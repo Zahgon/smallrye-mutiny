@@ -9,17 +9,16 @@ public class MultiOnTerminationSpy<T> extends MultiSpyBase<T> {
     private volatile Tuple2<Throwable, Boolean> lastTermination;
 
     public Throwable lastTerminationFailure() throws IllegalStateException {
-        return (lastTermination == null) ? null : lastTermination.getItem1();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     public boolean lastTerminationWasCancelled() throws IllegalStateException {
-        return (lastTermination != null) && lastTermination.getItem2();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void reset() {
-        super.reset();
-        lastTermination = null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     MultiOnTerminationSpy(Multi<? extends T> upstream) {
@@ -28,16 +27,11 @@ public class MultiOnTerminationSpy<T> extends MultiSpyBase<T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        upstream.onTermination().invoke((failure, cancelled) -> {
-            lastTermination = Tuple2.of(failure, cancelled);
-            incrementInvocationCount();
-        }).subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "MultiOnTerminationSpy{" +
-                "lastTermination=" + lastTermination +
-                "} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

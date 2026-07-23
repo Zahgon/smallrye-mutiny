@@ -1,15 +1,10 @@
 package io.smallrye.mutiny.operators.uni;
 
-import static io.smallrye.mutiny.helpers.EmptyUniSubscription.CANCELLED;
-
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.operators.UniOperator;
 import io.smallrye.mutiny.subscription.UniSubscriber;
-import io.smallrye.mutiny.subscription.UniSubscription;
 
 public class UniOnCancellation<T> extends UniOperator<T, T> {
 
@@ -22,10 +17,11 @@ public class UniOnCancellation<T> extends UniOperator<T, T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        AbstractUni.subscribe(upstream(), new UniOnCancellationProcessor<T>(callback, subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private enum State {
+
         INIT,
         DONE,
         CANCELLED
@@ -36,6 +32,7 @@ public class UniOnCancellation<T> extends UniOperator<T, T> {
         private final Runnable callback;
 
         private volatile State state = State.INIT;
+
         private static final AtomicReferenceFieldUpdater<UniOnCancellationProcessor, State> stateUpdater = AtomicReferenceFieldUpdater
                 .newUpdater(UniOnCancellationProcessor.class, State.class, "state");
 
@@ -46,32 +43,17 @@ public class UniOnCancellation<T> extends UniOperator<T, T> {
 
         @Override
         public void onItem(T item) {
-            if (stateUpdater.compareAndSet(this, State.INIT, State.DONE)) {
-                downstream.onItem(item);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            if (stateUpdater.compareAndSet(this, State.INIT, State.DONE)) {
-                downstream.onFailure(failure);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (stateUpdater.compareAndSet(this, State.INIT, State.CANCELLED)) {
-                UniSubscription sub = getAndSetUpstreamSubscription(CANCELLED);
-                try {
-                    callback.run();
-                } catch (Throwable e) {
-                    Infrastructure.handleDroppedException(e);
-                } finally {
-                    if (sub != null) {
-                        sub.cancel();
-                    }
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

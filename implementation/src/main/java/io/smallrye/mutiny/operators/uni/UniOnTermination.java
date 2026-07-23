@@ -1,14 +1,12 @@
 package io.smallrye.mutiny.operators.uni;
 
-import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.smallrye.mutiny.operators.AbstractUni;
 import io.smallrye.mutiny.operators.UniOperator;
 import io.smallrye.mutiny.subscription.UniSubscriber;
 import io.smallrye.mutiny.tuples.Functions;
 
 public class UniOnTermination<T> extends UniOperator<T, T> {
+
     private final Functions.TriConsumer<T, Throwable, Boolean> callback;
 
     public UniOnTermination(Uni<T> upstream, Functions.TriConsumer<T, Throwable, Boolean> callback) {
@@ -18,7 +16,7 @@ public class UniOnTermination<T> extends UniOperator<T, T> {
 
     @Override
     public void subscribe(UniSubscriber<? super T> subscriber) {
-        AbstractUni.subscribe(upstream(), new UniOnTerminationProcessor(subscriber));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class UniOnTerminationProcessor extends UniOperatorProcessor<T, T> {
@@ -29,43 +27,17 @@ public class UniOnTermination<T> extends UniOperator<T, T> {
 
         @Override
         public void onItem(T item) {
-            if (!isCancelled()) {
-                try {
-                    callback.accept(item, null, false);
-                } catch (Throwable e) {
-                    downstream.onFailure(e);
-                    return;
-                }
-                downstream.onItem(item);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            if (!isCancelled()) {
-                try {
-                    callback.accept(null, failure, false);
-                } catch (Throwable e) {
-                    downstream.onFailure(new CompositeException(failure, e));
-                    return;
-                }
-                downstream.onFailure(failure);
-            } else {
-                Infrastructure.handleDroppedException(failure);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (!isCancelled()) {
-                try {
-                    callback.accept(null, null, true);
-                } catch (Throwable e) {
-                    Infrastructure.handleDroppedException(e);
-                } finally {
-                    super.cancel();
-                }
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

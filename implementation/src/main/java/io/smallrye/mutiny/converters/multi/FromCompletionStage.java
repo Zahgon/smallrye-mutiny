@@ -15,6 +15,6 @@ public class FromCompletionStage<T> implements MultiConverter<CompletionStage<T>
 
     @Override
     public Multi<T> from(CompletionStage<T> instance) {
-        return Multi.createFrom().completionStage(instance);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

@@ -20,8 +20,6 @@ public class CountOperator<T> implements Function<Multi<T>, Multi<Long>> {
 
     @Override
     public Multi<Long> apply(Multi<T> multi) {
-        return multi
-                .onItem().transform(x -> count.incrementAndGet())
-                .onCompletion().ifEmpty().continueWith(0L);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

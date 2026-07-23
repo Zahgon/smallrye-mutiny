@@ -14,14 +14,12 @@ import io.smallrye.mutiny.tuples.Tuple2;
  *
  * @param <T> type of the incoming items.
  */
-public class IndexOperator<T>
-        implements Function<Multi<T>, Multi<Tuple2<Long, T>>> {
+public class IndexOperator<T> implements Function<Multi<T>, Multi<Tuple2<Long, T>>> {
 
     private final AtomicLong index = new AtomicLong();
 
     @Override
     public Multi<Tuple2<Long, T>> apply(Multi<T> multi) {
-        return multi
-                .onItem().transform(x -> Tuple2.of(index.getAndIncrement(), x));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

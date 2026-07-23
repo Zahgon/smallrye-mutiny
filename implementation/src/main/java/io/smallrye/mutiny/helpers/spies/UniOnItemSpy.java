@@ -12,29 +12,21 @@ public class UniOnItemSpy<T> extends UniSpyBase<T> {
     }
 
     public T lastItem() {
-        return lastItem;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void reset() {
-        super.reset();
-        lastItem = null;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void subscribe(UniSubscriber<? super T> downstream) {
-        upstream()
-                .onItem().invoke(item -> {
-                    this.lastItem = item;
-                    incrementInvocationCount();
-                })
-                .subscribe().withSubscriber(downstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public String toString() {
-        return "UniOnItemSpy{" +
-                "lastItem=" + lastItem +
-                "} " + super.toString();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

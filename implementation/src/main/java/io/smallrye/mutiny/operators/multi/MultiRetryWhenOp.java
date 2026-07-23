@@ -29,6 +29,7 @@ import io.smallrye.mutiny.subscription.SwitchableSubscriptionSubscriber;
 public final class MultiRetryWhenOp<T> extends AbstractMultiOperator<T, T> {
 
     private final Function<? super Multi<Throwable>, ? extends Publisher<?>> triggerStreamFactory;
+
     private final Predicate<? super Throwable> onFailurePredicate;
 
     public MultiRetryWhenOp(Multi<? extends T> upstream, Predicate<? super Throwable> onFailurePredicate,
@@ -39,26 +40,21 @@ public final class MultiRetryWhenOp<T> extends AbstractMultiOperator<T, T> {
     }
 
     private static <T> void subscribe(MultiSubscriber<? super T> downstream, Predicate<? super Throwable> onFailurePredicate,
-            Function<? super Multi<Throwable>, ? extends Publisher<?>> triggerStreamFactory,
-            Multi<? extends T> upstream) {
+            Function<? super Multi<Throwable>, ? extends Publisher<?>> triggerStreamFactory, Multi<? extends T> upstream) {
         Context context;
         if (downstream instanceof ContextSupport provider) {
             context = provider.context();
         } else {
             context = Context.empty();
         }
-
         TriggerSubscriber other = new TriggerSubscriber(context);
         Subscriber<Throwable> signaller = new SerializedSubscriber<>(other.processor);
         signaller.onSubscribe(Subscriptions.empty());
         MultiSubscriber<T> serialized = new SerializedSubscriber<>(downstream);
-
         RetryWhenOperator<T> operator = new RetryWhenOperator<>(upstream, onFailurePredicate, serialized, signaller);
         other.operator = operator;
-
         serialized.onSubscribe(operator);
         Publisher<?> publisher;
-
         try {
             publisher = triggerStreamFactory.apply(other);
             if (publisher == null) {
@@ -68,9 +64,7 @@ public final class MultiRetryWhenOp<T> extends AbstractMultiOperator<T, T> {
             downstream.onFailure(e);
             return;
         }
-
         publisher.subscribe(other);
-
         if (!operator.isCancelled()) {
             upstream.subscribe(operator);
         }
@@ -78,22 +72,25 @@ public final class MultiRetryWhenOp<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> downstream) {
-        subscribe(downstream, onFailurePredicate, triggerStreamFactory, upstream);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     static final class RetryWhenOperator<T> extends SwitchableSubscriptionSubscriber<T> {
 
         private final Publisher<? extends T> upstream;
+
         private final AtomicInteger wip = new AtomicInteger();
+
         private final Subscriber<Throwable> signaller;
+
         private final Subscriptions.DeferredSubscription arbiter = new Subscriptions.DeferredSubscription();
+
         private final Predicate<? super Throwable> onFailurePredicate;
 
         long produced;
 
         RetryWhenOperator(Publisher<? extends T> upstream, Predicate<? super Throwable> onFailurePredicate,
-                MultiSubscriber<? super T> downstream,
-                Subscriber<Throwable> signaller) {
+                MultiSubscriber<? super T> downstream, Subscriber<Throwable> signaller) {
             super(downstream);
             this.onFailurePredicate = onFailurePredicate;
             this.upstream = upstream;
@@ -102,36 +99,21 @@ public final class MultiRetryWhenOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void cancel() {
-            if (!isCancelled()) {
-                arbiter.cancel();
-                super.cancel();
-            }
-
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         public void setWhen(Flow.Subscription w) {
-            arbiter.set(w);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T t) {
-            downstream.onItem(t);
-            produced++;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable t) {
-            if (testOnFailurePredicate(t)) {
-                return;
-            }
-
-            long p = produced;
-            if (p != 0L) {
-                produced = 0;
-                emitted(p);
-            }
-            arbiter.request(1);
-            signaller.onNext(t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         private boolean testOnFailurePredicate(Throwable t) {
@@ -150,39 +132,30 @@ public final class MultiRetryWhenOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onCompletion() {
-            arbiter.cancel();
-            downstream.onComplete();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void resubscribe() {
-            if (wip.getAndIncrement() == 0) {
-                do {
-                    if (isCancelled()) {
-                        return;
-                    }
-
-                    upstream.subscribe(this);
-
-                } while (wip.decrementAndGet() != 0);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void whenFailure(Throwable failure) {
-            super.cancel();
-            downstream.onFailure(failure);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         void whenComplete() {
-            super.cancel();
-            downstream.onComplete();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 
     @SuppressWarnings({ "SubscriberImplementation" })
     static final class TriggerSubscriber extends AbstractMulti<Throwable>
             implements Multi<Throwable>, Subscriber<Object>, ContextSupport {
+
         RetryWhenOperator<?> operator;
+
         private final Flow.Processor<Throwable, Throwable> processor = UnicastProcessor.<Throwable> create().serialized();
+
         private final Context context;
 
         TriggerSubscriber(Context context) {
@@ -191,33 +164,32 @@ public final class MultiRetryWhenOp<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Flow.Subscription s) {
-            operator.setWhen(s);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onNext(Object t) {
-            operator.resubscribe();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onError(Throwable t) {
-            operator.whenFailure(t);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onComplete() {
-            operator.whenComplete();
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void subscribe(Subscriber<? super Throwable> actual) {
-            processor.subscribe(actual);
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public Context context() {
-            return this.context;
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
-
 }

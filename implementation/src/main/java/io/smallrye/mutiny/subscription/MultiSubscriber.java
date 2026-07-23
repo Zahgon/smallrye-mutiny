@@ -51,36 +51,15 @@ public interface MultiSubscriber<T> extends Subscriber<T> {
      */
     void onCompletion();
 
-    /**
-     * Data notification sent by the {@link Publisher} in response to requests to {@link Subscription#request(long)}.
-     * Delegates to {@link #onItem(Object)}
-     *
-     * @param t the element signaled
-     */
     default void onNext(T t) {
-        onItem(t);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Failed terminal state.
-     * <p>
-     * No further events will be sent even if {@link Subscription#request(long)} is invoked again.
-     * Delegates to {@link #onFailure(Throwable)}
-     *
-     * @param t the throwable signaled
-     */
     default void onError(Throwable t) {
-        onFailure(t);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
-    /**
-     * Successful terminal state.
-     * <p>
-     * No further events will be sent even if {@link Subscription#request(long)} is invoked again.
-     * Delegates to {@link #onCompletion()}
-     */
     default void onComplete() {
-        onCompletion();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }

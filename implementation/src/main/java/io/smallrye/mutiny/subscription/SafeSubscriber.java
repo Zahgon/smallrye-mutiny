@@ -1,6 +1,5 @@
 package io.smallrye.mutiny.subscription;
 
-import java.util.Objects;
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,57 +46,18 @@ public final class SafeSubscriber<T> implements Subscriber<T>, Subscription, Con
         this.downstream = downstream;
     }
 
-    /**
-     * For testing purpose only.
-     *
-     * @return whether the subscriber is in a terminal state.
-     */
     boolean isDone() {
-        return done;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onSubscribe(Subscription subscription) {
-        if (subscribed.compareAndSet(false, true)) {
-            this.upstream = subscription;
-            try {
-                downstream.onSubscribe(this);
-            } catch (Throwable e) {
-                done = true;
-                // can't call onError because the actual's state may be corrupt at this point
-                try {
-                    subscription.cancel();
-                } catch (Throwable e1) {
-                    // ignore it, nothing we can do.
-                    Infrastructure.handleDroppedException(e1);
-                }
-            }
-        } else {
-            subscription.cancel();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onNext(T t) {
-        if (done) {
-            return;
-        }
-        if (upstream == null) {
-            onNextNoSubscription();
-            return;
-        }
-
-        if (t == null) {
-            NullPointerException ex = new NullPointerException("onNext called with null.");
-            cancelAndDispatch(ex);
-            throw ex;
-        }
-
-        try {
-            downstream.onNext(t);
-        } catch (Throwable e) {
-            cancelAndDispatch(e);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void cancelAndDispatch(Throwable ex) {
@@ -117,57 +77,12 @@ public final class SafeSubscriber<T> implements Subscriber<T>, Subscription, Con
 
     @Override
     public void onError(Throwable t) {
-        Objects.requireNonNull(t);
-        if (done) {
-            return;
-        }
-        done = true;
-
-        if (upstream == null) {
-            Throwable npe = new NullPointerException("Subscription not set!");
-
-            try {
-                downstream.onSubscribe(Subscriptions.empty());
-            } catch (Throwable e) {
-                // can't call onError because the actual's state may be corrupt at this point
-                Infrastructure.handleDroppedException(new CompositeException(t, e));
-                return;
-            }
-            try {
-                downstream.onError(new CompositeException(t, npe));
-            } catch (Throwable e) {
-                // nothing we can do.
-                Infrastructure.handleDroppedException(new CompositeException(t, npe, e));
-            }
-            return;
-        }
-
-        try {
-            downstream.onError(t);
-        } catch (Throwable ex) {
-            // nothing we can do.
-            Infrastructure.handleDroppedException(new CompositeException(t, ex));
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onComplete() {
-        if (done) {
-            return;
-        }
-        done = true;
-
-        if (upstream == null) {
-            onCompleteNoSubscription();
-            return;
-        }
-
-        try {
-            downstream.onComplete();
-        } catch (Throwable e) {
-            // nothing we can do.
-            Infrastructure.handleDroppedException(e);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private void onCompleteNoSubscription() {
@@ -176,7 +91,6 @@ public final class SafeSubscriber<T> implements Subscriber<T>, Subscription, Con
 
     private void manageViolationProtocol() {
         Throwable ex = new NullPointerException("Subscription not set!");
-
         try {
             downstream.onSubscribe(Subscriptions.empty());
         } catch (Throwable e) {
@@ -194,34 +108,16 @@ public final class SafeSubscriber<T> implements Subscriber<T>, Subscription, Con
 
     @Override
     public void request(long n) {
-        try {
-            upstream.request(n);
-        } catch (Throwable e) {
-            try {
-                upstream.cancel();
-            } catch (Throwable ex) {
-                // nothing we can do.
-                Infrastructure.handleDroppedException(new CompositeException(e, ex));
-            }
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        try {
-            upstream.cancel();
-        } catch (Throwable e) {
-            // nothing we can do.
-            Infrastructure.handleDroppedException(e);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Context context() {
-        if (downstream instanceof ContextSupport) {
-            return ((ContextSupport) downstream).context();
-        } else {
-            return Context.empty();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

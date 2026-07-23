@@ -6,12 +6,12 @@ import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicLong;
 
 import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
 public class MultiLogger<T> extends AbstractMultiOperator<T, T> {
 
     private final String identifier;
+
     private final AtomicLong increment = new AtomicLong(0L);
 
     public MultiLogger(Multi<? extends T> upstream, String identifier) {
@@ -25,7 +25,7 @@ public class MultiLogger<T> extends AbstractMultiOperator<T, T> {
 
     @Override
     public void subscribe(MultiSubscriber<? super T> subscriber) {
-        upstream.subscribe().withSubscriber(new MultiLoggerProcessor(subscriber, increment.getAndIncrement()));
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     private class MultiLoggerProcessor extends MultiOperatorProcessor<T, T> {
@@ -39,50 +39,32 @@ public class MultiLogger<T> extends AbstractMultiOperator<T, T> {
 
         @Override
         public void onSubscribe(Subscription subscription) {
-            if (!isDone()) {
-                Infrastructure.logFromOperator(processorIdentifier, "onSubscribe", null, null);
-                super.onSubscribe(subscription);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onFailure(Throwable failure) {
-            if (!isDone()) {
-                Infrastructure.logFromOperator(processorIdentifier, "onFailure", null, failure);
-                super.onFailure(failure);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onItem(T item) {
-            if (!isDone()) {
-                Infrastructure.logFromOperator(processorIdentifier, "onItem", item, null);
-                super.onItem(item);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void onCompletion() {
-            if (!isDone()) {
-                Infrastructure.logFromOperator(processorIdentifier, "onCompletion", null, null);
-                super.onCompletion();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void request(long numberOfItems) {
-            if (!isDone()) {
-                Infrastructure.logFromOperator(processorIdentifier, "request", numberOfItems, null);
-                super.request(numberOfItems);
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
 
         @Override
         public void cancel() {
-            if (!isDone()) {
-                Infrastructure.logFromOperator(processorIdentifier, "cancel", null, null);
-                super.cancel();
-            }
+            throw new UnsupportedOperationException("STUB: not implemented");
         }
     }
 }

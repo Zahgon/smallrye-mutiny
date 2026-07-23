@@ -1,15 +1,11 @@
 package io.smallrye.mutiny.operators.multi;
 
-import static io.smallrye.mutiny.helpers.Subscriptions.CANCELLED;
-
 import java.util.concurrent.Flow.Subscription;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 import io.smallrye.mutiny.Context;
 import io.smallrye.mutiny.helpers.ParameterValidation;
-import io.smallrye.mutiny.helpers.Subscriptions;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.smallrye.mutiny.subscription.ContextSupport;
 import io.smallrye.mutiny.subscription.MultiSubscriber;
 
@@ -23,6 +19,7 @@ public abstract class MultiOperatorProcessor<I, O> implements MultiSubscriber<I>
     protected volatile MultiSubscriber<? super O> downstream;
 
     protected volatile Subscription upstream = null;
+
     private volatile int cancellationRequested = 0;
 
     private static final AtomicReferenceFieldUpdater<MultiOperatorProcessor, Subscription> UPSTREAM_UPDATER = AtomicReferenceFieldUpdater
@@ -36,107 +33,70 @@ public abstract class MultiOperatorProcessor<I, O> implements MultiSubscriber<I>
     }
 
     void failAndCancel(Throwable throwable) {
-        Subscription subscription = getUpstreamSubscription();
-        if (subscription != null) {
-            subscription.cancel();
-        }
-        onFailure(throwable);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     protected Subscription getUpstreamSubscription() {
-        return upstream;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     protected boolean compareAndSetUpstreamSubscription(Subscription expectedValue, Subscription newValue) {
-        return UPSTREAM_UPDATER.compareAndSet(this, expectedValue, newValue);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     protected Subscription getAndSetUpstreamSubscription(Subscription newValue) {
-        return UPSTREAM_UPDATER.getAndSet(this, newValue);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     protected boolean isDone() {
-        return getUpstreamSubscription() == CANCELLED;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     protected boolean isCancelled() {
-        return cancellationRequested == 1;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Context context() {
-        if (downstream instanceof ContextSupport) {
-            return ((ContextSupport) downstream).context();
-        } else {
-            return Context.empty();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onSubscribe(Subscription subscription) {
-        if (compareAndSetUpstreamSubscription(null, subscription)) {
-            // Propagate subscription to downstream.
-            downstream.onSubscribe(this);
-        } else {
-            subscription.cancel();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onFailure(Throwable throwable) {
-        Subscription subscription = getAndSetUpstreamSubscription(CANCELLED);
-        if (subscription != CANCELLED) {
-            downstream.onFailure(throwable);
-        } else {
-            Infrastructure.handleDroppedException(throwable);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void onItem(I item) {
-        Subscription subscription = getUpstreamSubscription();
-        if (subscription != CANCELLED) {
-            downstream.onItem((O) item);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onCompletion() {
-        Subscription subscription = getAndSetUpstreamSubscription(CANCELLED);
-        if (subscription != CANCELLED) {
-            downstream.onCompletion();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void request(long numberOfItems) {
-        Subscription subscription = getUpstreamSubscription();
-        if (subscription != CANCELLED) {
-            if (numberOfItems <= 0) {
-                onFailure(Subscriptions.getInvalidRequestException());
-                return;
-            }
-            subscription.request(numberOfItems);
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void cancel() {
-        if (compareAndSwapDownstreamCancellationRequest()) {
-            cancelUpstream();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     protected final boolean compareAndSwapDownstreamCancellationRequest() {
-        return CANCELLATION_REQUESTED_UPDATER.compareAndSet(this, 0, 1);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     protected void cancelUpstream() {
-        this.cancellationRequested = 1;
-        Subscription actual = UPSTREAM_UPDATER.getAndSet(this, CANCELLED);
-        if (actual != null && actual != CANCELLED) {
-            actual.cancel();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

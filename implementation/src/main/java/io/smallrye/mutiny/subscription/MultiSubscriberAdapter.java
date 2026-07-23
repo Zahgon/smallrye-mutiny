@@ -19,30 +19,26 @@ public class MultiSubscriberAdapter<T> implements MultiSubscriber<T>, ContextSup
 
     @Override
     public void onSubscribe(Flow.Subscription subscription) {
-        downstream.onSubscribe(subscription);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onItem(T item) {
-        downstream.onNext(item);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onFailure(Throwable failure) {
-        downstream.onError(failure);
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public void onCompletion() {
-        downstream.onComplete();
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     @Override
     public Context context() {
-        if (downstream instanceof ContextSupport) {
-            return ((ContextSupport) downstream).context();
-        } else {
-            return Context.empty();
-        }
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 }

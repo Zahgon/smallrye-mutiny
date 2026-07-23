@@ -12,15 +12,8 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface UncheckedSupplier<T> {
 
-    /**
-     * Creates a new {@link UncheckedSupplier} from an existing {@link Supplier}
-     *
-     * @param supplier the supplier
-     * @param <T> the type of items supplied by this supplier
-     * @return the new {@link UncheckedSupplier}
-     */
     static <T> UncheckedSupplier<T> from(Supplier<T> supplier) {
-        return supplier::get;
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
 
     /**
@@ -31,20 +24,7 @@ public interface UncheckedSupplier<T> {
      */
     T get() throws Exception;
 
-    /**
-     * @return the {@link Supplier} getting the item produced by this {@link UncheckedSupplier}. If an exception is
-     *         thrown during the production, this exception is rethrown, wrapped into a {@link RuntimeException} if needed.
-     */
     default Supplier<T> toSupplier() {
-        return () -> {
-            try {
-                return get();
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        };
+        throw new UnsupportedOperationException("STUB: not implemented");
     }
-
 }
